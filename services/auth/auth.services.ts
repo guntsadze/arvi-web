@@ -1,5 +1,4 @@
 import { apiClient } from "@/lib/api-client";
-import { useAuthStore } from "@/store/authStore";
 
 export interface LoginCredentials {
   email: string;

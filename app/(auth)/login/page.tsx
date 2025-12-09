@@ -19,7 +19,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { authService } from "@/services/auth/auth.services";
-import { useAuthStore } from "@/store/authStore";
 
 type LoginForm = {
   email: string;
@@ -29,11 +28,6 @@ type LoginForm = {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const setUser = useAuthStore((state) => state.setUser);
-
-  const router = useRouter();
-  const { login } = useAuth();
 
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -50,13 +44,6 @@ export default function LoginPage() {
       });
 
       console.log("Login response:", authData.user); // user უნდა იყოს აქ არა null
-      setUser(authData.user); // Zustand state-შისახვა
-
-      // small delay რომ state დამუშავდეს
-      setTimeout(() => {
-        const currentUser = useAuthStore.getState().user;
-        console.log("Current Zustand user:", currentUser); // აქ უნდა იყოს user
-      }, 0);
 
       // router.push("/dashboard");
     } catch (e: any) {
