@@ -6,6 +6,7 @@ import { PostForm } from "@/components/posts/PostForm";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2 } from "lucide-react";
 import { postsApi } from "@/services/posts-service";
+import { api } from "@/lib/api";
 
 export default function FeedPage() {
   const {
@@ -13,6 +14,8 @@ export default function FeedPage() {
     loading,
     refresh,
   } = useInfiniteScroll((page) => postsApi.getFeed(page), []);
+
+  postsApi.getFeed();
 
   return (
     <div className="max-w-2xl mx-auto py-6 px-4">

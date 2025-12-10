@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginSchema } from "@/lib/validations/auth";
-import { useAuth } from "@/contexts/auth-context";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +27,7 @@ type LoginForm = {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -43,11 +43,11 @@ export default function LoginPage() {
         password: data.password,
       });
 
-      console.log("Login response:", authData.user); // user უნდა იყოს აქ არა null
+      console.log("Login response:", authData); // user უნდა იყოს აქ არა null
 
-      // router.push("/dashboard");
+      router.push("/dashboard");
     } catch (e: any) {
-      setError(e.message || "შესვლა ვერ მოხერხდა");
+      setError("შესვლა ვერ მოხერხდა");
     } finally {
       setIsLoading(false);
     }

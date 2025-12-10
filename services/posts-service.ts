@@ -2,6 +2,7 @@ import { apiClient } from "@/lib/api-client";
 
 export const postsApi = {
   getFeed: (page = 1) => apiClient.get(`/posts/feed?page=${page}&limit=20`),
+  getUser: (page = 1) => apiClient.get(`/users`),
 
   getExplore: (page = 1) =>
     apiClient.get(`/posts/explore?page=${page}&limit=20`),

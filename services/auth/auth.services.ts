@@ -20,21 +20,19 @@ export interface AuthResponse {
     firstName: string;
     lastName: string;
     avatar?: string;
-    role: string;
+    role?: string;
   };
-  token: string;
 }
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/login", credentials);
-    this.setAuth(response.data);
+    console.log(response);
     return response.data;
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/register", data);
-    this.setAuth(response.data);
     return response.data;
   }
 
@@ -43,13 +41,9 @@ class AuthService {
     return response.data;
   }
 
-  setAuth(data: AuthResponse) {
-    localStorage.setItem("user", JSON.stringify(data.user));
-  }
-
   logout() {
     localStorage.removeItem("user");
-    window.location.href = "/auth/login";
+    window.location.href = "/login";
   }
 
   getStoredUser() {

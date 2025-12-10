@@ -12,11 +12,8 @@ export class ClientApi {
     body?: any,
     query?: Record<string, string | number | boolean>
   ) {
-    // Client-side only: localStorage ან cookie-სგან token
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
     const url = new URL(path, this.baseUrl);
+
     if (query) {
       Object.entries(query).forEach(([key, value]) =>
         url.searchParams.append(key, String(value))
@@ -25,9 +22,9 @@ export class ClientApi {
 
     const response = await fetch(url.toString(), {
       method,
+      credentials: "include", // <-- მთავარი ნაწილი! Cookie გაიგზავნება
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: body ? JSON.stringify(body) : undefined,
     });
@@ -61,5 +58,5 @@ export class ClientApi {
   }
 }
 
-// Singleton instance, რომ ყველგან მარტივად გამოვიყენო
+// Singleton instance
 export const apiClient = new ClientApi("http://localhost:5013");
