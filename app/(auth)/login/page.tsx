@@ -6,17 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginSchema } from "@/lib/validations/auth";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { authService } from "@/services/auth/auth.services";
 
 type LoginForm = {
@@ -31,7 +20,7 @@ export default function LoginPage() {
 
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-    mode: "onChange", // ღილაკის disabled-ის კონტროლი
+    mode: "onChange",
   });
 
   const onLogin = async (data: LoginForm) => {
@@ -43,7 +32,7 @@ export default function LoginPage() {
         password: data.password,
       });
 
-      console.log("Login response:", authData); // user უნდა იყოს აქ არა null
+      console.log("Login response:", authData);
 
       router.push("/dashboard");
     } catch (e: any) {
@@ -55,55 +44,61 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center font-bold">
-            🚗 შესვლა
-          </CardTitle>
-          <CardDescription className="text-center">
-            შესვლა შენს ანგარიშში
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 text-sm">
-              {error}
-            </div>
-          )}
+      <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-6">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold">🚗 შესვლა</h2>
+          <p className="text-gray-600 text-sm mt-1">შესვლა შენს ანგარიშში</p>
+        </div>
 
-          <form onSubmit={handleSubmit(onLogin)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">ელ. ფოსტა</Label>
-              <Input id="email" type="email" {...register("email")} required />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">პაროლი</Label>
-              <Input
-                id="password"
-                type="password"
-                {...register("password")}
-                required
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading || !formState.isValid}
-            >
-              {isLoading ? "იტვირთება..." : "შესვლა"}
-            </Button>
-          </form>
-
-          <div className="text-center text-sm mt-4">
-            <span className="text-gray-600">არ გაქვს ანგარიში? </span>
-            <Link href="/register" className="text-blue-600 hover:underline">
-              რეგისტრაცია
-            </Link>
+        {error && (
+          <div className="mb-4 p-3 rounded-md bg-red-100 text-red-700 text-sm">
+            {error}
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        <form onSubmit={handleSubmit(onLogin)} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">
+              ელ. ფოსტა
+            </label>
+            <input
+              id="email"
+              type="email"
+              {...register("email")}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium">
+              პაროლი
+            </label>
+            <input
+              id="password"
+              type="password"
+              {...register("password")}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || !formState.isValid}
+            className="w-full py-2 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "იტვირთება..." : "შესვლა"}
+          </button>
+        </form>
+
+        <div className="text-center text-sm mt-4">
+          <span className="text-gray-600">არ გაქვს ანგარიში? </span>
+          <Link href="/register" className="text-indigo-600 hover:underline">
+            რეგისტრაცია
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

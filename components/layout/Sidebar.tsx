@@ -10,7 +10,6 @@ import {
   Users,
   Plus,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
@@ -33,26 +32,26 @@ export function Sidebar() {
 
           return (
             <Link key={link.href} href={link.href}>
-              <Button
-                variant={isActive ? "secondary" : "ghost"}
+              <button
                 className={cn(
-                  "w-full justify-start",
+                  "w-full flex items-center px-4 py-2 rounded-lg text-sm font-medium transition",
+                  "hover:bg-gray-100",
                   isActive && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                 )}
               >
                 <Icon className="mr-3" size={20} />
                 {link.label}
-              </Button>
+              </button>
             </Link>
           );
         })}
 
         <div className="pt-4 border-t">
           <Link href="/cars/create">
-            <Button className="w-full">
+            <button className="w-full flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
               <Plus className="mr-2" size={20} />
               ავტომობილის დამატება
-            </Button>
+            </button>
           </Link>
         </div>
       </div>
