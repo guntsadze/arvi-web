@@ -8,7 +8,7 @@ interface ApiOptions extends RequestInit {
   query?: Record<string, string | number | boolean>;
 }
 
-const BASE_URL = "http://localhost:5013"; // შეგიძლია environment variable-ით შეცვალო
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL; // შეგიძლია environment variable-ით შეცვალო
 
 function buildUrl(
   path: string,

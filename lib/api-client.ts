@@ -59,4 +59,6 @@ export class ClientApi {
 }
 
 // Singleton instance
-export const apiClient = new ClientApi("http://localhost:5013");
+export const apiClient = new ClientApi(
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5013"
+);
