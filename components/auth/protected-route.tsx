@@ -21,7 +21,7 @@ export default function ProtectedRoute({
       router.push("/login");
     }
 
-    if (user && allowedRoles && !allowedRoles.includes(user.role)) {
+    if (user && allowedRoles) {
       router.push("/unauthorized");
     }
   }, [user, loading, router, allowedRoles]);
