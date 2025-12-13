@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api-client";
+import Cookie from "js-cookie";
 
 export interface LoginCredentials {
   email: string;
@@ -31,7 +32,10 @@ class AuthService {
     const token = response.data?.token;
 
     if (token && typeof document !== "undefined") {
-      document.cookie = `token=${token}; Path=/; SameSite=Lax; Secure`;
+      Cookie.set("token", token, {
+        path: "/",
+        expires: new Date(Date.now() + 8 * 60 * 60 * 1000),
+      });
     }
 
     return response.data;
