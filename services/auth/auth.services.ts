@@ -27,7 +27,13 @@ export interface AuthResponse {
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/login", credentials);
-    console.log(response);
+
+    const token = response.data?.token;
+
+    if (token && typeof document !== "undefined") {
+      document.cookie = `token=${token}; Path=/; SameSite=Lax; Secure`;
+    }
+
     return response.data;
   }
 

@@ -1,4 +1,3 @@
-// lib/api.ts
 import { cookies } from "next/headers";
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
