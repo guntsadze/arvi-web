@@ -53,7 +53,7 @@ export function CarCard({ car }: CarCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Image
-                src={car.user.avatar || "/default-avatar.png"}
+                src={car.user.avatar || ""}
                 alt={car.user.firstName}
                 width={24}
                 height={24}

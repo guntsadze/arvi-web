@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, Video, MapPin } from "lucide-react";
-import { postsApi } from "@/services/posts-service";
+import { postsService } from "@/services/posts/posts.service";
 
 interface PostFormProps {
   onPostCreated: () => void;
@@ -17,7 +17,7 @@ export function PostForm({ onPostCreated }: PostFormProps) {
 
     setLoading(true);
     try {
-      await postsApi.createPost({ content });
+      await postsService.createPost({ content });
       setContent("");
       onPostCreated();
     } catch (error) {

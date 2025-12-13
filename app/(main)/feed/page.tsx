@@ -5,17 +5,14 @@ import { PostCard } from "@/components/posts/PostCard";
 import { PostForm } from "@/components/posts/PostForm";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2 } from "lucide-react";
-import { postsApi } from "@/services/posts-service";
-import { api } from "@/lib/api";
+import { postsService } from "@/services/posts/posts.service";
 
 export default function FeedPage() {
   const {
     data: posts,
     loading,
     refresh,
-  } = useInfiniteScroll((page) => postsApi.getFeed(page), []);
-
-  postsApi.getFeed();
+  } = useInfiniteScroll((page) => postsService.getFeed(page), []);
 
   return (
     <div className="max-w-2xl mx-auto py-6 px-4">
