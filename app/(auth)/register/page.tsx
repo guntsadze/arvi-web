@@ -28,7 +28,7 @@ export default function RegisterPage() {
     setGlobalError("");
     try {
       await authService.register(data);
-      router.push("/dashboard");
+      // router.push("/feed");
     } catch (e: any) {
       setGlobalError(e.message || "რეგისტრაცია ვერ მოხერხდა");
     } finally {
@@ -59,6 +59,12 @@ export default function RegisterPage() {
           id="lastName"
           register={form.register}
           error={form.formState.errors.lastName?.message}
+        />
+        <AuthInput
+          label="UserName"
+          id="username"
+          register={form.register}
+          error={form.formState.errors.username?.message}
         />
       </div>
       <AuthInput

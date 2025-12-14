@@ -5,10 +5,10 @@ import { Image as ImageIcon, Video, MapPin } from "lucide-react";
 import { postsService } from "@/services/posts/posts.service";
 
 interface PostFormProps {
-  onPostCreated: () => void;
+  refresh: () => void;
 }
 
-export function PostForm({ onPostCreated }: PostFormProps) {
+export function PostForm({ refresh }: PostFormProps) {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ export function PostForm({ onPostCreated }: PostFormProps) {
     try {
       await postsService.createPost({ content });
       setContent("");
-      onPostCreated();
+      refresh();
     } catch (error) {
       console.error("Error creating post:", error);
     } finally {

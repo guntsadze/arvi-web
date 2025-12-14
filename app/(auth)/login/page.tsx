@@ -28,7 +28,7 @@ export default function LoginPage() {
     setGlobalError("");
     try {
       await authService.login(data);
-      router.push("/dashboard");
+      router.push("/feed");
     } catch {
       setGlobalError("შესვლა ვერ მოხერხდა");
     } finally {

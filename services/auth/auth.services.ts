@@ -30,6 +30,12 @@ class AuthService {
     const response = await apiClient.post("/auth/login", credentials);
 
     const token = response.data?.token;
+    const user = response.data?.user;
+
+    if (user && typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("userId", JSON.stringify(user.id));
+    }
 
     if (token && typeof document !== "undefined") {
       Cookie.set("token", token, {

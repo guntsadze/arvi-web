@@ -69,6 +69,15 @@ class PostsService extends BaseApiService<Posts> {
     });
   }
 
+  // COMMENTS
+  updateComment(commentId: string, content: string) {
+    return apiClient.put(`${this.endpoint}/comments/${commentId}`, { content });
+  }
+
+  deleteComment(commentId: string) {
+    return apiClient.delete(`${this.endpoint}/comments/${commentId}`);
+  }
+
   getComments(postId: string, page = 1, limit = 20) {
     return apiClient.get(
       `${this.endpoint}/${postId}/comments?page=${page}&limit=${limit}`

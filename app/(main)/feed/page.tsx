@@ -17,12 +17,12 @@ export default function FeedPage() {
   return (
     <div className="max-w-2xl mx-auto py-6 px-4">
       {/* Create Post */}
-      <PostForm onPostCreated={refresh} />
+      <PostForm refresh={refresh} />
 
       {/* Feed */}
       <div className="mt-6 space-y-4">
         {posts.map((post: any) => (
-          <PostCard key={post.id} post={post} onUpdate={refresh} />
+          <PostCard key={post.id} post={post} refresh={refresh} />
         ))}
 
         {loading && (
