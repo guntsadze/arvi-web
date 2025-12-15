@@ -52,8 +52,12 @@ export default function LoginPage() {
       linkText="არ გაქვს ანგარიში?"
       linkHref="/register"
     >
-      <Input label="ელ. ფოსტა" id="email" type="email" {...register("email")} />
-
+      <Input
+        label="ელ. ფოსტა / მომხმარებლის სახელი / ტელეფონი"
+        id="identifier"
+        type="text"
+        {...register("identifier")}
+      />
       <Input
         label="პაროლი"
         id="password"

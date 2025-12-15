@@ -34,7 +34,6 @@ class AuthService {
 
     if (user && typeof window !== "undefined") {
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userId", JSON.stringify(user.id));
     }
 
     if (token && typeof document !== "undefined") {
@@ -49,6 +48,20 @@ class AuthService {
 
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/register", data);
+
+    const token = response.data?.token;
+    const user = response.data?.user;
+
+    if (user && typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    if (token && typeof document !== "undefined") {
+      Cookie.set("token", token, {
+        path: "/",
+        expires: new Date(Date.now() + 8 * 60 * 60 * 1000),
+      });
+    }
     return response.data;
   }
 

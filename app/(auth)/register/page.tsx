@@ -52,7 +52,7 @@ export default function RegisterPage() {
       linkText="უკვე გაქვს ანგარიში?"
       linkHref="/login"
     >
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <Input label="სახელი" id="firstName" {...register("firstName")} />
         <Input label="გვარი" id="lastName" {...register("lastName")} />
         <Input label="UserName" id="username" {...register("username")} />
