@@ -10,6 +10,7 @@ import { loginSchema } from "@/lib/validations/auth";
 import { authService } from "@/services/auth/auth.services";
 import { AuthForm } from "@/components/ui/auth/AuthForm";
 import { AuthInput } from "@/components/ui/AuthInput";
+import Input from "@/components/ui/Input";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
@@ -18,7 +19,11 @@ export default function LoginPage() {
   const [globalError, setGlobalError] = useState("");
   const router = useRouter();
 
-  const form = useForm<LoginForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
@@ -40,26 +45,20 @@ export default function LoginPage() {
     <AuthForm
       title="🚗 შესვლა"
       subtitle="შესვლა შენს ანგარიშში"
-      onSubmit={form.handleSubmit(onLogin)}
+      onSubmit={handleSubmit(onLogin)}
       isLoading={isLoading}
       globalError={globalError}
       submitLabel="შესვლა"
       linkText="არ გაქვს ანგარიში?"
       linkHref="/register"
     >
-      <AuthInput
-        label="ელ. ფოსტა"
-        id="email"
-        type="email"
-        register={form.register}
-        error={form.formState.errors.email?.message}
-      />
-      <AuthInput
+      <Input label="ელ. ფოსტა" id="email" type="email" {...register("email")} />
+
+      <Input
         label="პაროლი"
         id="password"
         type="password"
-        register={form.register}
-        error={form.formState.errors.password?.message}
+        {...register("password")}
       />
     </AuthForm>
   );

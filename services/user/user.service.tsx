@@ -1,3 +1,4 @@
+import { apiClient } from "@/lib/api-client-HTTPONLY";
 import { BaseApiService } from "@/services/common/base-api.service";
 
 export interface User {
@@ -14,6 +15,10 @@ export interface User {
 
 class UsersService extends BaseApiService<User> {
   protected endpoint = "/users";
+
+  getByUsername(username: string) {
+    return apiClient.get(`${this.endpoint}/by-username/${username}`);
+  }
 }
 
 export const usersService = new UsersService();

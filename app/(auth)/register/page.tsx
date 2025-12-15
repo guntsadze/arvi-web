@@ -10,6 +10,7 @@ import { registerSchema } from "@/lib/validations/auth";
 import { authService } from "@/services/auth/auth.services";
 import { AuthInput } from "@/components/ui/AuthInput";
 import { AuthForm } from "@/components/ui/auth/AuthForm";
+import Input from "@/components/ui/Input";
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
@@ -18,7 +19,11 @@ export default function RegisterPage() {
   const [globalError, setGlobalError] = useState("");
   const router = useRouter();
 
-  const form = useForm<RegisterForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
@@ -28,7 +33,7 @@ export default function RegisterPage() {
     setGlobalError("");
     try {
       await authService.register(data);
-      // router.push("/feed");
+      router.push("/feed");
     } catch (e: any) {
       setGlobalError(e.message || "რეგისტრაცია ვერ მოხერხდა");
     } finally {
@@ -40,7 +45,7 @@ export default function RegisterPage() {
     <AuthForm
       title="✍️ რეგისტრაცია"
       subtitle="შექმენი ახალი ანგარიში"
-      onSubmit={form.handleSubmit(onRegister)}
+      onSubmit={handleSubmit(onRegister)}
       isLoading={isLoading}
       globalError={globalError}
       submitLabel="რეგისტრაცია"
@@ -48,38 +53,16 @@ export default function RegisterPage() {
       linkHref="/login"
     >
       <div className="grid grid-cols-2 gap-4">
-        <AuthInput
-          label="სახელი"
-          id="firstName"
-          register={form.register}
-          error={form.formState.errors.firstName?.message}
-        />
-        <AuthInput
-          label="გვარი"
-          id="lastName"
-          register={form.register}
-          error={form.formState.errors.lastName?.message}
-        />
-        <AuthInput
-          label="UserName"
-          id="username"
-          register={form.register}
-          error={form.formState.errors.username?.message}
-        />
+        <Input label="სახელი" id="firstName" {...register("firstName")} />
+        <Input label="გვარი" id="lastName" {...register("lastName")} />
+        <Input label="UserName" id="username" {...register("username")} />
       </div>
-      <AuthInput
-        label="ელ. ფოსტა"
-        id="email"
-        type="email"
-        register={form.register}
-        error={form.formState.errors.email?.message}
-      />
-      <AuthInput
+      <Input label="ელ. ფოსტა" id="email" type="email" {...register("email")} />
+      <Input
         label="პაროლი"
         id="password"
         type="password"
-        register={form.register}
-        error={form.formState.errors.password?.message}
+        {...register("password")}
       />
     </AuthForm>
   );
