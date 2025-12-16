@@ -10,6 +10,7 @@ import {
   Users,
   Plus,
   Wrench,
+  Car,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authService } from "@/services/auth/auth.services";
@@ -18,9 +19,10 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/", icon: Home, label: "მაგალითი" },
+    { href: "/", icon: Car, label: "მაგალითი" },
     { href: "/feed", icon: Home, label: "სიახლეები" },
     { href: "/user", icon: Users, label: "ავტომოყვარულები" },
+    { href: "/cars/create", icon: Car, label: "ავტომობილები" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
