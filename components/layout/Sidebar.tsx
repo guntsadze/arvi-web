@@ -17,6 +17,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const links = [
+    { href: "/", icon: Home, label: "მაგალითი" },
     { href: "/feed", icon: Home, label: "სიახლეები" },
     { href: "/user", icon: Users, label: "ავტომოყვარულები" },
     { href: "/explore", icon: Compass, label: "Explore" },

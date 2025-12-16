@@ -14,12 +14,14 @@ import {
   Car,
   ChevronDown,
   X,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
 // შეცვალე გზა შენი ფაილების მიხედვით
 import { carsService } from "@/services/cars/cars.service";
-import Input from "@/components/ui/Input"; // შენი RuggedInput
+import Input from "@/components/ui/Input";
 
-// --- Helper Component: Rugged Select (რომ ერგებოდეს სტილს) ---
+// --- Helper Component: Rugged Select ---
 const RuggedSelect = ({ label, options, register, name, required }) => (
   <div className="relative w-full">
     <div className="flex items-center justify-between mb-1 pl-2">
@@ -51,10 +53,8 @@ const RuggedSelect = ({ label, options, register, name, required }) => (
 const RuggedCheckbox = ({ label, icon: Icon, register, name }) => (
   <label className="relative flex items-center gap-4 cursor-pointer group p-4 border-2 border-stone-600 border-dashed hover:border-amber-500 hover:bg-stone-800/50 transition-all">
     <input type="checkbox" {...register(name)} className="peer sr-only" />
-    {/* Checkbox Box */}
     <div className="w-6 h-6 border-2 border-[#EBE9E1] bg-stone-900 peer-checked:bg-amber-500 peer-checked:border-amber-500 transition-colors flex items-center justify-center">
       <div className="w-4 h-1 bg-stone-900 transform -rotate-45 hidden peer-checked:block" />
-      {/* მარტივი "Check" ვიზუალი */}
     </div>
     <span className="text-[#EBE9E1] font-mono uppercase tracking-wider text-xs flex items-center gap-2 group-hover:text-amber-400 transition-colors">
       <Icon className="w-4 h-4" />
@@ -63,10 +63,256 @@ const RuggedCheckbox = ({ label, icon: Icon, register, name }) => (
   </label>
 );
 
+// --- CAR DETAIL VIEW Component (E34 Hero Style) ---
+const CarDetailView = ({ car, onClose }) => {
+  const getFuelIcon = (fuelType) => {
+    switch (fuelType) {
+      case "ELECTRIC":
+      case "HYBRID":
+      case "PLUGIN_HYBRID":
+        return <Zap className="text-amber-600" />;
+      default:
+        return <Fuel className="text-amber-600" />;
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-[#1c1917] z-50 overflow-y-auto">
+      {/* Blueprint Grid Background */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #44403c 1px, transparent 1px),
+            linear-gradient(to bottom, #44403c 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+        }}
+      />
+
+      {/* Decorative Background Text */}
+      <div className="absolute top-10 left-4 md:left-20 text-[120px] md:text-[200px] font-black text-stone-800/40 leading-none select-none z-0 tracking-tighter">
+        {car.make}
+      </div>
+      <div className="absolute bottom-0 right-0 text-[100px] md:text-[180px] font-black text-stone-800/30 leading-none select-none z-0 tracking-tighter">
+        {car.year}
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto min-h-screen flex flex-col justify-center items-center pt-20 pb-10 px-4">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center gap-2 px-6 py-3 bg-stone-800 hover:bg-amber-600 text-[#EBE9E1] hover:text-stone-900 font-bold uppercase tracking-wider transition-all duration-300 border-2 border-stone-700 hover:border-amber-600"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="hidden md:inline">Back</span>
+        </button>
+
+        {/* Header Badge */}
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 border border-amber-700/30 bg-amber-950/20 rounded-full">
+            <Sparkles className="w-4 h-4 text-amber-600 animate-pulse" />
+            <span className="text-xs md:text-sm text-amber-600 font-mono uppercase tracking-wider">
+              Vehicle Specification
+            </span>
+          </div>
+
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-[#dcd8c8] mb-3 tracking-tight">
+            {car.make} {car.model}
+          </h1>
+          <p className="text-sm md:text-base text-stone-400 font-mono">
+            Year: <span className="text-amber-600">{car.year}</span>
+            {car.engineCapacity && (
+              <>
+                {" "}
+                | Engine:{" "}
+                <span className="text-amber-600">{car.engineCapacity}L</span>
+              </>
+            )}
+          </p>
+        </div>
+
+        {/* Car Visual Area (Placeholder for now - you can add image later) */}
+        <div className="relative w-full max-w-5xl aspect-[16/9] md:aspect-[21/9] flex items-center justify-center group mb-10">
+          <div className="relative w-full h-full grayscale contrast-125 sepia-[0.3] group-hover:grayscale-0 group-hover:sepia-0 group-hover:scale-105 transition-all duration-700 ease-in-out">
+            {/* Placeholder Icon - შემდეგში შეგიძლია სურათი დაამატო */}
+            <div className="w-full h-full flex items-center justify-center bg-stone-900/50 border-2 border-stone-800">
+              <Car className="w-32 h-32 md:w-48 md:h-48 text-stone-700 drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)]" />
+            </div>
+          </div>
+
+          {/* Technical Annotations */}
+          {car.horsepower && (
+            <div className="absolute top-[30%] left-[20%] w-[1px] h-20 bg-amber-600/60 hidden md:block group-hover:bg-amber-500 transition-colors">
+              <div className="absolute -top-2 -left-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+              <div className="absolute bottom-0 left-0 w-32 h-[1px] bg-amber-600/60 group-hover:w-40 transition-all" />
+              <div className="absolute bottom-2 left-2 text-[10px] font-mono text-amber-500 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                Power: {car.horsepower} HP
+              </div>
+            </div>
+          )}
+
+          <div className="absolute bottom-[25%] left-[23%] w-[1px] h-16 bg-stone-500/60 hidden md:block rotate-12 group-hover:bg-stone-400 transition-colors">
+            <div className="absolute top-0 left-0 w-20 h-[1px] bg-stone-500/60 -translate-x-full group-hover:w-24 transition-all" />
+            <div className="absolute -top-4 -left-28 text-[10px] font-mono text-stone-400 uppercase text-right opacity-0 group-hover:opacity-100 transition-opacity">
+              Trans: {car.transmission}
+            </div>
+          </div>
+
+          {car.mileage && (
+            <div className="absolute top-[35%] right-[15%] w-[1px] h-24 bg-stone-500/60 hidden md:block group-hover:bg-stone-400 transition-colors">
+              <div className="absolute top-0 right-0 w-24 h-[1px] bg-stone-500/60 group-hover:w-32 transition-all" />
+              <div className="absolute -top-5 right-0 text-[10px] font-mono text-stone-400 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                ODO: {car.mileage.toLocaleString()} km
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Specifications Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl border-t border-stone-700 pt-6 md:pt-8">
+          {car.horsepower && (
+            <SpecBox
+              icon={<Gauge className="text-amber-600" />}
+              label="Power Output"
+              value={`${car.horsepower} HP`}
+              sub={
+                car.engineCapacity
+                  ? `${car.engineCapacity}L Engine`
+                  : "Performance"
+              }
+            />
+          )}
+
+          <SpecBox
+            icon={getFuelIcon(car.fuelType)}
+            label="Fuel Type"
+            value={car.fuelType}
+            sub="Power Source"
+          />
+
+          <SpecBox
+            icon={<Settings className="text-amber-600" />}
+            label="Transmission"
+            value={car.transmission}
+            sub="Gearbox Type"
+          />
+
+          {car.mileage ? (
+            <SpecBox
+              icon={<Gauge className="text-amber-600" />}
+              label="Mileage"
+              value={`${car.mileage.toLocaleString()} km`}
+              sub="Odometer Reading"
+            />
+          ) : (
+            <SpecBox
+              icon={<Calendar className="text-amber-600" />}
+              label="Production"
+              value={car.year}
+              sub="Manufacturing Year"
+            />
+          )}
+        </div>
+
+        {/* Status Badges */}
+        <div className="flex flex-wrap gap-4 mt-10 justify-center">
+          {car.isProject && (
+            <div className="border-2 border-amber-700 px-6 py-2 bg-amber-950/20">
+              <div className="flex items-center gap-2">
+                <Wrench className="w-5 h-5 text-amber-600" />
+                <span className="text-amber-600 font-black text-sm uppercase tracking-widest">
+                  Restoration Project
+                </span>
+              </div>
+            </div>
+          )}
+
+          {car.isPublic ? (
+            <div className="border-2 border-stone-700 px-6 py-2 bg-stone-800/50">
+              <div className="flex items-center gap-2">
+                <Eye className="w-5 h-5 text-stone-400" />
+                <span className="text-stone-400 font-black text-sm uppercase tracking-widest">
+                  Public Listing
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="border-2 border-red-900 px-6 py-2 bg-red-950/20">
+              <div className="flex items-center gap-2">
+                <EyeOff className="w-5 h-5 text-red-600" />
+                <span className="text-red-600 font-black text-sm uppercase tracking-widest">
+                  Private Collection
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Vehicle ID Badge */}
+        <div className="absolute top-10 right-10 border-2 border-amber-700 p-2 rotate-[-5deg] opacity-80 mix-blend-screen hidden md:block">
+          <div className="border border-amber-700 px-4 py-1">
+            <span className="text-amber-600 font-black text-xl tracking-widest uppercase">
+              ID: {car.id.toString().slice(-6)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Scanning Effect */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.5)] animate-scan opacity-30 pointer-events-none" />
+
+      <style jsx>{`
+        @keyframes scan {
+          0% {
+            top: 0%;
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            top: 100%;
+            opacity: 0;
+          }
+        }
+        .animate-scan {
+          animation: scan 4s linear infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// Spec Box Component
+function SpecBox({ icon, label, value, sub }) {
+  return (
+    <div className="flex flex-col items-start p-3 md:p-4 border border-stone-800 bg-[#292524] hover:border-amber-700/50 hover:bg-[#312e29] transition-all duration-300 group cursor-pointer hover:shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+      <div className="mb-2 opacity-70 group-hover:opacity-100 transition-opacity group-hover:scale-110 transform duration-300">
+        {icon}
+      </div>
+      <span className="text-[10px] md:text-xs text-stone-500 font-mono uppercase tracking-widest mb-1">
+        {label}
+      </span>
+      <span className="text-lg md:text-xl lg:text-2xl font-black text-[#dcd8c8] group-hover:text-amber-600 transition-colors break-words">
+        {value}
+      </span>
+      <span className="text-[8px] md:text-[9px] text-amber-700 font-mono mt-1 group-hover:text-amber-500 transition-colors">
+        {sub}
+      </span>
+    </div>
+  );
+}
+
 export default function CarCollectionPage() {
   const [cars, setCars] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCar, setSelectedCar] = useState(null);
 
   const {
     register,
@@ -90,7 +336,7 @@ export default function CarCollectionPage() {
     try {
       setIsLoading(true);
       const data = await carsService.search();
-      setCars(data.data.data); // შეამოწმე შენი API response-ის სტრუქტურა
+      setCars(data.data.data);
     } catch (error) {
       console.error("Error loading cars:", error);
     } finally {
@@ -106,7 +352,6 @@ export default function CarCollectionPage() {
         horsepower: data.horsepower ? Number(data.horsepower) : undefined,
         mileage: data.mileage ? Number(data.mileage) : undefined,
       });
-      // აქ ვთვლით რომ newCar ბრუნდება, ან თავიდან ვტვირთავთ სიას
       setCars((prev) => [newCar, ...prev]);
       reset();
       setIsFormOpen(false);
@@ -126,13 +371,19 @@ export default function CarCollectionPage() {
     }
   };
 
+  // თუ მანქანა არჩეულია, ვაჩვენებთ detail view-ს
+  if (selectedCar) {
+    return (
+      <CarDetailView car={selectedCar} onClose={() => setSelectedCar(null)} />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans selection:bg-amber-500 selection:text-stone-900 pb-20">
-      {/* --- HEADER: Workshop Sign Style --- */}
+      {/* HEADER */}
       <div className="sticky top-0 z-30 border-b-4 border-stone-800 bg-[#1c1917]/95 backdrop-blur-sm shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Logo / Title Area */}
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-600 flex items-center justify-center rounded-sm shadow-[4px_4px_0px_0px_#000]">
                 <Car className="text-stone-900 w-8 h-8" />
@@ -147,17 +398,9 @@ export default function CarCollectionPage() {
               </div>
             </div>
 
-            {/* Action Button: Industrial Style */}
             <button
               onClick={() => setIsFormOpen(!isFormOpen)}
-              className="
-                relative group overflow-hidden bg-[#EBE9E1] px-8 py-3 
-                font-black uppercase tracking-widest text-stone-900 
-                border-2 border-transparent hover:border-amber-500
-                shadow-[6px_6px_0px_0px_#ea580c] hover:shadow-[2px_2px_0px_0px_#ea580c] 
-                hover:translate-x-1 hover:translate-y-1 
-                transition-all duration-200
-              "
+              className="relative group overflow-hidden bg-[#EBE9E1] px-8 py-3 font-black uppercase tracking-widest text-stone-900 border-2 border-transparent hover:border-amber-500 shadow-[6px_6px_0px_0px_#ea580c] hover:shadow-[2px_2px_0px_0px_#ea580c] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
             >
               <span className="relative z-10 flex items-center gap-2">
                 <Plus className="w-5 h-5" />
@@ -169,10 +412,9 @@ export default function CarCollectionPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* --- ADD CAR FORM: The "Clipboard" / Torn Paper Look --- */}
+        {/* ADD CAR FORM */}
         {isFormOpen && (
           <div className="mb-16 relative">
-            {/* Background Shadow Filter for Form */}
             <div
               className="absolute inset-0 bg-stone-900/80 z-0 transform translate-x-4 translate-y-4"
               style={{ filter: "url(#rugged-tear)" }}
@@ -182,7 +424,6 @@ export default function CarCollectionPage() {
               className="relative z-10 bg-[#e3e1d5] p-8 md:p-12 w-full"
               style={{ filter: "url(#rugged-tear)" }}
             >
-              {/* Decorative Screws */}
               <div className="absolute top-4 left-4 w-3 h-3 rounded-full bg-stone-400 border border-stone-500 shadow-inner" />
               <div className="absolute top-4 right-4 w-3 h-3 rounded-full bg-stone-400 border border-stone-500 shadow-inner" />
               <div className="absolute bottom-4 left-4 w-3 h-3 rounded-full bg-stone-400 border border-stone-500 shadow-inner" />
@@ -274,7 +515,6 @@ export default function CarCollectionPage() {
                   />
                 </div>
 
-                {/* Checkboxes Area */}
                 <div className="flex flex-col sm:flex-row gap-6 p-6 bg-stone-800/10 border border-stone-800/20 mt-4">
                   <RuggedCheckbox
                     label="Restoration Project"
@@ -290,16 +530,16 @@ export default function CarCollectionPage() {
                   />
                 </div>
 
-                {/* Form Actions */}
                 <div className="flex gap-4 pt-6 border-t-2 border-stone-800 border-dashed">
                   <button
-                    onClick={handleSubmit(onSubmit)}
+                    type="submit"
                     disabled={isSubmitting}
                     className="flex-1 bg-stone-800 text-[#EBE9E1] py-4 font-black uppercase tracking-[0.2em] hover:bg-amber-600 hover:text-stone-900 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-none"
                   >
                     {isSubmitting ? "Processing..." : "Register Vehicle"}
                   </button>
                   <button
+                    type="button"
                     onClick={() => setIsFormOpen(false)}
                     className="px-8 py-4 font-bold uppercase tracking-wider text-stone-600 border-2 border-stone-400 hover:border-stone-800 hover:text-stone-800 transition-colors"
                   >
@@ -317,7 +557,7 @@ export default function CarCollectionPage() {
           </div>
         )}
 
-        {/* --- CARS GRID: Index Cards Style --- */}
+        {/* CARS GRID */}
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-16 h-16 border-4 border-stone-600 border-t-amber-500 rounded-full animate-spin" />
@@ -343,17 +583,15 @@ export default function CarCollectionPage() {
             {cars.map((car) => (
               <div
                 key={car.id}
-                className="group relative bg-[#f2f0e9] min-h-[400px] flex flex-col shadow-xl transition-transform hover:-translate-y-2 duration-300"
+                onClick={() => setSelectedCar(car)}
+                className="group relative bg-[#f2f0e9] min-h-[400px] flex flex-col shadow-xl transition-transform hover:-translate-y-2 duration-300 cursor-pointer"
               >
-                {/* Tape Effect at top */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#e8dcc0] opacity-90 rotate-1 shadow-sm z-20" />
 
-                {/* Card Header (Image/Icon Placeholder) */}
                 <div className="h-40 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
                   <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-500 to-black" />
                   <Car className="w-20 h-20 text-stone-600 group-hover:text-amber-500 transition-colors duration-500" />
 
-                  {/* Status Badges */}
                   <div className="absolute top-2 right-2 flex flex-col gap-1">
                     {car.isProject && (
                       <span className="bg-amber-600 text-stone-900 text-[10px] font-black uppercase px-2 py-0.5 shadow-sm">
@@ -372,7 +610,6 @@ export default function CarCollectionPage() {
                   </div>
                 </div>
 
-                {/* Card Body */}
                 <div className="p-6 flex-1 flex flex-col">
                   <div className="mb-6 border-b border-stone-300 pb-4">
                     <h3 className="text-sm font-bold text-stone-500 uppercase tracking-widest mb-1">
@@ -383,7 +620,6 @@ export default function CarCollectionPage() {
                     </p>
                   </div>
 
-                  {/* Specs Grid */}
                   <div className="space-y-3 font-mono text-xs text-stone-600">
                     <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
                       <span className="flex items-center gap-2">
@@ -436,10 +672,17 @@ export default function CarCollectionPage() {
                   </div>
                 </div>
 
-                {/* Footer / ID */}
                 <div className="bg-stone-200 p-2 text-center border-t border-stone-300">
                   <span className="font-mono text-[10px] text-stone-400 uppercase tracking-[0.2em]">
                     ID: {car.id.toString().slice(-6)}
+                  </span>
+                </div>
+
+                {/* Click to View Indicator */}
+                <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/10 transition-colors pointer-events-none" />
+                <div className="absolute bottom-16 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-xs font-mono text-amber-700 uppercase tracking-wider">
+                    Click to View →
                   </span>
                 </div>
               </div>
@@ -448,7 +691,7 @@ export default function CarCollectionPage() {
         )}
       </div>
 
-      {/* SVG FILTERS (აუცილებელია დახეული ეფექტისთვის) */}
+      {/* SVG FILTERS */}
       <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
         <defs>
           <filter id="rugged-tear" x="-20%" y="-20%" width="140%" height="140%">

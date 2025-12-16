@@ -72,6 +72,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
+    Cookie.remove("token");
     window.location.href = "/login";
   }
 
