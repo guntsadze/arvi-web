@@ -11,6 +11,8 @@ type Props = {
 export default function UserProfile({ user }: Props) {
   const [editMode, setEditMode] = useState(false);
 
+  console.log("User Data:", user);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* Cover */}

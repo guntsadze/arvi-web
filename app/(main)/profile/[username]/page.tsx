@@ -27,6 +27,8 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const user = await usersService.getByUsername(username);
 
+  console.log("Fetched User:", user);
+
   if (!user) {
     notFound();
   }
@@ -204,10 +206,7 @@ export default async function Page({ params }: Props) {
             <div className="lg:col-span-2">
               {/* Dashboard Gauges (Stats) */}
               <div className="grid grid-cols-3 gap-4 mb-8">
-                <StatBox
-                  label="Posts"
-                  value={user.postsCount < 0 ? 0 : user.postsCount}
-                />
+                <StatBox label="Posts" value={user.postsCount} />
                 <StatBox label="Followers" value={user.followersCount} />
                 <StatBox label="Following" value={user.followingCount} />
               </div>

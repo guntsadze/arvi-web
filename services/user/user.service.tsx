@@ -19,6 +19,10 @@ class UsersService extends BaseApiService<User> {
   getByUsername(username: string) {
     return apiClient.get(`${this.endpoint}/by-username/${username}`);
   }
+
+  findAll(params: { page: number; pageSize: number }) {
+    return apiClient.get(`${this.endpoint}`);
+  }
 }
 
 export const usersService = new UsersService();
