@@ -12,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { authService } from "@/services/auth/auth.services";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -77,23 +78,24 @@ export function Sidebar() {
       </div>
 
       {/* Bottom Action Area (Sticky at bottom of sidebar) */}
-      <div className="p-6 border-t-4 border-stone-800 bg-[#151413]">
+      {/* Bottom Action Area (Sticky at bottom of sidebar) */}
+      <div className="p-6 border-t-4 border-stone-800 bg-[#151413] space-y-4">
         {/* Decorative "Caution" Stripes */}
         <div className="h-2 w-full mb-4 bg-[repeating-linear-gradient(45deg,#292524,#292524_10px,#1c1917_10px,#1c1917_20px)] border border-stone-700 opacity-50" />
 
-        <Link href="/cars/create">
+        {/* <Link href="/cars/create">
           <button
             className="
-            w-full group relative flex items-center justify-center 
-            px-4 py-4 bg-[#EBE9E1] text-stone-900 
-            font-black uppercase tracking-widest text-xs
-            border-2 border-transparent
-            shadow-[4px_4px_0px_0px_#b45309] 
-            hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#b45309]
-            hover:bg-white
-            active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
-            transition-all duration-150
-          "
+        w-full group relative flex items-center justify-center 
+        px-4 py-4 bg-[#EBE9E1] text-stone-900 
+        font-black uppercase tracking-widest text-xs
+        border-2 border-transparent
+        shadow-[4px_4px_0px_0px_#b45309] 
+        hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#b45309]
+        hover:bg-white
+        active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+        transition-all duration-150
+      "
           >
             <Plus
               className="mr-2 text-amber-700 group-hover:rotate-90 transition-transform duration-300"
@@ -101,14 +103,27 @@ export function Sidebar() {
               strokeWidth={3}
             />
             <span>Add Vehicle</span>
-
-            {/* Corner Screws for the button */}
-            <div className="absolute top-1 left-1 w-0.5 h-0.5 bg-stone-400" />
-            <div className="absolute top-1 right-1 w-0.5 h-0.5 bg-stone-400" />
-            <div className="absolute bottom-1 left-1 w-0.5 h-0.5 bg-stone-400" />
-            <div className="absolute bottom-1 right-1 w-0.5 h-0.5 bg-stone-400" />
           </button>
-        </Link>
+        </Link> */}
+
+        {/* Logout Button */}
+        <button
+          onClick={() => authService.logout()}
+          className="
+      w-full group relative flex items-center justify-center
+      px-4 py-4 bg-red-700 text-white
+      font-black uppercase tracking-widest text-xs
+      border-2 border-transparent
+      shadow-[4px_4px_0px_0px_#7f1d1d]
+      hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#7f1d1d]
+      hover:bg-red-600
+      active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+      transition-all duration-150
+    "
+        >
+          <Wrench className="mr-2" size={16} strokeWidth={3} />
+          <span>Logout</span>
+        </button>
 
         <div className="mt-4 text-center">
           <span className="text-[9px] text-stone-600 font-mono uppercase">
