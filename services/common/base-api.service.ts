@@ -81,7 +81,7 @@ export abstract class BaseApiService<T> {
     data: Partial<T>,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response = await apiClient.patch<T>(
+    const response = await apiClient.put<T>(
       `${this.endpoint}/${id}`,
       data,
       config

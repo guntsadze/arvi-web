@@ -1,80 +1,116 @@
 "use client";
+import { Zap, Fuel, Calendar, Gauge, Settings, Car } from "lucide-react";
 
-import Image from "next/image";
-import Link from "next/link";
-import { Heart, Eye } from "lucide-react";
+export const CarCard = ({ car, onClick }) => {
+  const getFuelIcon = (fuelType) => {
+    switch (fuelType) {
+      case "ELECTRIC":
+      case "HYBRID":
+      case "PLUGIN_HYBRID":
+        return <Zap className="w-4 h-4" />;
+      default:
+        return <Fuel className="w-4 h-4" />;
+    }
+  };
 
-interface CarCardProps {
-  car: any;
-}
-
-export function CarCard({ car }: CarCardProps) {
   return (
-    <Link href={`/cars/${car.id}`}>
-      <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-        {/* Image */}
-        <div className="relative aspect-[4/3]">
-          <Image
-            src={car.coverImage || car.images?.[0] || "/car-placeholder.png"}
-            alt={`${car.make} ${car.model}`}
-            fill
-            className="object-cover"
-          />
+    <div
+      onClick={onClick}
+      className="group relative bg-[#f2f0e9] min-h-[400px] flex flex-col shadow-xl transition-transform hover:-translate-y-2 duration-300 cursor-pointer"
+    >
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#e8dcc0] opacity-90 rotate-1 shadow-sm z-20" />
+
+      <div className="h-40 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-500 to-black" />
+        <Car className="w-20 h-20 text-stone-600 group-hover:text-amber-500 transition-colors duration-500" />
+
+        <div className="absolute top-2 right-2 flex flex-col gap-1">
           {car.isProject && (
-            <div className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-              PROJECT
-            </div>
+            <span className="bg-amber-600 text-stone-900 text-[10px] font-black uppercase px-2 py-0.5 shadow-sm">
+              Project
+            </span>
           )}
-        </div>
-
-        {/* Info */}
-        <div className="p-4">
-          <h3 className="font-bold text-lg mb-1">
-            {car.make} {car.model}
-          </h3>
-
-          {car.nickname && (
-            <p className="text-sm text-gray-600 mb-2">"{car.nickname}"</p>
+          {car.isPublic ? (
+            <span className="bg-stone-300 text-stone-900 text-[10px] font-bold uppercase px-2 py-0.5 shadow-sm">
+              Public
+            </span>
+          ) : (
+            <span className="bg-red-900 text-white text-[10px] font-bold uppercase px-2 py-0.5 shadow-sm">
+              Private
+            </span>
           )}
-
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-            <span>{car.year}</span>
-            <span>•</span>
-            <span>{car.fuelType}</span>
-            {car.horsepower && (
-              <>
-                <span>•</span>
-                <span>{car.horsepower}HP</span>
-              </>
-            )}
-          </div>
-
-          {/* Owner */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Image
-                src={car.user.avatar || ""}
-                alt={car.user.firstName}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
-              <span className="text-sm">{car.user.username}</span>
-            </div>
-
-            <div className="flex items-center gap-3 text-gray-500 text-sm">
-              <div className="flex items-center gap-1">
-                <Heart size={16} />
-                {car.likesCount}
-              </div>
-              <div className="flex items-center gap-1">
-                <Eye size={16} />
-                {car.viewsCount}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-    </Link>
+
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="mb-6 border-b border-stone-300 pb-4">
+          <h3 className="text-sm font-bold text-stone-500 uppercase tracking-widest mb-1">
+            {car.make}
+          </h3>
+          <p className="text-3xl font-black text-stone-900 uppercase leading-none truncate">
+            {car.model}
+          </p>
+        </div>
+
+        <div className="space-y-3 font-mono text-xs text-stone-600">
+          <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
+            <span className="flex items-center gap-2">
+              <Calendar size={14} /> YEAR
+            </span>
+            <span className="font-bold text-stone-900 text-sm">{car.year}</span>
+          </div>
+
+          {car.horsepower && (
+            <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
+              <span className="flex items-center gap-2">
+                <Gauge size={14} /> POWER
+              </span>
+              <span className="font-bold text-stone-900 text-sm">
+                {car.horsepower} HP
+              </span>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
+            <span className="flex items-center gap-2">
+              {getFuelIcon(car.fuelType)} FUEL
+            </span>
+            <span className="font-bold text-stone-900">{car.fuelType}</span>
+          </div>
+
+          <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
+            <span className="flex items-center gap-2">
+              <Settings size={14} /> TRANS
+            </span>
+            <span className="font-bold text-stone-900">{car.transmission}</span>
+          </div>
+
+          {car.mileage && (
+            <div className="flex justify-between items-center pt-2">
+              <span className="uppercase tracking-widest text-[10px]">
+                Odometer:
+              </span>
+              <span className="font-bold text-stone-800 bg-stone-200 px-2 py-0.5 rounded-sm">
+                {car.mileage.toLocaleString()} km
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-stone-200 p-2 text-center border-t border-stone-300">
+        <span className="font-mono text-[10px] text-stone-400 uppercase tracking-[0.2em]">
+          ID: {car.id.toString().slice(-6)}
+        </span>
+      </div>
+
+      {/* Click to View Indicator */}
+      <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/10 transition-colors pointer-events-none" />
+      <div className="absolute bottom-16 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="text-xs font-mono text-amber-700 uppercase tracking-wider">
+          Click to View →
+        </span>
+      </div>
+    </div>
   );
-}
+};
