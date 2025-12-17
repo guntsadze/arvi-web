@@ -37,10 +37,7 @@ class AuthService {
     }
 
     if (token && typeof document !== "undefined") {
-      Cookie.set("token", token, {
-        path: "/",
-        expires: new Date(Date.now() + 8 * 60 * 60 * 1000),
-      });
+      Cookie.set("token", token);
     }
 
     return response.data;
@@ -57,10 +54,7 @@ class AuthService {
     }
 
     if (token && typeof document !== "undefined") {
-      Cookie.set("token", token, {
-        path: "/",
-        expires: new Date(Date.now() + 8 * 60 * 60 * 1000),
-      });
+      Cookie.set("token", token);
     }
     return response.data;
   }
