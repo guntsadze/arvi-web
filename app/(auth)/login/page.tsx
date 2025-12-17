@@ -43,8 +43,6 @@ export default function LoginPage() {
 
   return (
     <AuthForm
-      title="🚗 შესვლა"
-      subtitle="შესვლა შენს ანგარიშში"
       onSubmit={handleSubmit(onLogin)}
       isLoading={isLoading}
       globalError={globalError}

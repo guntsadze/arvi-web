@@ -43,8 +43,6 @@ export default function RegisterPage() {
 
   return (
     <AuthForm
-      title="✍️ რეგისტრაცია"
-      subtitle="შექმენი ახალი ანგარიში"
       onSubmit={handleSubmit(onRegister)}
       isLoading={isLoading}
       globalError={globalError}
