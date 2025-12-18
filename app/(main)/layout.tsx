@@ -1,3 +1,4 @@
+import { RightPanel } from "@/components/layout/RightPanel";
 import { Sidebar } from "@/components/layout/Sidebar";
 
 export default function MainLayout({
@@ -10,6 +11,7 @@ export default function MainLayout({
       <div className="flex">
         <Sidebar />
         <main className="flex-1">{children}</main>
+        <RightPanel />
       </div>
     </div>
   );
