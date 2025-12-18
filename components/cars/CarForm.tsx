@@ -11,6 +11,8 @@ import {
   FileText,
   Fingerprint,
   Image as ImageIcon,
+  Search, // დავამატეთ Search აიქონი
+  Loader2, // დავამატეთ Loader აიქონი
 } from "lucide-react";
 import { RuggedInput } from "@/components/ui/RuggedInput";
 import { RuggedTextarea } from "@/components/ui/RuggedTextarea";
@@ -43,13 +45,15 @@ const TabButton = ({ active, onClick, icon: Icon, label, error }) => (
 
 export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
   const isEditing = !!initialData;
-  const [activeTab, setActiveTab] = useState("identity"); // 'identity', 'specs', 'registration', 'visuals'
+  const [activeTab, setActiveTab] = useState("identity");
+  const [isDecodingVin, setIsDecodingVin] = useState(false); // VIN ლოადერი
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    watch,
     trigger,
   } = useForm({
     defaultValues: {
@@ -75,12 +79,97 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
     },
   });
 
+  // VIN ველის მნიშვნელობის კონტროლი
+  const vinValue = watch("vin");
+
   useEffect(() => {
     if (initialData) {
       const { id, createdAt, updatedAt, userId, ...rest } = initialData;
       Object.keys(rest).forEach((key) => setValue(key, rest[key]));
     }
   }, [initialData, setValue]);
+
+  // --- NHTSA VIN DECODER LOGIC ---
+  const handleVinDecode = async () => {
+    if (!vinValue || vinValue.length < 11) {
+      alert("Please enter a valid VIN (at least 11 chars) before checking.");
+      return;
+    }
+
+    setIsDecodingVin(true);
+    try {
+      // NHTSA API მოთხოვნა
+      const response = await fetch(
+        `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/${vinValue}?format=json`
+      );
+      const data = await response.json();
+      const results = data.Results;
+
+      // დამხმარე ფუნქცია მნიშვნელობის ამოსაღებად
+      const getVal = (variableName) => {
+        const item = results.find((r) => r.Variable === variableName);
+        return item ? item.Value : null;
+      };
+
+      // 1. Core Identity (Make, Model, Year)
+      const make = getVal("Make");
+      const model = getVal("Model");
+      const year = getVal("Model Year");
+
+      if (make) setValue("make", make);
+      if (model) setValue("model", model);
+      if (year) setValue("year", year);
+
+      // 2. Specs Mapping
+      const fuel = getVal("Fuel Type - Primary"); // მაგ: "Gasoline", "Diesel"
+      const drive = getVal("Drive Type"); // მაგ: "RWD", "4WD"
+      const hp = getVal("Engine Brake (hp) From"); // ზოგჯერ სხვა ველშია
+      const displacement = getVal("Displacement (L)"); // მაგ: "3.0"
+      const bodyClass = getVal("Body Class"); // მაგ: "Sedan/Saloon"
+
+      // Fuel Mapping (შენს Select ოფშენებზე მორგება)
+      if (fuel) {
+        if (fuel.includes("Gasoline")) setValue("fuelType", "PETROL");
+        else if (fuel.includes("Diesel")) setValue("fuelType", "DIESEL");
+        else if (fuel.includes("Electric")) setValue("fuelType", "ELECTRIC");
+      }
+
+      // Drive Type Mapping
+      if (drive) {
+        if (drive.includes("Rear")) setValue("driveType", "RWD");
+        else if (drive.includes("Front")) setValue("driveType", "FWD");
+        else if (drive.includes("All") || drive.includes("4WD"))
+          setValue("driveType", "AWD");
+      }
+
+      // Other Specs
+      if (hp) setValue("horsepower", parseInt(hp));
+      if (displacement) setValue("engine", `${displacement}L`);
+
+      // Body Type (მარტივი ლოგიკა)
+      if (bodyClass) {
+        const bodyUpper = bodyClass.toUpperCase();
+        if (bodyUpper.includes("SEDAN")) setValue("bodyType", "SEDAN");
+        else if (bodyUpper.includes("COUPE")) setValue("bodyType", "COUPE");
+        else if (bodyUpper.includes("WAGON")) setValue("bodyType", "WAGON");
+        else if (bodyUpper.includes("HATCHBACK"))
+          setValue("bodyType", "HATCHBACK");
+        else if (bodyUpper.includes("SUV") || bodyUpper.includes("TRUCK"))
+          setValue("bodyType", "SUV");
+      }
+
+      alert("Vehicle specs decoded successfully!");
+      // სურვილის შემთხვევაში გადავიყვანოთ Identity ტაბზე რომ ნახოს შედეგი
+      // setActiveTab("identity");
+    } catch (error) {
+      console.error("NHTSA API Error:", error);
+      alert(
+        "Failed to decode VIN. Please check internet connection or VIN validity."
+      );
+    } finally {
+      setIsDecodingVin(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -94,11 +183,9 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
 
       let savedCar;
       if (isEditing) {
-        // Mock update logic or service call
         console.log("Updating:", payload);
         savedCar = { ...initialData, ...payload };
-        const carId = initialData.id;
-        await carsService.update(carId, savedCar);
+        await carsService.update(initialData.id, savedCar);
       } else {
         savedCar = await carsService.create(payload);
       }
@@ -109,9 +196,7 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
     }
   };
 
-  // ამოწმებს ველებს ტაბების გადართვისას (ოპციონალური)
-  const handleTabChange = async (tab) => {
-    // const isValid = await trigger(); // თუ გინდა რომ გადასვლისას ვალიდაცია მოხდეს
+  const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
@@ -120,9 +205,8 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
       {/* Background Grid */}
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#44403c_1px,transparent_1px)] [background-size:20px_20px]" />
 
-      {/* Main Modal Container - Fixed Size */}
       <div className="relative z-10 w-full max-w-5xl h-[600px] bg-[#e3e1d5] flex shadow-2xl overflow-hidden border-2 border-stone-600">
-        {/* LEFT SIDEBAR (Navigation) */}
+        {/* LEFT SIDEBAR */}
         <div className="w-64 bg-[#151413] flex flex-col border-r-2 border-stone-800">
           <div className="p-6 border-b border-stone-800">
             <div className="flex items-center gap-2 mb-1">
@@ -174,9 +258,8 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
           </div>
         </div>
 
-        {/* RIGHT SIDE (Content Form) */}
+        {/* RIGHT SIDE */}
         <div className="flex-1 flex flex-col bg-[#292524] relative">
-          {/* Header Bar inside Content */}
           <div className="h-16 border-b border-stone-700 flex items-center justify-between px-8 bg-[#201d1b]">
             <span className="text-amber-600 font-mono text-xs uppercase tracking-[0.2em]">
               {activeTab === "identity" &&
@@ -193,7 +276,6 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
             </button>
           </div>
 
-          {/* SCROLLABLE CONTENT AREA (Only inputs scroll if needed, but designed to fit) */}
           <form
             id="car-form"
             onSubmit={handleSubmit(onSubmit)}
@@ -202,11 +284,10 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
             {/* TAB 1: IDENTITY */}
             {activeTab === "identity" && (
               <div className="grid grid-cols-2 gap-x-8 gap-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="col-span-2 mb-4 p-4 bg-stone-800/30 border border-stone-700/50">
+                <div className="col-span-2 mb-4 p-4 bg-stone-800/30 border border-stone-700/50 flex justify-between items-center">
                   <p className="text-stone-400 text-xs font-mono">
-                    Please provide the core manufacturing details. Fields marked
-                    with <span className="text-amber-600">*</span> are mandatory
-                    for database indexing.
+                    Use the <strong>Registration</strong> tab to auto-fill these
+                    fields via VIN decoder.
                   </p>
                 </div>
                 <RuggedInput
@@ -247,10 +328,10 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
             {activeTab === "specs" && (
               <div className="grid grid-cols-2 gap-x-8 gap-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <RuggedInput
-                  label="Engine Code"
+                  label="Engine Code / Displacement"
                   name="engine"
                   register={register}
-                  placeholder="S50B30"
+                  placeholder="3.0L / S50B30"
                 />
                 <RuggedSelect
                   label="Fuel Type"
@@ -297,17 +378,41 @@ export const CarForm = ({ onClose, onCarSaved, initialData = null }) => {
               </div>
             )}
 
-            {/* TAB 3: REGISTRATION */}
+            {/* TAB 3: REGISTRATION & VIN */}
             {activeTab === "registration" && (
               <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="grid grid-cols-2 gap-8">
-                  <RuggedInput
-                    label="VIN / Chassis"
-                    name="vin"
-                    register={register}
-                    placeholder="WBS..."
-                    fullWidth
-                  />
+                  {/* VIN INPUT WITH DECODER BUTTON */}
+                  <div className="col-span-2 flex items-end gap-2">
+                    <div className="flex-1">
+                      <RuggedInput
+                        label="VIN / Chassis"
+                        name="vin"
+                        register={register}
+                        placeholder="WBS..."
+                        fullWidth
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleVinDecode}
+                      disabled={isDecodingVin || !vinValue}
+                      className="mb-[2px] h-[52px] px-6 bg-stone-800 border border-stone-600 hover:border-amber-600 hover:text-amber-500 text-stone-400 transition-all flex items-center justify-center"
+                      title="Decode VIN from NHTSA"
+                    >
+                      {isDecodingVin ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Search className="w-5 h-5" />
+                          <span className="text-xs font-mono uppercase hidden sm:inline">
+                            Decode
+                          </span>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+
                   <RuggedInput
                     label="License Plate"
                     name="licensePlate"
