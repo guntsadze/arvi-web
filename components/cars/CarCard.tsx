@@ -16,7 +16,11 @@ export const CarCard = ({ car, onClick }) => {
       className="group relative bg-[#f2f0e9] min-h-[450px] flex flex-col shadow-xl transition-all hover:-translate-y-2 duration-300 cursor-pointer border border-stone-300"
     >
       {/* ზედა დეკორატიული "წებოვანი ლენტი" */}
-      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#e8dcc0] opacity-90 rotate-1 shadow-sm z-20 border-x border-stone-400/20" />
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#e8dcc0] opacity-90 rotate-1 shadow-sm z-20 border-x border-stone-400/20 flex justify-center items-center">
+        <span className="text-stone-900 font-semibold text-sm drop-shadow-sm">
+          {car.licensePlate}
+        </span>
+      </div>
 
       {/* სურათის/Header-ის სექცია */}
       <div className="h-44 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
@@ -24,10 +28,15 @@ export const CarCard = ({ car, onClick }) => {
 
         {/* Nickname "Badge" */}
         {car.nickname && (
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 left-4 z-10 flex flex-col">
             <span className="bg-amber-500 text-stone-900 text-[10px] font-black px-2 py-1 rounded-sm shadow-lg uppercase tracking-tighter">
               "{car.nickname}"
             </span>
+            {car.description && (
+              <span className="bg-white/10 text-stone-400 text-[9px] font-mono px-1 border border-white/10 mt-1">
+                {car.description}
+              </span>
+            )}
           </div>
         )}
 
@@ -48,11 +57,11 @@ export const CarCard = ({ car, onClick }) => {
           >
             {car.isPublic ? "Public" : "Private"}
           </span>
-          {car.licensePlate && (
+          {/* {car.licensePlate && (
             <span className="bg-white/10 text-stone-400 text-[9px] font-mono px-1 border border-white/10 mt-1">
               {car.licensePlate}
             </span>
-          )}
+          )} */}
         </div>
       </div>
 

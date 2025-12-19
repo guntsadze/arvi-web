@@ -28,7 +28,7 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-[#1c1917] z-50">
+    <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-[#1c1917] z-50 flex flex-col">
       {/* Background */}
       <BackgroundGrid />
 
@@ -37,11 +37,13 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
         {car.make}
       </div>
 
-      {/* Header */}
-      <CarHeader viewMode={viewMode} onBackClick={handleBackClick} />
+      {/* Header - Fixed Height (e.g., 64px) */}
+      <div className="relative z-20 flex-none">
+        <CarHeader viewMode={viewMode} onBackClick={handleBackClick} />
+      </div>
 
-      {/* Content */}
-      <div className="h-[calc(100vh-64px)] overflow-hidden">
+      {/* Content - Takes remaining height */}
+      <div className="flex-1 relative z-10 overflow-hidden">
         {viewMode === "overview" ? (
           <CarOverview
             car={car}

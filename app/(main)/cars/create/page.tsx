@@ -20,20 +20,6 @@ export default function CarCollectionPage() {
     setIsFormOpen(true);
   };
 
-  const handleCarSaved = (savedCar) => {
-    setCars((prev) => {
-      const exists = prev.find((c) => c.id === savedCar.id);
-      if (exists) {
-        // Update existing
-        return prev.map((c) => (c.id === savedCar.id ? savedCar : c));
-      }
-      // Add new
-      return [savedCar, ...prev];
-    });
-    setIsFormOpen(false);
-    setEditingCar(null);
-  };
-
   useEffect(() => {
     loadCars();
   }, []);
@@ -102,8 +88,8 @@ export default function CarCollectionPage() {
         {isFormOpen && (
           <CarForm
             onClose={() => setIsFormOpen(false)}
-            onCarSaved={handleCarSaved}
-            initialData={editingCar} // <--- გადავცემთ მონაცემებს
+            onSuccess={loadCars}
+            initialData={editingCar}
           />
         )}
 

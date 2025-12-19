@@ -14,8 +14,8 @@ import { CarFormProps } from "@/types/carForm.types";
 
 export const CarForm: React.FC<CarFormProps> = ({
   onClose,
-  onCarSaved,
   initialData,
+  onSuccess,
 }) => {
   const {
     register,
@@ -25,7 +25,7 @@ export const CarForm: React.FC<CarFormProps> = ({
     isEditing,
   } = useCarForm({
     initialData,
-    onSuccess: onCarSaved,
+    onSuccess,
     onClose,
   });
 

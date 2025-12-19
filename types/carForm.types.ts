@@ -22,6 +22,6 @@ export interface CarFormData {
 
 export interface CarFormProps {
   onClose: () => void;
-  onCarSaved: (car: any) => void;
   initialData?: any;
+  onSuccess: () => void;
 }
