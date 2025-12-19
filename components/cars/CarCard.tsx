@@ -69,10 +69,10 @@ export const CarCard = ({ car, onClick }) => {
         {/* სათაური */}
         <div className="mb-4 border-b-2 border-stone-900 pb-2">
           <h3 className="text-xs font-bold text-stone-500 uppercase tracking-[0.2em]">
-            {car.make}
+            {car.model}
           </h3>
           <p className="text-3xl font-black text-stone-900 uppercase leading-none truncate">
-            {car.model}
+            {car.make}
           </p>
         </div>
 
