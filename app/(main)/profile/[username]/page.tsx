@@ -1,21 +1,19 @@
 import { usersService } from "@/services/user/user.service";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import {
   MapPin,
-  Link as LinkIcon,
-  Calendar,
-  Mail,
   ShieldCheck,
-  Settings,
   MessageSquare,
   UserPlus,
   Clock,
-  Hash,
+  Trophy,
+  Zap,
+  Activity,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
+import ImageUploader from "@/components/ui/ImageUploader";
 
 type Props = {
   params: Promise<{
@@ -27,255 +25,208 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const user = await usersService.getByUsername(username);
 
-  console.log("Fetched User:", user);
+  console.log(user);
 
   if (!user) {
     notFound();
   }
 
-  // თარიღის ფორმატირება
   const joinDate = user.createdAt
-    ? format(new Date(user.createdAt), "d MMMM, yyyy", { locale: ka })
+    ? format(new Date(user.createdAt), "MMMM, yyyy", { locale: ka })
     : "უცნობია";
 
-  const lastUpdate = user.updatedAt
-    ? format(new Date(user.updatedAt), "dd/MM/yyyy", { locale: ka })
-    : "N/A";
-
   return (
-    <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] pb-20 pt-10 px-4">
-      {/* Main Container - The "Dossier" Folder */}
-      <div className="mx-auto relative group">
-        {/* Backing Shadow Layer */}
-        <div
-          className="absolute inset-0 bg-black/80 transform translate-x-2 translate-y-2 lg:translate-x-4 lg:translate-y-4 rounded-sm"
-          style={{ filter: "url(#rugged-tear-profile)" }}
-        />
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-orange-500/30">
+      {/* Carbon Fiber Background */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
 
-        {/* Content Layer */}
-        <div
-          className="relative bg-[#dcd8c8] min-h-[600px] overflow-hidden rounded-sm"
-          style={{ filter: "url(#rugged-tear-profile)" }}
-        >
-          {/* --- TOP SECTION: Cover & Header --- */}
-          <div className="relative">
-            {/* Cover Photo Area (Industrial Mesh Pattern if null) */}
-            <div className="h-48 w-full bg-[#292524] relative border-b-4 border-stone-800">
-              {user.coverPhoto ? (
-                <Image
-                  src={user.coverPhoto}
-                  alt="Cover"
-                  fill
-                  className="object-cover opacity-80"
-                />
-              ) : (
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]" />
-              )}
+      {/* Profile Header Area */}
+      <div className="relative h-[350px] md:h-[450px] w-full overflow-hidden">
+        {/* COVER PHOTO SECTION */}
+        <div className="absolute top-6 right-6 z-30">
+          <ImageUploader userId={user.id} type="cover" />
+        </div>
 
-              {/* Decorative Overlay */}
-              <div className="absolute top-4 right-4 bg-stone-900/80 px-3 py-1 border border-stone-600">
-                <span className="text-[10px] font-mono text-amber-500 tracking-widest uppercase">
-                  SECURE FILE: #{user.id.slice(-6).toUpperCase()}
-                </span>
-              </div>
-            </div>
+        {user.coverPhoto ? (
+          <Image
+            src={user.coverPhoto?.url}
+            alt="Cover"
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-800 to-[#0a0a0a]" />
+        )}
 
-            {/* Avatar & Main Info Row */}
-            <div className="px-6 md:px-10 pb-6 relative flex flex-col md:flex-row items-end md:items-center gap-6 -mt-16">
-              {/* Avatar Container */}
-              <div className="relative group/avatar">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-[6px] border-[#dcd8c8] bg-stone-800 shadow-xl overflow-hidden relative z-10">
+        {/* Shadow Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
+
+        {/* Identity Section */}
+        <div className="absolute bottom-0 left-0 w-full px-4 md:px-10 pb-10">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end gap-6">
+            {/* AVATAR SECTION */}
+            <div className="relative group">
+              <div className="w-32 h-32 md:w-44 md:h-44 relative">
+                <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
+                <div className="relative w-full h-full rounded-2xl border-4 border-orange-500 overflow-hidden bg-neutral-900 shadow-2xl">
                   <Image
-                    src={user.avatar || "/default-avatar.png"}
+                    src={user.avatar?.url || "/default-avatar.png"}
                     alt={user.username}
                     fill
                     className="object-cover"
                   />
-                </div>
-                {/* Status Indicator */}
-                <div
-                  className={`absolute bottom-2 right-2 z-20 w-6 h-6 rounded-full border-4 border-[#dcd8c8] ${
-                    user.showOnlineStatus ? "bg-green-500" : "bg-stone-500"
-                  }`}
-                />
-
-                {/* Verification Badge */}
-                {user.isVerified && (
-                  <div
-                    className="absolute -top-2 -right-2 z-20 bg-blue-600 text-white p-1.5 rounded-full border-2 border-[#dcd8c8] shadow-md"
-                    title="Verified Driver"
-                  >
-                    <ShieldCheck size={20} />
+                  {/* Avatar Upload Overlay */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
+                    <ImageUploader userId={user.id} type="avatar" />
                   </div>
+                </div>
+                {user.showOnlineStatus && (
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20" />
                 )}
               </div>
+            </div>
 
-              {/* Name & Role */}
-              <div className="flex-1 pt-16 md:pt-0 mb-4 md:mb-0">
-                <h1 className="text-3xl md:text-4xl font-black text-stone-900 uppercase tracking-tight flex items-center gap-3">
+            {/* User Info */}
+            <div className="flex-1 mb-2">
+              <div className="flex items-center gap-3 mb-1">
+                <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">
                   {user.firstName} {user.lastName}
                 </h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-stone-600 font-mono text-lg tracking-wide">
-                    @{user.username}
-                  </p>
-
-                  {/* Role Tag */}
-                  <span
-                    className={`
-                        text-[10px] font-bold px-2 py-0.5 border rounded-sm uppercase tracking-wider
-                        ${
-                          user.role === "ADMIN"
-                            ? "bg-red-900/10 text-red-800 border-red-800"
-                            : "bg-stone-400/20 text-stone-600 border-stone-500"
-                        }
-                     `}
-                  >
-                    {user.role}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 mb-4 md:mb-0 w-full md:w-auto">
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-stone-800 text-[#EBE9E1] font-black uppercase tracking-widest text-xs shadow-[4px_4px_0px_0px_#b45309] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#b45309] active:shadow-none transition-all">
-                  <UserPlus size={16} /> Follow
-                </button>
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 border-2 border-stone-800 text-stone-800 font-black uppercase tracking-widest text-xs hover:bg-stone-800 hover:text-[#EBE9E1] transition-colors">
-                  <MessageSquare size={16} /> Msg
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* --- MIDDLE SECTION: Grid Layout --- */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-6 md:px-10 py-8 border-t-2 border-stone-400 border-dashed">
-            {/* LEFT COLUMN: Personal Specs */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* Bio / Manifesto */}
-              <div className="bg-[#f2f0e9] p-4 border border-stone-300 shadow-sm relative rotate-1">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-[#d4c5a3] opacity-60" />{" "}
-                {/* Tape */}
-                <h3 className="text-xs font-black text-stone-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                  <Hash size={12} /> Driver's Manifesto
-                </h3>
-                <p className="font-serif text-stone-800 text-sm leading-relaxed italic">
-                  {user.bio ||
-                    "No personal records found in the archive. This driver prefers to stay anonymous."}
-                </p>
-              </div>
-
-              {/* Technical Data List */}
-              <div className="space-y-3 font-mono text-xs text-stone-700">
-                {user.location && (
-                  <div className="flex items-center gap-3">
-                    <MapPin size={14} className="text-amber-600" />
-                    <span className="uppercase">{user.location}</span>
-                  </div>
+                {user.isVerified && (
+                  <ShieldCheck className="text-blue-500 w-6 h-6 md:w-8 md:h-8" />
                 )}
-                {user.website && (
-                  <div className="flex items-center gap-3">
-                    <LinkIcon size={14} className="text-amber-600" />
-                    <a
-                      href={user.website}
-                      target="_blank"
-                      className="hover:underline text-blue-800 truncate"
-                    >
-                      {user.website}
-                    </a>
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  <Mail size={14} className="text-amber-600" />
-                  <span className="truncate">{user.email}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Calendar size={14} className="text-amber-600" />
-                  <span>Joined: {joinDate}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock size={14} className="text-stone-400" />
-                  <span className="text-stone-500">
-                    Last Update: {lastUpdate}
-                  </span>
-                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-neutral-400 font-mono text-sm">
+                <span className="text-orange-500 font-bold">
+                  @{user.username}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin size={14} /> {user.location || "Earth"}
+                </span>
+                <span className="bg-neutral-800 px-2 py-0.5 rounded text-[10px] border border-neutral-700 uppercase tracking-widest text-white">
+                  {user.role}
+                </span>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Dashboard & Stats */}
-            <div className="lg:col-span-2">
-              {/* Dashboard Gauges (Stats) */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                <StatBox label="Posts" value={user.postsCount} />
-                <StatBox label="Followers" value={user.followersCount} />
-                <StatBox label="Following" value={user.followingCount} />
-              </div>
-
-              {/* Empty State / Content Area Placeholder */}
-              <div className="border-4 border-double border-stone-300 min-h-[200px] flex flex-col items-center justify-center p-8 text-center bg-[#e6e4dc]">
-                <Settings className="w-10 h-10 text-stone-400 mb-2 animate-spin-slow" />
-                <h3 className="text-stone-600 font-bold uppercase tracking-widest text-sm">
-                  Activity Log
-                </h3>
-                <p className="text-stone-500 font-mono text-xs mt-1">
-                  Recent check-ins and maintenance records will appear here.
-                </p>
-              </div>
+            {/* Actions */}
+            <div className="flex gap-3 w-full md:w-auto pb-2">
+              <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-black font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg]">
+                <span className="inline-block skew-x-[12deg] flex items-center gap-2">
+                  <UserPlus size={18} /> Follow
+                </span>
+              </button>
+              <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg]">
+                <span className="inline-block skew-x-[12deg]">
+                  <MessageSquare size={18} />
+                </span>
+              </button>
             </div>
-          </div>
-
-          {/* Footer of the Dossier */}
-          <div className="bg-[#292524] p-2 flex justify-between items-center px-6">
-            <span className="text-[10px] text-stone-500 font-mono uppercase">
-              ID: {user.id}
-            </span>
-            <span className="text-[10px] text-stone-500 font-mono uppercase">
-              Provider: {user.provider}
-            </span>
           </div>
         </div>
       </div>
 
-      {/* SVG Filters (Specific for Profile) */}
-      <svg className="fixed w-0 h-0 pointer-events-none" aria-hidden="true">
-        <defs>
-          <filter
-            id="rugged-tear-profile"
-            x="-20%"
-            y="-20%"
-            width="140%"
-            height="140%"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.04"
-              numOctaves="4"
-              result="noise"
+      {/* Dashboard Grid */}
+      <div className="max-w-7xl mx-auto px-4 md:px-10 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Sidebar */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="grid grid-cols-3 gap-2">
+            <StatCard
+              label="Posts"
+              value={user.postsCount || 0}
+              icon={<Activity size={14} />}
             />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="4"
-              xChannelSelector="R"
-              yChannelSelector="G"
+            <StatCard
+              label="Followers"
+              value={user.followersCount || 0}
+              icon={<Trophy size={14} />}
             />
-          </filter>
-        </defs>
-      </svg>
+            <StatCard
+              label="Following"
+              value={user.followingCount || 0}
+              icon={<Zap size={14} />}
+            />
+          </div>
+
+          <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-xl">
+            <h3 className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+              <div className="w-1 h-4 bg-orange-500" /> Driver's Statement
+            </h3>
+            <p className="text-neutral-300 leading-relaxed font-light">
+              {user.bio || "No telemetry data recorded for this driver."}
+            </p>
+          </div>
+
+          <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-xl space-y-4">
+            <div className="flex items-center justify-between text-sm border-b border-neutral-800 pb-2">
+              <span className="text-neutral-500 uppercase font-mono">
+                Status
+              </span>
+              <span className="text-green-500 font-mono">Active</span>
+            </div>
+            <div className="flex items-center justify-between text-sm border-b border-neutral-800 pb-2">
+              <span className="text-neutral-500 uppercase font-mono">
+                Joined
+              </span>
+              <span className="text-neutral-200 font-mono">{joinDate}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-neutral-500 uppercase font-mono">
+                System ID
+              </span>
+              <span className="text-neutral-600 font-mono text-[10px]">
+                {user.id.slice(0, 15)}...
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="lg:col-span-8 space-y-6">
+          <div className="flex gap-8 border-b border-neutral-800 mb-6 font-mono text-[10px] tracking-widest">
+            <button className="pb-4 border-b-2 border-orange-500 text-white font-bold uppercase">
+              Telemetry Feed
+            </button>
+            <button className="pb-4 text-neutral-500 uppercase">Garage</button>
+            <button className="pb-4 text-neutral-500 uppercase">
+              Achievements
+            </button>
+          </div>
+
+          <div className="aspect-video w-full rounded-2xl border-2 border-dashed border-neutral-800 flex flex-col items-center justify-center opacity-50">
+            <Clock className="text-neutral-700 mb-2" size={32} />
+            <span className="text-neutral-500 font-mono text-xs uppercase tracking-widest">
+              Awaiting activity log...
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// Helper Component for Stats
-function StatBox({ label, value }: { label: string; value: number }) {
+function StatCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+}) {
   return (
-    <div className="bg-stone-800 p-4 border-2 border-stone-600 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center group hover:border-amber-600 transition-colors">
-      <span className="text-3xl font-black text-[#EBE9E1] font-mono group-hover:text-amber-500 transition-colors">
-        {value}
-      </span>
-      <span className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mt-1">
-        {label}
-      </span>
+    <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl hover:border-orange-500/50 transition-all group">
+      <div className="flex items-center gap-2 text-neutral-500 mb-1 group-hover:text-orange-500 transition-colors">
+        {icon}
+        <span className="text-[10px] uppercase font-black tracking-tighter">
+          {label}
+        </span>
+      </div>
+      <div className="text-2xl font-black italic tracking-tighter font-mono">
+        {value.toLocaleString()}
+      </div>
     </div>
   );
 }

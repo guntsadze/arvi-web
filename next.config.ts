@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["www.bmwgroup-classic.com"],
+    domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
   },
 };
 

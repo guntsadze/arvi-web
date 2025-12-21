@@ -23,6 +23,23 @@ class UsersService extends BaseApiService<User> {
   findAll(params: { page: number; pageSize: number }) {
     return apiClient.get(`${this.endpoint}`);
   }
+
+  async uploadAvatar(userId: string, data: { file: string }) {
+    return apiClient.post(`/users/${userId}/avatar`, data);
+  }
+
+  async uploadCover(userId: string, data: { file: string }) {
+    return apiClient.post(`/users/${userId}/cover`, data);
+  }
+
+  // 🗑 Delete methods
+  async deleteAvatar(userId: string) {
+    return apiClient.delete(`${this.endpoint}/${userId}/avatar`);
+  }
+
+  async deleteCover(userId: string) {
+    return apiClient.delete(`${this.endpoint}/${userId}/cover`);
+  }
 }
 
 export const usersService = new UsersService();
