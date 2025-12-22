@@ -36,7 +36,7 @@ export function Sidebar() {
   }, [isOpen]);
 
   const links = [
-    { href: "/", icon: Car, label: "მთავარი" },
+    // { href: "/", icon: Car, label: "მთავარი" },
     { href: "/feed", icon: Home, label: "სიახლეები" },
     { href: "/user", icon: Users, label: "ავტომოყვარულები" },
     { href: "/cars/create", icon: Car, label: "ავტომობილები" },
