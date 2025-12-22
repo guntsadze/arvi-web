@@ -22,47 +22,16 @@ export const CarCard = ({ car, onClick }) => {
         </span>
       </div>
 
-      {/* სურათის/Header-ის სექცია */}
       <div className="h-44 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-500 to-black" />
-
-        {/* Nickname "Badge" */}
-        {car.nickname && (
-          <div className="absolute top-4 left-4 z-10 flex flex-col">
-            <span className="bg-amber-500 text-stone-900 text-[10px] font-black px-2 py-1 rounded-sm shadow-lg uppercase tracking-tighter">
-              "{car.nickname}"
-            </span>
-            {car.description && (
-              <span className="bg-white/10 text-stone-400 text-[9px] font-mono px-1 border border-white/10 mt-1">
-                {car.description}
-              </span>
-            )}
-          </div>
+        {car.photos && car.photos.length > 0 ? (
+          <img
+            src={car.photos[0].url} // პირველი სურათი
+            alt={car.make + " " + car.model}
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <Car className="w-24 h-24 text-stone-700 group-hover:text-amber-500 transition-colors duration-500" />
         )}
-
-        <Car className="w-24 h-24 text-stone-700 group-hover:text-amber-500 transition-colors duration-500" />
-
-        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-          {car.isProject && (
-            <span className="bg-amber-600 text-stone-900 text-[10px] font-black uppercase px-2 py-0.5 shadow-sm">
-              Project
-            </span>
-          )}
-          <span
-            className={`${
-              car.isPublic
-                ? "bg-stone-300 text-stone-900"
-                : "bg-red-900 text-white"
-            } text-[10px] font-bold uppercase px-2 py-0.5 shadow-sm`}
-          >
-            {car.isPublic ? "Public" : "Private"}
-          </span>
-          {/* {car.licensePlate && (
-            <span className="bg-white/10 text-stone-400 text-[9px] font-mono px-1 border border-white/10 mt-1">
-              {car.licensePlate}
-            </span>
-          )} */}
-        </div>
       </div>
 
       <div className="p-6 flex-1 flex flex-col">

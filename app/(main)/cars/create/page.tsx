@@ -28,7 +28,7 @@ export default function CarCollectionPage() {
     try {
       setIsLoading(true);
       const data = await carsService.search();
-      setCars(data.data.data);
+      setCars(data.data);
     } catch (error) {
       console.error("Error loading cars:", error);
     } finally {
@@ -87,8 +87,16 @@ export default function CarCollectionPage() {
         {/* ADD CAR FORM */}
         {isFormOpen && (
           <CarForm
-            onClose={() => setIsFormOpen(false)}
-            onSuccess={loadCars}
+            key={editingCar?.id || "new"} // <--- დაამატეთ ეს
+            onClose={() => {
+              setIsFormOpen(false);
+              setEditingCar(null); // აუცილებლად გაასუფთავეთ რედაქტირების შემდეგ
+            }}
+            onSuccess={() => {
+              loadCars();
+              setIsFormOpen(false);
+              setEditingCar(null);
+            }}
             initialData={editingCar}
           />
         )}

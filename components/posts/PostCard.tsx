@@ -23,7 +23,6 @@ import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
 import { postsService } from "@/services/posts/posts.service";
 
-// ... (Interface-ები რჩება იგივე)
 interface Comment {
   id: string;
   content: string;
@@ -44,7 +43,6 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, refresh }: PostCardProps) {
-  // ... (State და ლოგიკა რჩება უცვლელი)
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
     isSaved: post.isSaved || false,
@@ -56,6 +54,8 @@ export function PostCard({ post, refresh }: PostCardProps) {
     editingReplyId: null as string | null,
     editingPost: false,
   });
+
+  console.log(post.saved, "statestatestate");
 
   const commentForm = useForm<{ content: string }>({
     defaultValues: { content: "" },
@@ -74,23 +74,22 @@ export function PostCard({ post, refresh }: PostCardProps) {
     if (state.showComments) fetchComments();
   }, [state.showComments]);
 
-  // ... (API ფუნქციები იგივეა: fetchComments, handleLike, handleSave, handleDeletePost, handleUpdatePost, handleAddComment, handleEditComment, handleDeleteComment)
   const fetchComments = async () => {
     try {
       const res = await postsService.getComments(post.id.toString());
-      setPartialState({ comments: res.data || [] });
+
+      const data = Array.isArray(res) ? res : res.data || [];
+
+      setPartialState({ comments: data });
     } catch (err) {
-      console.error(err);
+      console.error("Fetch error:", err);
     }
   };
 
   const handleLike = async () => {
     try {
       await postsService.likePost(post.id);
-      setPartialState({
-        isLiked: !state.isLiked,
-        likesCount: state.isLiked ? state.likesCount - 1 : state.likesCount + 1,
-      });
+      refresh?.();
     } catch (err) {
       console.error(err);
     }
@@ -99,7 +98,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
   const handleSave = async () => {
     try {
       await postsService.savePost(post.id);
-      setPartialState({ isSaved: !state.isSaved });
+      refresh();
     } catch (err) {
       console.error(err);
     }
@@ -134,7 +133,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
       await postsService.addComment(post.id.toString(), data.content, parentId);
       commentForm.reset();
       fetchComments();
-      setPartialState({ replyTo: null });
+      refresh();
     } catch (err) {
       console.error(err);
     }
@@ -160,12 +159,11 @@ export function PostCard({ post, refresh }: PostCardProps) {
     try {
       await postsService.deleteComment(commentId);
       fetchComments();
+      // refresh();
     } catch (err) {
       console.error(err);
     }
   };
-
-  const rootComments = state.comments.filter((c) => !c.parentId);
 
   // --- VISUAL RENDER ---
   return (
@@ -173,7 +171,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
       {/* Container Frame */}
       <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-600 transition-colors duration-300 relative overflow-hidden">
         {/* Decorative Side Bar */}
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-700 to-transparent opacity-50" />
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-700 to-transparent" />
 
         {/* HEADER */}
         <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-[#1c1917]">
@@ -183,7 +181,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
           >
             <div className="relative p-0.5 bg-stone-800 border border-stone-600">
               <Image
-                src={post.user.avatar || "/default-avatar.png"}
+                src={post.user.avatar?.url || "/default-avatar.png"}
                 alt={post.user.firstName}
                 width={40}
                 height={40}
@@ -260,13 +258,16 @@ export function PostCard({ post, refresh }: PostCardProps) {
           <button
             onClick={handleLike}
             className={`flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase transition-colors hover:bg-stone-800 ${
-              state.isLiked
+              post.likesCount > 0
                 ? "text-red-500"
                 : "text-stone-500 hover:text-red-500"
             }`}
           >
-            <Heart size={16} className={state.isLiked ? "fill-current" : ""} />
-            <span>{state.likesCount}</span>
+            <Heart
+              size={16}
+              className={post.likesCount > 0 ? "fill-current" : ""}
+            />
+            <span>{post.likesCount}</span>
           </button>
 
           <button
@@ -276,7 +277,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
             className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-stone-500 hover:text-amber-500 hover:bg-stone-800 transition-colors border-l border-stone-800"
           >
             <MessageCircle size={16} />
-            <span>{post.commentsCount}</span>
+            <span>{post._count.comments}</span>
           </button>
 
           <button className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-stone-500 hover:text-blue-500 hover:bg-stone-800 transition-colors border-l border-stone-800">
@@ -299,7 +300,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
             <button
               onClick={handleSave}
               className={`${
-                state.isSaved
+                post.saved
                   ? "text-amber-600"
                   : "text-stone-600 hover:text-amber-600"
               }`}
@@ -315,7 +316,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
         {/* COMMENTS SECTION */}
         {state.showComments && (
           <div className="bg-[#151413] border-t border-stone-800 p-6 shadow-inner">
-            {/* Input */}
+            {/* Input Form */}
             <form
               onSubmit={commentForm.handleSubmit((data) =>
                 handleAddComment(data)
@@ -339,19 +340,21 @@ export function PostCard({ post, refresh }: PostCardProps) {
             </form>
 
             <div className="space-y-6 pl-2">
-              {rootComments.map((c) => (
+              {/* ყურადღება: აქ ვიყენებთ state.comments-ს */}
+              {state.comments.map((c) => (
                 <div key={c.id} className="relative group/comment">
                   {/* Vertical Line for Thread */}
                   <div className="absolute left-4 top-8 bottom-0 w-px bg-stone-800 group-last/comment:hidden" />
 
                   <div className="flex gap-4">
-                    <Image
-                      src={c.user.avatar || "/default-avatar.png"}
-                      alt={c.user.firstName}
-                      width={32}
-                      height={32}
-                      className="rounded-none border border-stone-600 h-8 w-8 object-cover grayscale opacity-70"
-                    />
+                    <div className="relative h-8 w-8 min-w-[32px]">
+                      <Image
+                        src={c.user.avatar?.url || "/default-avatar.png"}
+                        alt={c.user.firstName}
+                        fill
+                        className="border border-stone-600 object-cover grayscale opacity-70"
+                      />
+                    </div>
 
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2 mb-1">
@@ -361,6 +364,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         <span className="text-[9px] text-stone-700 font-mono">
                           {formatDistanceToNow(new Date(c.createdAt), {
                             addSuffix: true,
+                            locale: ka,
                           })}
                         </span>
                       </div>
@@ -374,7 +378,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         >
                           <input
                             {...editCommentForm.register("content")}
-                            className="flex-1 bg-stone-800 border border-stone-600 text-[#EBE9E1] text-xs px-2 py-1"
+                            className="flex-1 bg-stone-800 border border-stone-600 text-[#EBE9E1] text-xs px-2 py-1 focus:outline-none"
                             autoFocus
                           />
                           <button type="submit" className="text-amber-600">
@@ -387,6 +391,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         </p>
                       )}
 
+                      {/* Actions */}
                       <div className="flex gap-4 opacity-40 group-hover/comment:opacity-100 transition-opacity">
                         <button
                           onClick={() => setPartialState({ replyTo: c.id })}
@@ -421,77 +426,84 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         >
                           <input
                             {...commentForm.register("content")}
-                            placeholder="Reply..."
-                            className="flex-1 bg-stone-900 border border-stone-700 px-2 py-1 text-xs text-white"
+                            placeholder="Reply to log..."
+                            className="flex-1 bg-stone-900 border border-stone-700 px-2 py-1 text-xs text-white focus:outline-none"
                             autoFocus
                           />
                           <button
                             type="submit"
-                            className="text-[9px] text-amber-600 uppercase"
+                            className="text-[9px] text-amber-600 uppercase font-bold"
                           >
                             Send
                           </button>
                         </form>
                       )}
 
-                      {/* Nested Replies */}
-                      {c.replies?.map((r) => (
-                        <div key={r.id} className="mt-4 flex gap-3 relative">
-                          <div className="absolute -left-6 top-3 w-4 h-px bg-stone-700" />{" "}
-                          {/* Connector Line */}
-                          <div className="flex-1">
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-[9px] font-bold text-amber-700 uppercase">
-                                {r.user.firstName}
-                              </span>
-                              {state.editingReplyId === r.id ? (
-                                <form
-                                  onSubmit={editCommentForm.handleSubmit(
-                                    (data) =>
-                                      handleEditComment(r.id, data, true)
-                                  )}
-                                  className="flex-1 flex gap-2"
-                                >
-                                  <input
-                                    {...editCommentForm.register("content")}
-                                    className="flex-1 bg-stone-800 border border-stone-600 text-xs px-2"
-                                  />
-                                  <button type="submit">
-                                    <Save
-                                      size={12}
-                                      className="text-amber-600"
-                                    />
-                                  </button>
-                                </form>
-                              ) : (
-                                <span className="text-xs text-stone-500 font-mono">
+                      {/* Nested Replies Rendering */}
+                      {c.replies && c.replies.length > 0 && (
+                        <div className="mt-4 space-y-4 border-l border-stone-800 ml-4 pl-4">
+                          {c.replies.map((r) => (
+                            <div
+                              key={r.id}
+                              className="flex gap-3 relative group/reply"
+                            >
+                              {/* პატარა ხაზი გვერდზე */}
+                              <div className="absolute -left-4 top-3 w-3 h-px bg-stone-800" />
+
+                              <div className="relative h-6 w-6 min-w-[24px]">
+                                <Image
+                                  src={
+                                    r.user.avatar?.url || "/default-avatar.png"
+                                  }
+                                  alt={r.user.firstName}
+                                  fill
+                                  className="border border-stone-700 object-cover grayscale opacity-60"
+                                />
+                              </div>
+
+                              <div className="flex-1">
+                                <div className="flex items-baseline gap-2">
+                                  <span className="text-[9px] font-bold text-amber-700/80 uppercase">
+                                    {r.user.firstName} {r.user.lastName}
+                                  </span>
+                                  <span className="text-[8px] text-stone-600 font-mono">
+                                    {formatDistanceToNow(
+                                      new Date(r.createdAt),
+                                      { addSuffix: true, locale: ka }
+                                    )}
+                                  </span>
+                                </div>
+
+                                <p className="text-xs text-stone-400 font-mono leading-relaxed">
                                   {r.content}
-                                </span>
-                              )}
+                                </p>
+
+                                {/* Reply-ს მოქმედებები (Edit/Delete) */}
+                                <div className="flex gap-3 mt-1 opacity-0 group-hover/reply:opacity-100 transition-opacity">
+                                  <button
+                                    onClick={() => {
+                                      editCommentForm.setValue(
+                                        "content",
+                                        r.content
+                                      );
+                                      setPartialState({ editingReplyId: r.id });
+                                    }}
+                                    className="text-[8px] text-stone-600 hover:text-blue-500 uppercase"
+                                  >
+                                    [Edit]
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteComment(r.id)}
+                                    className="text-[8px] text-stone-600 hover:text-red-500 uppercase"
+                                  >
+                                    [Del]
+                                  </button>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex gap-2 mt-1 opacity-0 group-hover/comment:opacity-100">
-                              <button
-                                onClick={() => {
-                                  editCommentForm.setValue(
-                                    "content",
-                                    r.content
-                                  );
-                                  setPartialState({ editingReplyId: r.id });
-                                }}
-                                className="text-[8px] text-stone-600 hover:text-blue-500"
-                              >
-                                [Edit]
-                              </button>
-                              <button
-                                onClick={() => handleDeleteComment(r.id)}
-                                className="text-[8px] text-stone-600 hover:text-red-500"
-                              >
-                                [Del]
-                              </button>
-                            </div>
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>

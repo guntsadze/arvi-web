@@ -14,8 +14,7 @@ import {
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import ImageUploader from "@/components/ui/ImageUploader";
-import { postsService } from "@/services/posts/posts.service";
-import { PostCard } from "@/components/posts/PostCard";
+import { UserPosts } from "./UserPosts";
 
 type Props = {
   params: Promise<{
@@ -26,10 +25,6 @@ type Props = {
 export default async function Page({ params }: Props) {
   const { username } = await params;
   const user = await usersService.getByUsername(username);
-
-  const posts = await postsService.getByUserId(user.id, 1, 10);
-
-  console.log(posts);
 
   if (!user) {
     notFound();
@@ -201,9 +196,7 @@ export default async function Page({ params }: Props) {
 
           <div className="p-2">
             <span className="text-neutral-500 font-mono text-xs uppercase tracking-widest">
-              {posts.data.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+              <UserPosts userId={user.id} />
             </span>
           </div>
         </div>

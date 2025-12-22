@@ -24,20 +24,48 @@ export const useCarForm = ({
   const { reset, handleSubmit, formState } = formMethods;
 
   useEffect(() => {
-    if (initialData) {
-      const { id, createdAt, updatedAt, userId, ...rest } = initialData;
-      reset(rest);
-    }
+    if (!initialData) return;
+
+    const { id, createdAt, updatedAt, userId, photos, coverPhoto, ...rest } =
+      initialData;
+
+    reset({
+      ...rest,
+      photos: photos ?? [], // ✅ მხოლოდ საჩვენებლად
+    });
   }, [initialData, reset]);
 
   const onSubmit = async (data: CarFormData) => {
-    const payload = {
+    const newPhotos = (data.photos || []).filter(
+      (p) => typeof p === "string" && p.startsWith("data:")
+    );
+
+    const oldPhotos = initialData?.photos || [];
+
+    // შედარება მხოლოდ URL-ების მიხედვით
+    const oldPhotoUrls = oldPhotos.map((p) => p.url);
+    const currentPhotoUrls = (data.photos || []).map((p) =>
+      typeof p === "string" ? p : p.url
+    );
+
+    const hasChangedPhotos =
+      newPhotos.length > 0 || // ახალი Base64 სურათები
+      oldPhotoUrls.length !== currentPhotoUrls.length || // რაოდენობა განსხვავდება
+      !oldPhotoUrls.every((url, idx) => url === currentPhotoUrls[idx]); // URL შეიცვალა
+
+    const payload: any = {
       ...data,
       year: Number(data.year),
       horsepower: data.horsepower ? Number(data.horsepower) : null,
       torque: data.torque ? Number(data.torque) : null,
       mileage: data.mileage ? Number(data.mileage) : null,
     };
+
+    if (hasChangedPhotos) {
+      payload.photos = newPhotos.length > 0 ? newPhotos : currentPhotoUrls;
+    } else {
+      delete payload.photos; // იგივე სურათები → არ გავაგზავნოთ
+    }
 
     if (isEditing) {
       await carsService.update(initialData.id, payload);

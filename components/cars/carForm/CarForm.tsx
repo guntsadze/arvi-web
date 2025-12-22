@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { FormHeader } from "./shared/FormHeader";
 import { FormSection } from "./shared/FormSection";
@@ -11,6 +11,7 @@ import { DescriptionSection } from "./sections/DescriptionSection";
 import { ClassificationSection } from "./sections/ClassificationSection";
 import { useCarForm } from "@/hooks/useCarForm";
 import { CarFormProps } from "@/types/carForm.types";
+import { Watch } from "react-hook-form";
 
 export const CarForm: React.FC<CarFormProps> = ({
   onClose,
@@ -19,6 +20,7 @@ export const CarForm: React.FC<CarFormProps> = ({
 }) => {
   const {
     register,
+    control,
     onSubmit,
     formState: { errors },
     isSubmitting,
@@ -50,7 +52,7 @@ export const CarForm: React.FC<CarFormProps> = ({
 
           {/* Description & Images */}
           <FormSection title="Manifest & Visuals" />
-          <DescriptionSection register={register} />
+          <DescriptionSection register={register} control={control} />
 
           {/* Classification */}
           <FormSection title="System Classification" />
