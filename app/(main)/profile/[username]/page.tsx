@@ -14,6 +14,8 @@ import {
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import ImageUploader from "@/components/ui/ImageUploader";
+import { postsService } from "@/services/posts/posts.service";
+import { PostCard } from "@/components/posts/PostCard";
 
 type Props = {
   params: Promise<{
@@ -25,7 +27,9 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const user = await usersService.getByUsername(username);
 
-  console.log(user);
+  const posts = await postsService.getByUserId(user.id, 1, 10);
+
+  console.log(posts);
 
   if (!user) {
     notFound();
@@ -195,10 +199,11 @@ export default async function Page({ params }: Props) {
             </button>
           </div>
 
-          <div className="aspect-video w-full rounded-2xl border-2 border-dashed border-neutral-800 flex flex-col items-center justify-center opacity-50">
-            <Clock className="text-neutral-700 mb-2" size={32} />
+          <div className="p-2">
             <span className="text-neutral-500 font-mono text-xs uppercase tracking-widest">
-              Awaiting activity log...
+              {posts.data.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
             </span>
           </div>
         </div>

@@ -1,4 +1,3 @@
-// lib/services/base-api.service.ts
 import { apiClient } from "@/lib/api-client";
 import { AxiosRequestConfig } from "axios";
 

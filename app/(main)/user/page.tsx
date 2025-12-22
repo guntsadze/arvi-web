@@ -4,49 +4,82 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserPlus, ShieldCheck, MapPin, Hash, Shield } from "lucide-react";
 import { useEffect, useState } from "react";
-import { apiClient } from "@/lib/api-client";
+import { usersService } from "@/services/user/user.service";
 import { socialService } from "@/services/social/social.service";
 
-// 1. ტიპების განსაზღვრა
 type User = {
   id: string;
-  username: string;
+  username: string | null;
   email: string;
   firstName: string;
   lastName: string;
-  avatar: string | null;
-  coverPhoto: string | null;
+  avatar?: string | null;
+  coverPhoto?: string | null;
   role: "USER" | "ADMIN";
   isVerified: boolean;
   followersCount: number;
   postsCount: number;
-  location: string | null;
+  location?: string | null;
+  isFollowing?: boolean;
 };
 
 export default function Page() {
-  // თავიდანვე ვუთითებთ რომ ეს არის User-ების მასივი
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiClient
-      .get("/users")
-      .then((response) => {
-        // --- ცვლილება აქ არის ---
-        // ლოგის მიხედვით სტრუქტურაა: response.data.data
-        const usersArray = response.data?.data || [];
-        setUsers(usersArray);
-      })
-      .catch((err) => {
-        console.error("Error fetching users:", err);
-      });
-  }, []);
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const res = await usersService.findAll({ page: 1, pageSize: 50 });
 
-  console.log("Current Users State:", users);
+        // Debug: log the full response to see the structure
+        console.log("Full API Response:", res);
+        console.log("Response data:", res.data);
+
+        // Handle different possible response structures
+        let usersArray: User[] = [];
+
+        // If res.data has a 'data' property (nested structure)
+        if (res.data && res.data.data) {
+          usersArray = res.data.data;
+        }
+        // If res.data is already the array
+        else if (Array.isArray(res.data)) {
+          usersArray = res.data;
+        }
+        // If the response itself is the data object
+        else if (res.data) {
+          usersArray = res.data;
+        }
+
+        console.log("Parsed users array:", usersArray);
+        console.log(
+          "Users with null username:",
+          usersArray.filter((u) => !u.username)
+        );
+
+        // Filter out users without username or use email as fallback
+        const validUsers = usersArray.filter((user) => user.username !== null);
+
+        setUsers(validUsers);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("Failed to load users. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleFollow = async (userId: string) => {
     try {
       const res = await socialService.toggleFollow(userId);
-      const { following } = res.data; // backend უნდა აბრუნებდეს { following: true/false }
+      const { following } = res.data;
 
       setUsers((prev) =>
         prev.map((u) =>
@@ -66,9 +99,28 @@ export default function Page() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
+        <div className="max-w-7xl mx-auto text-center text-stone-500 font-mono py-20">
+          INITIALIZING DATABASE...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
+        <div className="max-w-7xl mx-auto text-center text-red-500 font-mono py-20">
+          ERROR: {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
-      {/* სათაური */}
       <div className="max-w-7xl mx-auto mb-10 border-b-4 border-double border-stone-700 pb-4">
         <h1 className="text-3xl md:text-5xl font-black text-[#dcd8c8] uppercase tracking-tighter flex items-center gap-4">
           <Hash className="text-amber-600" size={40} />
@@ -79,24 +131,19 @@ export default function Page() {
         </p>
       </div>
 
-      {/* ბარათების გრიდი */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* აქ დავამატე შემოწმება (Array.isArray), რათა დარწმუნებულები ვიყოთ რომ map იმუშავებს */}
-        {Array.isArray(users) && users.length > 0 ? (
+        {users.length > 0 ? (
           users.map((user) => (
             <div key={user.id} className="relative group">
-              {/* უკანა ჩრდილი/ფონი */}
               <div className="absolute inset-0 bg-stone-900 translate-x-2 translate-y-2 rounded-sm" />
-
-              {/* ბარათის შიგთავსი */}
               <div className="relative bg-[#dcd8c8] border border-stone-500 rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200">
-                {/* --- ზედა ნაწილი: Cover & Avatar --- */}
                 <div className="relative h-24 bg-stone-800 border-b-2 border-stone-600">
                   {user.coverPhoto ? (
                     <Image
                       src={user.coverPhoto}
                       alt="cover"
                       fill
+                      sizes="100vw"
                       className="object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   ) : (
@@ -115,8 +162,9 @@ export default function Page() {
                     <div className="w-20 h-20 rounded-full border-4 border-[#dcd8c8] bg-stone-700 relative overflow-hidden shadow-lg">
                       <Image
                         src={user.avatar || "/default-avatar.png"}
-                        alt={user.username}
+                        alt={user.username || "User"}
                         fill
+                        sizes="80px"
                         className="object-cover"
                       />
                     </div>
@@ -143,7 +191,7 @@ export default function Page() {
                       </span>
                     </div>
                     <p className="text-stone-600 font-mono text-xs mb-3">
-                      @{user.username}
+                      @{user.username || user.email.split("@")[0]}
                     </p>
 
                     <div className="flex items-center gap-4 py-2 border-t border-b border-stone-300 border-dashed">
@@ -183,20 +231,18 @@ export default function Page() {
                   <div className="mt-auto pb-5 flex gap-2">
                     <button
                       onClick={() => handleFollow(user.id)}
-                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 font-black uppercase tracking-widest text-[10px] transition-all
-    ${
-      user.isFollowing
-        ? "bg-amber-600 text-black shadow-[3px_3px_0px_0px_#000]"
-        : "bg-stone-800 text-[#EBE9E1] shadow-[3px_3px_0px_0px_#b45309]"
-    }
-  `}
+                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 font-black uppercase tracking-widest text-[10px] transition-all ${
+                        user.isFollowing
+                          ? "bg-amber-600 text-black shadow-[3px_3px_0px_0px_#000]"
+                          : "bg-stone-800 text-[#EBE9E1] shadow-[3px_3px_0px_0px_#b45309]"
+                      }`}
                     >
                       <UserPlus size={14} />
                       {user.isFollowing ? "Unfollow" : "Follow"}
                     </button>
 
                     <Link
-                      href={`/profile/${user.username}`}
+                      href={`/profile/${user.username || user.id}`}
                       className="flex items-center justify-center px-3 py-2 border-2 border-stone-800 text-stone-800 font-bold hover:bg-stone-200 transition-colors"
                       title="View Dossier"
                     >
@@ -208,9 +254,8 @@ export default function Page() {
             </div>
           ))
         ) : (
-          // თუ იუზერები ჯერ არ ჩატვირთულა ან ცარიელია
           <div className="col-span-full text-center text-stone-500 font-mono py-20">
-            INITIALIZING DATABASE... OR NO RECORDS FOUND.
+            NO PERSONNEL RECORDS FOUND IN DATABASE.
           </div>
         )}
       </div>

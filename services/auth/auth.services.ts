@@ -29,8 +29,8 @@ class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/login", credentials);
 
-    const token = response.data?.token;
-    const user = response.data?.user;
+    const token = response?.token;
+    const user = response?.user;
 
     if (user && typeof window !== "undefined") {
       localStorage.setItem("user", JSON.stringify(user));
@@ -40,14 +40,14 @@ class AuthService {
       Cookie.set("token", token);
     }
 
-    return response.data;
+    return response;
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await apiClient.post("/auth/register", data);
 
-    const token = response.data?.token;
-    const user = response.data?.user;
+    const token = response?.token;
+    const user = response?.user;
 
     if (user && typeof window !== "undefined") {
       localStorage.setItem("user", JSON.stringify(user));
@@ -56,7 +56,8 @@ class AuthService {
     if (token && typeof document !== "undefined") {
       Cookie.set("token", token);
     }
-    return response.data;
+
+    return response;
   }
 
   async getProfile() {

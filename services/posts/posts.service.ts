@@ -83,6 +83,13 @@ class PostsService extends BaseApiService<Posts> {
       `${this.endpoint}/${postId}/comments?page=${page}&limit=${limit}`
     );
   }
+
+  // USER POSTS (Profile)
+  getByUserId(userId: string, page = 1, limit = 10) {
+    return apiClient.get(
+      `${this.endpoint}/user/${userId}?page=${page}&limit=${limit}`
+    );
+  }
 }
 
 export const postsService = new PostsService();

@@ -1,4 +1,3 @@
-// services/social/social.service.ts
 import { apiClient } from "@/lib/api-client";
 import { BaseApiService } from "@/services/common/base-api.service";
 

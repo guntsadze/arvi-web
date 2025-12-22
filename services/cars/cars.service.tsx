@@ -49,7 +49,7 @@ class CarsService extends BaseApiService<Car> {
   protected endpoint = "/cars";
 
   getTrending(limit = 20) {
-    return apiClient.get<Car[]>(`/trending?limit=${limit}`);
+    return apiClient.get(`/trending?limit=${limit}`);
   }
 
   search(page = 1, limit = 20) {
@@ -57,7 +57,7 @@ class CarsService extends BaseApiService<Car> {
   }
 
   getUserGarage(userId: string) {
-    return apiClient.get<Car[]>(`/garage/${userId}`);
+    return apiClient.get(`/garage/${userId}`);
   }
 
   toggleLike(id: string) {

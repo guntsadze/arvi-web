@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client-HTTPONLY";
+import { apiClient } from "@/lib/api-client";
 import { BaseApiService } from "@/services/common/base-api.service";
 
 export interface User {

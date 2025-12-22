@@ -46,8 +46,8 @@ export default function FeedPage() {
         <PostForm refresh={refresh} />
 
         <div className="mt-16 space-y-8">
-          {posts.map((post: any) => (
-            <PostCard key={post.id} post={post} refresh={refresh} />
+          {posts.map((post: any, index: number) => (
+            <PostCard post={post} refresh={refresh} />
           ))}
 
           {loading && (
