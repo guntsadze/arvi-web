@@ -56,8 +56,10 @@ class CarsService extends BaseApiService<Car> {
     return apiClient.get(`${this.endpoint}/search?page=${page}&limit=${limit}`);
   }
 
-  getUserGarage(userId: string) {
-    return apiClient.get(`/garage/${userId}`);
+  getUserGarage(userId: string, page = 1, limit = 10) {
+    return apiClient.get(
+      `${this.endpoint}/garage/${userId}?page=${page}&limit=${limit}`
+    );
   }
 
   toggleLike(id: string) {

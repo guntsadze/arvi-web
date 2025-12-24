@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
-export function useInfiniteScroll<T>(
+export function useInfiniteScroll<T extends { id: string }>(
   fetchFn: (page: number) => Promise<any>,
   deps: any[] = []
 ) {
@@ -9,84 +9,80 @@ export function useInfiniteScroll<T>(
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const pageRef = useRef(page);
-  pageRef.current = page;
+  const loadedPages = useRef<Set<number>>(new Set());
+  const isInitialLoaded = useRef(false);
 
-  // მთავარი loadMore scroll-ისთვის
-  const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+  const mergeUnique = (prev: T[], next: T[]) => {
+    const map = new Map<string, T>();
+    [...prev, ...next].forEach((item) => map.set(item.id, item));
+    return Array.from(map.values());
+  };
 
-    setLoading(true);
-    try {
-      const response = await fetchFn(pageRef.current);
-      const newData = response.data.data || response.data;
-
-      if (!newData || newData.length === 0) {
-        setHasMore(false);
-      } else {
-        setData((prev) => [...prev, ...newData]);
-        setPage((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchFn, loading, hasMore]);
-
-  // ფუნქცია explicit page-ის ჩასატვირთად
-  const fetchPage = useCallback(
+  const loadPage = useCallback(
     async (pageNumber: number) => {
+      if (loading || !hasMore) return;
+      if (loadedPages.current.has(pageNumber)) return;
+
+      loadedPages.current.add(pageNumber);
       setLoading(true);
+
       try {
         const response = await fetchFn(pageNumber);
         const newData = response.data.data || response.data;
 
-        setData((prev) => [...prev, ...newData]);
+        if (!newData || newData.length === 0) {
+          setHasMore(false);
+          return;
+        }
+
+        setData((prev) => mergeUnique(prev, newData));
         setPage(pageNumber + 1);
-        setHasMore(newData.length > 0);
       } catch (error) {
-        console.error("Error fetching page:", error);
+        console.error("InfiniteScroll error:", error);
       } finally {
         setLoading(false);
       }
     },
-    [fetchFn]
+    [fetchFn, loading, hasMore]
   );
 
-  // Initial load
+  // Initial load (მხოლოდ ერთხელ)
   useEffect(() => {
-    loadMore();
+    if (isInitialLoaded.current) return;
+    isInitialLoaded.current = true;
+    loadPage(1);
   }, deps);
 
-  // Infinite scroll
+  // Scroll listener
   useEffect(() => {
     let lastCall = 0;
 
     const handleScroll = () => {
       const now = Date.now();
-      if (now - lastCall < 300) return; // 300ms throttle
+      if (now - lastCall < 300) return;
       lastCall = now;
 
       if (
         window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 1000
+        document.documentElement.scrollHeight - 800
       ) {
-        loadMore();
+        loadPage(page);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadMore]);
+  }, [loadPage, page]);
 
-  // Refresh ფუნქცია
+  // Refresh
   const refresh = useCallback(() => {
+    loadedPages.current.clear();
+    isInitialLoaded.current = false;
     setData([]);
     setPage(1);
     setHasMore(true);
-    fetchPage(1); // პირველად იტვირთება პირველი გვერდი
-  }, [fetchPage]);
+    loadPage(1);
+  }, [loadPage]);
 
-  return { data, loading, hasMore, loadMore, fetchPage, refresh };
+  return { data, loading, hasMore, refresh };
 }

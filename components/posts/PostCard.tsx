@@ -13,11 +13,8 @@ import {
   Edit2,
   CornerDownRight,
   MoreHorizontal,
-  X,
   Check,
-  Save,
   ShieldCheck,
-  Cpu,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
@@ -55,8 +52,6 @@ export function PostCard({ post, refresh }: PostCardProps) {
     editingPost: false,
   });
 
-  console.log(post.saved, "statestatestate");
-
   const commentForm = useForm<{ content: string }>({
     defaultValues: { content: "" },
   });
@@ -77,9 +72,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
   const fetchComments = async () => {
     try {
       const res = await postsService.getComments(post.id.toString());
-
       const data = Array.isArray(res) ? res : res.data || [];
-
       setPartialState({ comments: data });
     } catch (err) {
       console.error("Fetch error:", err);
@@ -88,8 +81,11 @@ export function PostCard({ post, refresh }: PostCardProps) {
 
   const handleLike = async () => {
     try {
-      await postsService.likePost(post.id);
-      refresh?.();
+      const res = await postsService.likePost(post.id);
+      setPartialState({
+        isLiked: res.liked,
+        likesCount: res.likesCount,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -97,8 +93,8 @@ export function PostCard({ post, refresh }: PostCardProps) {
 
   const handleSave = async () => {
     try {
-      await postsService.savePost(post.id);
-      refresh();
+      const res = await postsService.savePost(post.id);
+      setPartialState({ isSaved: res.saved });
     } catch (err) {
       console.error(err);
     }
@@ -116,11 +112,15 @@ export function PostCard({ post, refresh }: PostCardProps) {
 
   const handleUpdatePost = async (data: { content: string }) => {
     try {
-      await postsService.updatePost(post.id, data);
+      // ოპტიმისტური UI – პირდაპირ state-ში ვანახლებთ
       setPartialState({ editingPost: false });
-      refresh();
+      post.content = data.content; // სწრაფი ცვლილება UI-ში
+
+      // მერე ვუკავშირდებით სერვისს
+      await postsService.updatePost(post.id, data);
     } catch (err) {
       console.error(err);
+      // შეცდომის შემთხვევაში შეიძლება revert გავაკეთოთ
     }
   };
 
@@ -130,10 +130,26 @@ export function PostCard({ post, refresh }: PostCardProps) {
   ) => {
     if (!data.content.trim()) return;
     try {
-      await postsService.addComment(post.id.toString(), data.content, parentId);
+      const newComment = await postsService.addComment(
+        post.id,
+        data.content,
+        parentId
+      );
+      if (parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? { ...c, replies: [newComment, ...(c.replies || [])] }
+              : c
+          ),
+          replyTo: null,
+        });
+      } else {
+        setPartialState({
+          comments: [newComment, ...state.comments],
+        });
+      }
       commentForm.reset();
-      fetchComments();
-      refresh();
     } catch (err) {
       console.error(err);
     }
@@ -142,47 +158,86 @@ export function PostCard({ post, refresh }: PostCardProps) {
   const handleEditComment = async (
     commentId: string,
     data: { content: string },
-    isReply: boolean = false
+    isReply = false,
+    parentId?: string
   ) => {
     try {
-      await postsService.updateComment(commentId, data.content);
-      setPartialState({ editingCommentId: null, editingReplyId: null });
+      const updatedComment = await postsService.updateComment(
+        commentId,
+        data.content
+      );
+
+      if (isReply && parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? {
+                  ...c,
+                  replies: c.replies?.map((r) =>
+                    r.id === commentId
+                      ? { ...r, content: updatedComment.content }
+                      : r
+                  ),
+                }
+              : c
+          ),
+          editingReplyId: null,
+        });
+      } else {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === commentId ? { ...c, content: updatedComment.content } : c
+          ),
+          editingCommentId: null,
+        });
+      }
       editCommentForm.reset();
-      fetchComments();
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleDeleteComment = async (commentId: string) => {
-    if (!confirm("Delete trace?")) return;
+  const handleDeleteComment = async (
+    commentId: string,
+    isReply = false,
+    parentId?: string
+  ) => {
+    if (!confirm("Delete comment?")) return;
     try {
       await postsService.deleteComment(commentId);
-      fetchComments();
-      // refresh();
+
+      if (isReply && parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? { ...c, replies: c.replies?.filter((r) => r.id !== commentId) }
+              : c
+          ),
+        });
+      } else {
+        setPartialState({
+          comments: state.comments.filter((c) => c.id !== commentId),
+        });
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
-  // --- VISUAL RENDER ---
   return (
     <div className="relative mb-8 group/card">
-      {/* Container Frame */}
       <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-600 transition-colors duration-300 relative overflow-hidden">
-        {/* Decorative Side Bar */}
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-700 to-transparent" />
 
-        {/* HEADER */}
         <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-[#1c1917]">
           <Link
-            href={`/profile/${post.user.username}`}
+            href={`/profile/${post.user?.username}`}
             className="flex items-center gap-3 group/user"
           >
             <div className="relative p-0.5 bg-stone-800 border border-stone-600">
               <Image
-                src={post.user.avatar?.url || "/default-avatar.png"}
-                alt={post.user.firstName}
+                src={post.user?.avatar?.url || "/default-avatar.png"}
+                alt={post.user?.firstName}
                 width={40}
                 height={40}
                 className="grayscale group-hover/user:grayscale-0 transition-all"
@@ -211,14 +266,12 @@ export function PostCard({ post, refresh }: PostCardProps) {
               </p>
             </div>
           </Link>
-
           <MoreHorizontal
             className="text-stone-600 cursor-pointer hover:text-amber-600"
             size={20}
           />
         </div>
 
-        {/* CONTENT */}
         <div className="p-6 bg-[#201d1b]">
           {state.editingPost ? (
             <form
@@ -253,21 +306,20 @@ export function PostCard({ post, refresh }: PostCardProps) {
           )}
         </div>
 
-        {/* ACTIONS GRID */}
         <div className="grid grid-cols-2 md:grid-cols-4 border-t border-stone-800 bg-[#181615]">
           <button
             onClick={handleLike}
             className={`flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase transition-colors hover:bg-stone-800 ${
-              post.likesCount > 0
+              state.likesCount > 0
                 ? "text-red-500"
                 : "text-stone-500 hover:text-red-500"
             }`}
           >
             <Heart
               size={16}
-              className={post.likesCount > 0 ? "fill-current" : ""}
+              className={state.likesCount > 0 ? "fill-current" : ""}
             />
-            <span>{post.likesCount}</span>
+            <span>{state.likesCount}</span>
           </button>
 
           <button
@@ -300,7 +352,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
             <button
               onClick={handleSave}
               className={`${
-                post.saved
+                state.isSaved
                   ? "text-amber-600"
                   : "text-stone-600 hover:text-amber-600"
               }`}
@@ -313,10 +365,8 @@ export function PostCard({ post, refresh }: PostCardProps) {
           </div>
         </div>
 
-        {/* COMMENTS SECTION */}
         {state.showComments && (
           <div className="bg-[#151413] border-t border-stone-800 p-6 shadow-inner">
-            {/* Input Form */}
             <form
               onSubmit={commentForm.handleSubmit((data) =>
                 handleAddComment(data)
@@ -340,12 +390,10 @@ export function PostCard({ post, refresh }: PostCardProps) {
             </form>
 
             <div className="space-y-6 pl-2">
-              {/* ყურადღება: აქ ვიყენებთ state.comments-ს */}
               {state.comments.map((c) => (
                 <div key={c.id} className="relative group/comment">
                   {/* Vertical Line for Thread */}
                   <div className="absolute left-4 top-8 bottom-0 w-px bg-stone-800 group-last/comment:hidden" />
-
                   <div className="flex gap-4">
                     <div className="relative h-8 w-8 min-w-[32px]">
                       <Image
@@ -355,7 +403,6 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         className="border border-stone-600 object-cover grayscale opacity-70"
                       />
                     </div>
-
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2 mb-1">
                         <span className="font-bold text-[10px] uppercase text-stone-400 tracking-wider">
@@ -391,7 +438,6 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         </p>
                       )}
 
-                      {/* Actions */}
                       <div className="flex gap-4 opacity-40 group-hover/comment:opacity-100 transition-opacity">
                         <button
                           onClick={() => setPartialState({ replyTo: c.id })}
@@ -416,7 +462,6 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         </button>
                       </div>
 
-                      {/* Reply Input */}
                       {state.replyTo === c.id && (
                         <form
                           onSubmit={commentForm.handleSubmit((data) =>
@@ -439,7 +484,6 @@ export function PostCard({ post, refresh }: PostCardProps) {
                         </form>
                       )}
 
-                      {/* Nested Replies Rendering */}
                       {c.replies && c.replies.length > 0 && (
                         <div className="mt-4 space-y-4 border-l border-stone-800 ml-4 pl-4">
                           {c.replies.map((r) => (
@@ -447,9 +491,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
                               key={r.id}
                               className="flex gap-3 relative group/reply"
                             >
-                              {/* პატარა ხაზი გვერდზე */}
                               <div className="absolute -left-4 top-3 w-3 h-px bg-stone-800" />
-
                               <div className="relative h-6 w-6 min-w-[24px]">
                                 <Image
                                   src={
@@ -474,11 +516,37 @@ export function PostCard({ post, refresh }: PostCardProps) {
                                   </span>
                                 </div>
 
-                                <p className="text-xs text-stone-400 font-mono leading-relaxed">
-                                  {r.content}
-                                </p>
+                                {state.editingReplyId === r.id ? (
+                                  <form
+                                    onSubmit={editCommentForm.handleSubmit(
+                                      (data) =>
+                                        handleEditComment(
+                                          r.id,
+                                          data,
+                                          true,
+                                          c.id
+                                        )
+                                    )}
+                                    className="flex gap-2 mb-2"
+                                  >
+                                    <input
+                                      {...editCommentForm.register("content")}
+                                      className="flex-1 bg-stone-800 border border-stone-600 text-[#EBE9E1] text-xs px-2 py-1 focus:outline-none"
+                                      autoFocus
+                                    />
+                                    <button
+                                      type="submit"
+                                      className="text-amber-600"
+                                    >
+                                      <Check size={14} />
+                                    </button>
+                                  </form>
+                                ) : (
+                                  <p className="text-xs text-stone-400 font-mono leading-relaxed">
+                                    {r.content}
+                                  </p>
+                                )}
 
-                                {/* Reply-ს მოქმედებები (Edit/Delete) */}
                                 <div className="flex gap-3 mt-1 opacity-0 group-hover/reply:opacity-100 transition-opacity">
                                   <button
                                     onClick={() => {
@@ -493,7 +561,9 @@ export function PostCard({ post, refresh }: PostCardProps) {
                                     [Edit]
                                   </button>
                                   <button
-                                    onClick={() => handleDeleteComment(r.id)}
+                                    onClick={() =>
+                                      handleDeleteComment(r.id, true, c.id)
+                                    }
                                     className="text-[8px] text-stone-600 hover:text-red-500 uppercase"
                                   >
                                     [Del]

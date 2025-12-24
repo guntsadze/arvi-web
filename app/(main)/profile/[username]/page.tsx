@@ -14,7 +14,7 @@ import {
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import ImageUploader from "@/components/ui/ImageUploader";
-import { UserPosts } from "./UserPosts";
+import UserProfileTabs from "@/components/profile/UserProfileTabs";
 
 type Props = {
   params: Promise<{
@@ -184,20 +184,8 @@ export default async function Page({ params }: Props) {
 
         {/* Content Area */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="flex gap-8 border-b border-neutral-800 mb-6 font-mono text-[10px] tracking-widest">
-            <button className="pb-4 border-b-2 border-orange-500 text-white font-bold uppercase">
-              Telemetry Feed
-            </button>
-            <button className="pb-4 text-neutral-500 uppercase">Garage</button>
-            <button className="pb-4 text-neutral-500 uppercase">
-              Achievements
-            </button>
-          </div>
-
-          <div className="p-2">
-            <span className="text-neutral-500 font-mono text-xs uppercase tracking-widest">
-              <UserPosts userId={user.id} />
-            </span>
+          <div className="lg:col-span-8 space-y-6">
+            <UserProfileTabs userId={user.id} />
           </div>
         </div>
       </div>
