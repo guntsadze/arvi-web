@@ -11,7 +11,6 @@ import { DescriptionSection } from "./sections/DescriptionSection";
 import { ClassificationSection } from "./sections/ClassificationSection";
 import { useCarForm } from "@/hooks/useCarForm";
 import { CarFormProps } from "@/types/carForm.types";
-import { Watch } from "react-hook-form";
 
 export const CarForm: React.FC<CarFormProps> = ({
   onClose,
@@ -31,44 +30,62 @@ export const CarForm: React.FC<CarFormProps> = ({
     onClose,
   });
 
-  return (
-    <div className="fixed inset-0 bg-[#1c1917] z-50">
-      <BackgroundGrid />
+  // ბლოკავს ძირითადი გვერდის სქროლს, როცა ფორმა ღიაა
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
-      <div className="relative z-10 max-w-5xl mx-auto min-h-screen py-10 px-4">
+  return (
+    <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto scrollbar-hide">
+      {/* BackgroundGrid-ს ვსვამთ აბსოლუტურად, რომ მთელ სქროლვად სიმაღლეზე გაჰყვეს */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <BackgroundGrid />
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen flex flex-col">
         <FormHeader isEditing={isEditing} onClose={onClose} />
 
-        <form onSubmit={onSubmit} className="space-y-8 pb-20">
+        <form onSubmit={onSubmit} className="space-y-12 pb-24 flex-grow">
           {/* Identity */}
           <IdentitySection register={register} errors={errors} />
 
           {/* Technical Specs */}
-          <FormSection title="Technical Specifications" />
-          <TechnicalSection register={register} />
+          <div className="space-y-6">
+            <FormSection title="Technical Specifications" />
+            <TechnicalSection register={register} />
+          </div>
 
           {/* Registration */}
-          <FormSection title="Registration & Details" />
-          <RegistrationSection register={register} />
+          <div className="space-y-6">
+            <FormSection title="Registration & Details" />
+            <RegistrationSection register={register} />
+          </div>
 
           {/* Description & Images */}
-          <FormSection title="Manifest & Visuals" />
-          <DescriptionSection register={register} control={control} />
+          <div className="space-y-6">
+            <FormSection title="Manifest & Visuals" />
+            <DescriptionSection register={register} control={control} />
+          </div>
 
           {/* Classification */}
-          <FormSection title="System Classification" />
-          <ClassificationSection register={register} />
+          <div className="space-y-6">
+            <FormSection title="System Classification" />
+            <ClassificationSection register={register} />
+          </div>
 
           {/* Actions */}
-          <FormActions
-            isSubmitting={isSubmitting}
-            isEditing={isEditing}
-            onCancel={onClose}
-          />
+          <div className="pt-10 border-t border-stone-800">
+            <FormActions
+              isSubmitting={isSubmitting}
+              isEditing={isEditing}
+              onCancel={onClose}
+            />
+          </div>
         </form>
       </div>
-
-      {/* Scanning Line Effect */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-0" />
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
   isEditing,
   onClose,
 }) => (
-  <div className="flex items-center justify-between mb-12 border-b-2 border-stone-800 pb-6">
+  <div className="flex items-center justify-between mb-4 border-b-2 border-stone-800 pb-6">
     <div>
       <div className="flex items-center gap-2 mb-2">
         <Sparkles className="w-4 h-4 text-amber-600 animate-pulse" />

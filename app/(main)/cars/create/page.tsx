@@ -51,7 +51,7 @@ export default function CarCollectionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans selection:bg-amber-500 selection:text-stone-900 pb-20">
+    <div className="bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans selection:bg-amber-500 selection:text-stone-900 pb-20">
       {/* HEADER */}
       <div className="sticky top-0 z-30 border-b-4 border-stone-800 bg-[#1c1917]/95 backdrop-blur-sm shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
