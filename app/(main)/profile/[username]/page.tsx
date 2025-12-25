@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import ImageUploader from "@/components/ui/ImageUploader";
 import UserProfileTabs from "@/components/profile/UserProfileTabs";
+import MessageButton from "./MessageButton";
 
 type Props = {
   params: Promise<{
@@ -117,11 +118,7 @@ export default async function Page({ params }: Props) {
                   <UserPlus size={18} /> Follow
                 </span>
               </button>
-              <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg]">
-                <span className="inline-block skew-x-[12deg]">
-                  <MessageSquare size={18} />
-                </span>
-              </button>
+              <MessageButton userId={user.id} />
             </div>
           </div>
         </div>

@@ -1,0 +1,26 @@
+import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
+
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+export const useSocket = (conversationId?: string) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const s = io(SOCKET_URL);
+    setSocket(s);
+
+    if (conversationId) {
+      s.emit("joinConversation", conversationId);
+    }
+
+    return () => {
+      if (conversationId) {
+        s.emit("leaveConversation", conversationId);
+      }
+      s.disconnect();
+    };
+  }, [conversationId]);
+
+  return socket;
+};
