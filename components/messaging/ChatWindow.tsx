@@ -1,43 +1,116 @@
-import { useEffect, useState } from "react";
-import { useSocket } from "@/hooks/useSocket";
-import { messagingService } from "@/services/messaging.service";
+import { useEffect } from "react";
+import { Conversation } from "@/types/messaging.types";
+import { ChatHeader } from "./ChatHeader";
+import { MessageList } from "./MessageList";
+import { MessageInput } from "./MessageInput";
+import { TypingIndicator } from "./TypingIndicator";
+import { useMessages } from "@/hooks/useMessages";
+import { useTyping } from "@/hooks/useTyping";
+import { Socket } from "socket.io-client";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
-export const ChatWindow = ({
-  conversationId,
-  currentUser,
-}: {
-  conversationId: string;
-  currentUser: any;
-}) => {
-  const [messages, setMessages] = useState([]);
-  const socket = useSocket(conversationId); // სოკეტთან კავშირი
+interface ChatWindowProps {
+  conversation: Conversation;
+  socket: Socket | null;
+}
 
-  // საწყისი მესიჯების წამოღება
+export const ChatWindow = ({ conversation, socket }: ChatWindowProps) => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const partner = conversation.participants[0];
+
+  const {
+    messages,
+    loading,
+    loadMessages,
+    sendMessage,
+    addMessage,
+    markAsRead,
+  } = useMessages(conversation.id);
+
+  const {
+    typingUsers,
+    handleTypingStart,
+    handleTypingStop,
+    addTypingUser,
+    removeTypingUser,
+  } = useTyping(socket, conversation.id);
+
+  // მესიჯების ჩატვირთვა
   useEffect(() => {
-    messagingService.getMessages(conversationId).then((data) => {
-      setMessages(data.reverse());
-    });
-  }, [conversationId]);
+    loadMessages();
+    markAsRead();
+  }, [conversation.id, loadMessages, markAsRead]);
 
-  // რეალურ დროში ახალი მესიჯების მოსმენა
+  // Socket listeners
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("newMessage", (newMessage) => {
-      setMessages((prev) => [...prev, newMessage]);
-      // წავიკითხოთ ავტომატურად თუ ამ ჩატში ვართ
-      messagingService.markAsRead(conversationId);
-    });
+    const handleNewMessage = (msg: any) => {
+      if (msg?.conversationId === conversation.id) {
+        addMessage(msg);
+        markAsRead();
+      }
+    };
+
+    const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
+      if (data.userId === partner?.userId) {
+        if (data.isTyping) {
+          addTypingUser(data.userId);
+        } else {
+          removeTypingUser(data.userId);
+        }
+      }
+    };
+
+    socket.on("newMessage", handleNewMessage);
+    socket.on("userTyping", handleUserTyping);
+    socket.emit("joinConversation", conversation.id);
 
     return () => {
-      socket.off("newMessage");
+      socket.off("newMessage", handleNewMessage);
+      socket.off("userTyping", handleUserTyping);
+      socket.emit("leaveConversation", conversation.id);
     };
-  }, [socket, conversationId]);
+  }, [
+    socket,
+    conversation.id,
+    partner?.userId,
+    addMessage,
+    markAsRead,
+    addTypingUser,
+    removeTypingUser,
+  ]);
 
-  // გაგზავნის ფუნქცია (იგივე რჩება, რადგან Backend აგვარებს სოკეტში გადაცემას)
   const handleSend = async (content: string) => {
-    await messagingService.sendMessage({ conversationId, content });
+    await sendMessage(content);
+    handleTypingStop();
   };
 
-  // ... (UI კოდი იგივეა რაც წინა პასუხში)
+  const isPartnerTyping = typingUsers.has(partner?.userId || "");
+
+  if (!currentUser) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-neutral-400">იტვირთება...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      <ChatHeader partner={partner} />
+      <MessageList
+        messages={messages}
+        currentUserId={currentUser.id}
+        loading={loading}
+      />
+      {isPartnerTyping && (
+        <TypingIndicator
+          userName={partner?.user?.firstName || "მომხმარებელი"}
+        />
+      )}
+      <MessageInput onSend={handleSend} onTyping={handleTypingStart} />
+    </div>
+  );
 };

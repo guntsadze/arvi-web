@@ -12,7 +12,8 @@ import {
   Wrench,
   Car,
   Menu, // ჰამბურგერის აიქონი
-  X, // დახურვის აიქონი
+  X,
+  MessageCircle, // დახურვის აიქონი
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authService } from "@/services/auth/auth.services";
@@ -36,10 +37,11 @@ export function Sidebar() {
   }, [isOpen]);
 
   const links = [
-    // { href: "/", icon: Car, label: "მთავარი" },
+    { href: "/", icon: Car, label: "მთავარი" },
     { href: "/feed", icon: Home, label: "სიახლეები" },
     { href: "/user", icon: Users, label: "ავტომოყვარულები" },
     { href: "/cars/create", icon: Car, label: "ავტომობილები" },
+    { href: "/messages", icon: MessageCircle, label: "მესიჯები" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
