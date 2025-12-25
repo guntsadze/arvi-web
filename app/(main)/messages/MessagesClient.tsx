@@ -6,48 +6,58 @@ import {
   Message,
 } from "@/services/messaging.service";
 import { useSocket } from "@/hooks/useSocket";
-import { Hash, Send, ShieldCheck, Loader2 } from "lucide-react";
+import { Hash, Send, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
 export default function MessagingPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [activeConv, setActiveConv] = useState<Conversation | null>(null); // დავამატეთ სთეითი
+  const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
+
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set()); // ვინ წერს
+
   const searchParams = useSearchParams();
   const socket = useSocket(activeId || undefined);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 1. პირველადი ჩატვირთვა (Sidebar)
+  // 1. Sidebar - ჩატების ჩატვირთვა
   useEffect(() => {
     loadConversations();
   }, []);
 
-  // 2. URL-იდან ID-ის აღება
+  // 2. URL-დან ID-ის აღება
   useEffect(() => {
     const idFromQuery = searchParams.get("id");
     if (idFromQuery) setActiveId(idFromQuery);
   }, [searchParams]);
 
-  // 3. აქტიური საუბრის მართვა
+  // 3. აქტიური ჩატის სინქრონიზაცია
   useEffect(() => {
-    if (!activeId) return;
+    if (!activeId) {
+      setActiveConv(null);
+      setMessages([]);
+      return;
+    }
 
     const syncActiveConversation = async () => {
-      // ვეძებთ Sidebar-ის სიაში
       const foundInList = conversations.find((c) => c.id === activeId);
 
       if (foundInList) {
         setActiveConv(foundInList);
       } else {
-        // თუ სიაში არაა (ახალი შექმნილია), ბექენდიდან მოგვაქვს დეტალები
         try {
           const data = await messagingService.getConversationById(activeId);
           if (data) {
             setActiveConv(data);
-            setConversations((prev) => [data, ...prev]); // Sidebar-ში ჩამატება
+            setConversations((prev) => [
+              data,
+              ...prev.filter((c) => c.id !== data.id),
+            ]);
           }
         } catch (error) {
           console.error("ჩატის დეტალები ვერ ჩაიტვირთა", error);
@@ -59,35 +69,56 @@ export default function MessagingPage() {
     };
 
     syncActiveConversation();
-  }, [activeId, conversations.length]);
+  }, [activeId, conversations]);
 
-  // 4. Socket ლოგიკა
+  // 4. Socket ლოგიკა - newMessage + typing
   useEffect(() => {
     if (!socket || !activeId) return;
 
+    // ახალი მესიჯი
     const handleNewMessage = (msg: Message) => {
-      // ამოწმებს msg არსებობას და ეკუთვნის თუ არა ამ ჩატს
-      if (msg && msg.conversationId === activeId) {
-        setMessages((prev) => {
-          // უსაფრთხო ძებნა მასივში
-          const exists = prev.find((m) => m && m.id === msg.id);
-          if (exists) return prev;
+      if (msg?.conversationId !== activeId) return;
 
-          return [...prev, msg];
-        });
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === msg.id)) return prev;
+        return [...prev, msg];
+      });
 
-        setTimeout(() => {
-          scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
-      }
+      setTimeout(() => scrollToBottom(), 100);
+    };
+
+    // მეორე მხარე წერს
+    const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
+      const partnerId = activeConv?.participants[0]?.userId;
+      if (data.userId !== partnerId) return;
+      console.log("Typing received:", data);
+      setTypingUsers((prev) => {
+        const newSet = new Set(prev);
+        if (data.isTyping) {
+          newSet.add(data.userId);
+        } else {
+          newSet.delete(data.userId);
+        }
+        return newSet;
+      });
     };
 
     socket.on("newMessage", handleNewMessage);
+    socket.on("userTyping", handleUserTyping);
+
+    // join room
+    socket.emit("joinConversation", activeId);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
+      socket.off("userTyping", handleUserTyping);
+      socket.emit("leaveConversation", activeId);
     };
-  }, [socket, activeId]);
+  }, [socket, activeId, activeConv]);
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const loadConversations = async () => {
     const data = await messagingService.getConversations();
@@ -97,7 +128,6 @@ export default function MessagingPage() {
   const loadMessages = async (id: string) => {
     try {
       const data = await messagingService.getMessages(id);
-      // დაცვა: თუ data undefined-ია, ვიყენებთ ცარიელ მასივს
       const msgs = Array.isArray(data) ? data : [];
       setMessages([...msgs].reverse());
     } catch (error) {
@@ -106,21 +136,91 @@ export default function MessagingPage() {
     }
   };
 
+  // Typing emit ლოგიკა
+  const emitTyping = (typing: boolean) => {
+    if (!socket || !activeId) return;
+    socket.emit("typing", { conversationId: activeId, isTyping: typing });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (!isTyping) {
+      setIsTyping(true);
+      emitTyping(true);
+    }
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      emitTyping(false);
+    }, 1000);
+  };
+
+  // მესიჯის გაგზავნა + ოპტიმისტური UI
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || !activeId) return;
-    const content = inputValue;
+
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage: Message = {
+      id: tempId,
+      conversationId: activeId,
+      senderId: "me", // ან შენი current user ID
+      receiverId: partner?.userId || null,
+      content: inputValue.trim(),
+      createdAt: new Date().toISOString(),
+      type: "TEXT",
+      isRead: false,
+      // სხვა ველები რაც გჭირდება
+    } as Message;
+
+    // მაშინვე ვამატებთ UI-ში
+    setMessages((prev) => [...prev, optimisticMessage]);
     setInputValue("");
+    setIsTyping(false);
+    emitTyping(false);
+    scrollToBottom();
+
     try {
       const newMsg = await messagingService.sendMessage({
         conversationId: activeId,
-        content,
+        content: inputValue.trim(),
       });
-      setMessages((prev) => [...prev, newMsg]);
+
+      console.log(newMsg);
+
+      // დაცვა: თუ newMsg არ მოვიდა ან არ აქვს id
+      if (!newMsg || !newMsg.id) {
+        console.error("სერვერიდან მესიჯი არ მოვიდა სწორად");
+        return;
+      }
+
+      // ვანაცვლებთ დროებითს რეალურით — უსაფრთხოდ
+      setMessages((prev) =>
+        prev.map((m) => {
+          // ვამოწმებთ string-ად, რადგან tempId string-ია
+          if (m.id === tempId) {
+            return newMsg;
+          }
+          return m;
+        })
+      );
     } catch (err) {
-      console.error("გაგზავნის შეცდომა", err);
+      console.error("გაგზავნა ჩავარდა", err);
+
+      // ვშლით ოპტიმისტურ მესიჯს შეცდომის შემთხვევაში
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+
+      // სურვილისამებრ: მომხმარებელს აცნობე შეცდომა
+      // toast.error("მესიჯის გაგზავნა ჩაიშალა");
     }
   };
+
+  const partner = activeConv?.participants[0];
+  const isPartnerTyping = typingUsers.has(partner?.userId || "");
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-4 md:p-8 font-mono">
@@ -158,7 +258,7 @@ export default function MessagingPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-[10px] font-black uppercase truncate block">
-                        {user?.firstName}
+                        {user?.firstName ?? "Unknown"}
                       </span>
                       <p className="text-[9px] text-neutral-500 truncate italic">
                         SECURE_LINK_ACTIVE
@@ -175,47 +275,43 @@ export default function MessagingPage() {
         <div className="flex-1 bg-neutral-900/30 border border-neutral-800 flex flex-col relative overflow-hidden">
           {activeConv ? (
             <>
-              <div className="p-4 border-b border-neutral-800 bg-neutral-900/80 backdrop-blur-md flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 border border-orange-500/50 overflow-hidden relative">
-                    <Image
-                      src={
-                        activeConv.participants[0]?.user.avatar?.url ||
-                        "/default-avatar.png"
-                      }
-                      alt="avatar"
-                      fill
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-1">
-                      {activeConv.participants[0]?.user.firstName}{" "}
-                      {activeConv.participants[0]?.user.lastName}
-                      {activeConv.participants[0]?.user.isVerified && (
-                        <ShieldCheck size={12} className="text-blue-500" />
-                      )}
-                    </h3>
-                    <span className="text-[8px] text-green-500 animate-pulse">
-                      ● ENCRYPTED
-                    </span>
+              <div className="p-4 border-b border-neutral-800 bg-neutral-900/80 backdrop-blur-md flex flex-col">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 border border-orange-500/50 overflow-hidden relative">
+                      <Image
+                        src={partner?.user.avatar?.url || "/default-avatar.png"}
+                        alt="avatar"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-1">
+                        {partner?.user.firstName} {partner?.user.lastName}
+                        {partner?.user.isVerified && (
+                          <ShieldCheck size={12} className="text-blue-500" />
+                        )}
+                      </h3>
+                      <span className="text-[8px] text-green-500 animate-pulse">
+                        ● ENCRYPTED
+                      </span>
+                    </div>
                   </div>
                 </div>
+
+                {/* Typing Indicator */}
+                {isPartnerTyping && (
+                  <div className="mt-2 text-xs text-orange-500 animate-pulse italic">
+                    {partner?.user.firstName} წერს...
+                  </div>
+                )}
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {messages.map((msg, index) => {
-                  // 1. დაზღვევა: თუ msg რაიმე მიზეზით undefined-ია
                   if (!msg || !msg.id) return null;
 
-                  // 2. ლოგიკა: "არის ჩემი?"
-                  // ვიღებთ იმ ადამიანის ID-ს, ვისაც ვესაუბრებით
-                  const otherUser = activeConv.participants.find(
-                    (p) => p.userId !== msg.receiverId // ეს ლოგიკა ცოტა რთულია DIRECT ჩატში
-                  );
-
-                  // ყველაზე მარტივი და მუშა გზა:
-                  // თუ senderId არ არის იმ იუზერის ID, ვისაც ვესაუბრებით, ესე იგი ჩემია.
-                  const partner = activeConv.participants[0]; // DIRECT ჩატში მეორე იუზერია
                   const isMine = msg.senderId !== partner?.userId;
 
                   return (
@@ -264,15 +360,15 @@ export default function MessagingPage() {
               >
                 <input
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={handleInputChange}
                   placeholder="ENTER_DATA..."
                   className="flex-1 bg-neutral-950 border border-neutral-800 px-4 py-2 text-xs text-orange-500 focus:outline-none focus:border-orange-500"
                 />
                 <button
                   type="submit"
-                  className="bg-orange-500 text-black px-4 py-2 font-black uppercase italic tracking-tighter skew-x-[-12deg]"
+                  className="bg-orange-500 text-black px-4 py-2 font-black uppercase italic tracking-tighter skew-x-[-12deg] hover:skew-x-[-8deg] transition-all"
                 >
-                  SEND
+                  <Send size={16} />
                 </button>
               </form>
             </>

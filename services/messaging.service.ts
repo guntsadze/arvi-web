@@ -58,7 +58,7 @@ class MessagingService extends BaseApiService<any> {
 
   // საუბრების სიის წამოღება
   async getConversations() {
-    const { data } = await apiClient.get(`${this.endpoint}/conversations`);
+    const data = await apiClient.get(`${this.endpoint}/conversations`);
     return data as Conversation[];
   }
 
@@ -88,7 +88,7 @@ class MessagingService extends BaseApiService<any> {
 
   // 2. კონკრეტულ საუბარში მესიჯის გაგზავნა
   async sendMessage(payload: { conversationId: string; content: string }) {
-    const { data } = await apiClient.post(
+    const data = await apiClient.post(
       `${this.endpoint}/${payload.conversationId}`,
       { content: payload.content }
     );
@@ -97,7 +97,7 @@ class MessagingService extends BaseApiService<any> {
 
   // წაკითხულად მონიშვნა
   async markAsRead(conversationId: string) {
-    const { data } = await apiClient.post(
+    const data = await apiClient.post(
       `${this.endpoint}/${conversationId}/read`
     );
     return data;

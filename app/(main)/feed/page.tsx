@@ -47,7 +47,7 @@ export default function FeedPage() {
 
         <div className="mt-16 space-y-8">
           {posts.map((post: any, index: number) => (
-            <PostCard post={post} refresh={refresh} />
+            <PostCard key={post.id} post={post} refresh={refresh} />
           ))}
 
           {loading && (
