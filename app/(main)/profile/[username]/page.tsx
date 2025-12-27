@@ -27,6 +27,8 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const user = await usersService.getByUsername(username);
 
+  console.log(user);
+
   if (!user) {
     notFound();
   }
@@ -71,7 +73,7 @@ export default async function Page({ params }: Props) {
                 <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
                 <div className="relative w-full h-full rounded-2xl border-4 border-orange-500 overflow-hidden bg-neutral-900 shadow-2xl">
                   <Image
-                    src={user.avatar?.url || "/default-avatar.png"}
+                    src={user.avatar?.url}
                     alt={user.username}
                     fill
                     className="object-cover"
@@ -113,9 +115,16 @@ export default async function Page({ params }: Props) {
 
             {/* Actions */}
             <div className="flex gap-3 w-full md:w-auto pb-2">
-              <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-black font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg]">
+              <button
+                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg] ${
+                  user.isFollowing
+                    ? "bg-amber-600 text-black shadow-[3px_3px_0px_0px_#000]"
+                    : "bg-stone-800 text-[#EBE9E1] shadow-[3px_3px_0px_0px_#b45309]"
+                }`}
+              >
                 <span className="inline-block skew-x-[12deg] flex items-center gap-2">
-                  <UserPlus size={18} /> Follow
+                  <UserPlus size={18} />
+                  {user.isFollowing ? "Unfollow" : "Follow"}
                 </span>
               </button>
               <MessageButton userId={user.id} />

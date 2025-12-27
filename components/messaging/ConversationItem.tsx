@@ -28,7 +28,7 @@ export const ConversationItem = ({
       <div className="flex items-center gap-3">
         <div className="relative">
           <Image
-            src={user.avatar?.url || "/default-avatar.png"}
+            src={user.avatar?.url}
             alt={user.firstName}
             width={48}
             height={48}

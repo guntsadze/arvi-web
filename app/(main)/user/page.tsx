@@ -28,6 +28,8 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(users);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -77,25 +79,51 @@ export default function Page() {
   }, []);
 
   const handleFollow = async (userId: string) => {
-    try {
-      const res = await socialService.toggleFollow(userId);
-      const { following } = res.data;
+    // 1. ვიპოვოთ მიმდინარე იუზერი სიაში
+    const user = users.find((u) => u.id === userId);
+    if (!user) return;
 
-      setUsers((prev) =>
-        prev.map((u) =>
+    // 2. ვიმახსოვროთ წინა მდგომარეობა (rollback-ისთვის)
+    const previousIsFollowing = user.isFollowing || false;
+    const previousFollowersCount = user.followersCount;
+
+    // 3. Optimistic Update – ეგრევე ვაცვლით UI-ს
+    setUsers((prevUsers) =>
+      prevUsers.map((u) =>
+        u.id === userId
+          ? {
+              ...u,
+              isFollowing: !previousIsFollowing,
+              followersCount: previousIsFollowing
+                ? previousFollowersCount - 1
+                : previousFollowersCount + 1,
+            }
+          : u
+      )
+    );
+
+    // 4. ვაკეთებთ სერვერზე მოთხოვნას
+    try {
+      await socialService.toggleFollow(userId);
+      // წარმატებით შესრულდა – არაფერი არ გვჭირდება, UI უკვე განახლებულია
+    } catch (error) {
+      console.error("Follow toggle failed:", error);
+
+      // 5. შეცდომის შემთხვევაში – ვაბრუნებთ წინა მდგომარეობას
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
           u.id === userId
             ? {
                 ...u,
-                isFollowing: following,
-                followersCount: following
-                  ? u.followersCount + 1
-                  : u.followersCount - 1,
+                isFollowing: previousIsFollowing,
+                followersCount: previousFollowersCount,
               }
             : u
         )
       );
-    } catch (e) {
-      console.error("Follow error", e);
+
+      // სურვილისამებრ: შეგიძლიათ toast/notification გამოიყენოთ
+      // toast.error("ვერ მოხერხდა გამოწერა");
     }
   };
 

@@ -8,7 +8,7 @@ export default function E34HeroSection() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className="relative w-full bg-[#1c1917] overflow-hidden border-b-4 h-screen border-stone-800">
+    <div className="relative w-full h-screen overflow-hidden bg-[#1c1917] border-b-4 border-stone-800 p-6">
       {/* 1. უკანა ფონი - მილიმეტრული ქაღალდის ეფექტი */}
       <div
         className="absolute inset-0 opacity-20"
@@ -39,7 +39,7 @@ export default function E34HeroSection() {
       </div>
 
       {/* 3. მთავარი კონტეინერი */}
-      <div className="relative z-10 max-w-7xl mx-auto h-full flex flex-col justify-center items-center pt-16 pb-10 px-4">
+      <div className="relative z-10 max-w-7xl mx-auto h-full flex flex-col justify-center items-center px-4">
         {/* სათაური და ქვესათაური */}
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 border border-amber-700/30 bg-amber-950/20 rounded-full">
@@ -59,7 +59,7 @@ export default function E34HeroSection() {
         </div>
 
         {/* მანქანის ვიზუალი */}
-        <div className="relative w-full max-w-5xl aspect-[16/9] md:aspect-[21/9] flex items-center justify-center group">
+        <div className="relative w-full max-w-5xl h-[45vh] md:h-[40vh] flex items-center justify-center group">
           {/* Loading skeleton */}
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -180,28 +180,6 @@ export default function E34HeroSection() {
 
       {/* სკანერის ეფექტი */}
       <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.5)] animate-scan opacity-30 pointer-events-none" />
-
-      <style jsx>{`
-        @keyframes scan {
-          0% {
-            top: 0%;
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            top: 100%;
-            opacity: 0;
-          }
-        }
-        .animate-scan {
-          animation: scan 4s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }
