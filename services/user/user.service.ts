@@ -16,8 +16,20 @@ export interface User {
 class UsersService extends BaseApiService<User> {
   protected endpoint = "/users";
 
-  getByUsername(username: string) {
-    return apiClient.get(`${this.endpoint}/by-username/${username}`);
+  getByUsername(username: string, options?: { headers?: HeadersInit }) {
+    return apiClient.get(`/Users/by-username/${username}`, undefined, options);
+  }
+
+  // 1. გასწორებული getFollowers - იღებს userId-ს და pagination-ს
+  getFollowers(userId: string, params?: { page?: number; limit?: number }) {
+    const query = new URLSearchParams(params as any).toString();
+    return apiClient.get(`${this.endpoint}/${userId}/followers?${query}`);
+  }
+
+  // 2. თუ დაგჭირდება getFollowing (ვის აფოლოვებს იუზერი)
+  getFollowing(userId: string, params?: { page?: number; limit?: number }) {
+    const query = new URLSearchParams(params as any).toString();
+    return apiClient.get(`${this.endpoint}/${userId}/following?${query}`);
   }
 
   findAll(params: { page: number; pageSize: number }) {

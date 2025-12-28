@@ -1,21 +1,12 @@
-import { usersService } from "@/services/user/user.service";
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import {
-  MapPin,
-  ShieldCheck,
-  MessageSquare,
-  UserPlus,
-  Clock,
-  Trophy,
-  Zap,
-  Activity,
-} from "lucide-react";
-import { format } from "date-fns";
-import { ka } from "date-fns/locale";
+import FollowButton from "@/components/profile/FollowButton";
 import ImageUploader from "@/components/ui/ImageUploader";
-import UserProfileTabs from "@/components/profile/UserProfileTabs";
+import { usersService } from "@/services/user/user.service";
+import { MapPin, ShieldCheck } from "lucide-react";
+import { cookies } from "next/headers";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 import MessageButton from "./MessageButton";
+import ProfileContentWrapper from "./UserProfileContent";
 
 type Props = {
   params: Promise<{
@@ -25,17 +16,16 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const { username } = await params;
-  const user = await usersService.getByUsername(username);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  const user = await usersService.getByUsername(username, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   console.log(user);
 
-  if (!user) {
-    notFound();
-  }
-
-  const joinDate = user.createdAt
-    ? format(new Date(user.createdAt), "MMMM, yyyy", { locale: ka })
-    : "უცნობია";
+  if (!user) notFound();
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-orange-500/30">
@@ -73,7 +63,7 @@ export default async function Page({ params }: Props) {
                 <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
                 <div className="relative w-full h-full rounded-2xl border-4 border-orange-500 overflow-hidden bg-neutral-900 shadow-2xl">
                   <Image
-                    src={user.avatar?.url}
+                    src={user.avatar}
                     alt={user.username}
                     fill
                     className="object-cover"
@@ -115,110 +105,23 @@ export default async function Page({ params }: Props) {
 
             {/* Actions */}
             <div className="flex gap-3 w-full md:w-auto pb-2">
-              <button
-                className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg] ${
-                  user.isFollowing
-                    ? "bg-amber-600 text-black shadow-[3px_3px_0px_0px_#000]"
-                    : "bg-stone-800 text-[#EBE9E1] shadow-[3px_3px_0px_0px_#b45309]"
-                }`}
-              >
-                <span className="inline-block skew-x-[12deg] flex items-center gap-2">
-                  <UserPlus size={18} />
-                  {user.isFollowing ? "Unfollow" : "Follow"}
-                </span>
-              </button>
+              <FollowButton
+                userId={user.id}
+                initialFollowing={user.isFollowing || false}
+                followersCount={user.followersCount || 0}
+                // onFollowersChange={(newCount) => {
+                //   // თუ გინდა რომ StatCard-ში followers რიცხვი მაშინვე განახლდეს (optimistic update)
+                //   // შეგიძლია state გამოიყენო parent-ში, მაგრამ მარტივად რომ იყოს – უბრალოდ დატოვე
+                // }}
+              />
               <MessageButton userId={user.id} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Dashboard Grid */}
-      <div className="max-w-7xl mx-auto px-4 md:px-10 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Sidebar */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="grid grid-cols-3 gap-2">
-            <StatCard
-              label="Posts"
-              value={user.postsCount || 0}
-              icon={<Activity size={14} />}
-            />
-            <StatCard
-              label="Followers"
-              value={user.followersCount || 0}
-              icon={<Trophy size={14} />}
-            />
-            <StatCard
-              label="Following"
-              value={user.followingCount || 0}
-              icon={<Zap size={14} />}
-            />
-          </div>
-
-          <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-xl">
-            <h3 className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-              <div className="w-1 h-4 bg-orange-500" /> Driver's Statement
-            </h3>
-            <p className="text-neutral-300 leading-relaxed font-light">
-              {user.bio || "No telemetry data recorded for this driver."}
-            </p>
-          </div>
-
-          <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-xl space-y-4">
-            <div className="flex items-center justify-between text-sm border-b border-neutral-800 pb-2">
-              <span className="text-neutral-500 uppercase font-mono">
-                Status
-              </span>
-              <span className="text-green-500 font-mono">Active</span>
-            </div>
-            <div className="flex items-center justify-between text-sm border-b border-neutral-800 pb-2">
-              <span className="text-neutral-500 uppercase font-mono">
-                Joined
-              </span>
-              <span className="text-neutral-200 font-mono">{joinDate}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-neutral-500 uppercase font-mono">
-                System ID
-              </span>
-              <span className="text-neutral-600 font-mono text-[10px]">
-                {user.id.slice(0, 15)}...
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="lg:col-span-8 space-y-6">
-            <UserProfileTabs userId={user.id} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl hover:border-orange-500/50 transition-all group">
-      <div className="flex items-center gap-2 text-neutral-500 mb-1 group-hover:text-orange-500 transition-colors">
-        {icon}
-        <span className="text-[10px] uppercase font-black tracking-tighter">
-          {label}
-        </span>
-      </div>
-      <div className="text-2xl font-black italic tracking-tighter font-mono">
-        {value.toLocaleString()}
-      </div>
+      {/* ძველი Dashboard Grid-ის ნაცვლად ვიძახებთ ახალ კომპონენტს */}
+      <ProfileContentWrapper user={user} userId={user.id} />
     </div>
   );
 }

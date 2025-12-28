@@ -1,37 +1,37 @@
-// კომპონენტი: MessageButton.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { messagingService } from "@/services/messaging.service";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 export default function MessageButton({ userId }: { userId: string }) {
+  const currentUser = useAppSelector(selectCurrentUser);
+
+  if (!currentUser || currentUser.id === userId) {
+    return null;
+  }
   const router = useRouter();
 
-  const handleMessageClick = async () => {
+  const handleMessageClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     try {
       const res = await messagingService.getOrCreateConversation(userId);
-
-      // res არის ის ობიექტი, რომელიც ბექენდმა დააბრუნა
-      if (res && res.id) {
-        console.log("წარმატება! გადავდივართ ID-ზე:", res.id);
+      if (res?.id) {
         router.push(`/messages?id=${res.id}`);
-      } else {
-        console.error("ბექენდმა დააბრუნა პასუხი ID-ის გარეშე:", res);
       }
-    } catch (error: any) {
-      // უსაფრთხო ლოგირება
-      const errorMsg =
-        error?.response?.data?.message || error?.message || "Unknown error";
-      console.error("ჩატის გახსნა ვერ მოხერხდა:", errorMsg);
+    } catch (error) {
+      console.error("ჩატის გახსნა ვერ მოხერხდა");
     }
   };
 
   return (
     <button
       onClick={handleMessageClick}
-      className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg]"
+      className="flex-1 md:flex-none flex items-center justify-center px-6 py-2.5 md:py-3 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg] active:translate-y-[1px]"
     >
-      <span className="inline-block skew-x-[12deg]">
+      <span className="skew-x-[12deg]">
         <MessageSquare size={18} />
       </span>
     </button>

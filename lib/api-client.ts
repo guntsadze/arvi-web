@@ -15,7 +15,8 @@ export class ApiClient {
     path: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
     body?: any,
-    query?: Record<string, string | number | boolean>
+    query?: Record<string, string | number | boolean>,
+    extraHeaders?: HeadersInit // <-- დავამატეთ გარე ჰედერების მხარდაჭერა
   ) {
     const url = new URL(path, this.baseUrl);
 
@@ -25,14 +26,16 @@ export class ApiClient {
       );
     }
 
-    const token = this.getTokenFromCookie();
     const headers: HeadersInit = {
       "Content-Type": "application/json",
+      ...extraHeaders, // <-- გარედან მოწოდებული ჰედერები (მაგ. სერვერული ტოკენი)
     };
 
-    // თუ token არსებობს, დავამატოთ Authorization header
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    // თუ კლიენტის მხარეს ვართ და ტოკენი გვაქვს ქუქიში, ავტომატურად ჩავამატოთ
+    // ოღონდ მხოლოდ მაშინ, თუ Authorization უკვე არ არის გამოგზავნილი
+    const clientToken = this.getTokenFromCookie();
+    if (clientToken && !headers.hasOwnProperty("Authorization")) {
+      (headers as any).Authorization = `Bearer ${clientToken}`;
     }
 
     const response = await fetch(url.toString(), {
@@ -54,20 +57,25 @@ export class ApiClient {
     }
   }
 
-  get(path: string, query?: Record<string, string | number | boolean>) {
-    return this.request(path, "GET", undefined, query);
+  // ყველა მეთოდს დავამატოთ options პარამეტრი
+  get(
+    path: string,
+    query?: Record<string, string | number | boolean>,
+    options?: { headers?: HeadersInit }
+  ) {
+    return this.request(path, "GET", undefined, query, options?.headers);
   }
 
-  post(path: string, body?: any) {
-    return this.request(path, "POST", body);
+  post(path: string, body?: any, options?: { headers?: HeadersInit }) {
+    return this.request(path, "POST", body, undefined, options?.headers);
   }
 
-  put(path: string, body?: any) {
-    return this.request(path, "PUT", body);
+  put(path: string, body?: any, options?: { headers?: HeadersInit }) {
+    return this.request(path, "PUT", body, undefined, options?.headers);
   }
 
-  delete(path: string) {
-    return this.request(path, "DELETE");
+  delete(path: string, options?: { headers?: HeadersInit }) {
+    return this.request(path, "DELETE", undefined, undefined, options?.headers);
   }
 }
 

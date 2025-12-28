@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { UserPosts } from "./UserPosts";
 import { UserGarage } from "./UserGarage";
+import { UserFollowers } from "./UserFollowers";
 
 type Props = {
   userId: string;
 };
 
-type Tab = "posts" | "garage" | "achievements";
+type Tab = "posts" | "garage" | "followers";
 
 export default function UserProfileTabs({ userId }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("posts");
@@ -19,10 +20,10 @@ export default function UserProfileTabs({ userId }: Props) {
       <div className="flex gap-8 border-b border-neutral-800 mb-6 font-mono text-[10px] tracking-widest">
         <button
           onClick={() => setActiveTab("posts")}
-          className={`pb-4 uppercase ${
+          className={`pb-4 uppercase transition-colors ${
             activeTab === "posts"
               ? "border-b-2 border-orange-500 text-white font-bold"
-              : "text-neutral-500"
+              : "text-neutral-500 hover:text-neutral-300"
           }`}
         >
           Telemetry Feed
@@ -30,24 +31,24 @@ export default function UserProfileTabs({ userId }: Props) {
 
         <button
           onClick={() => setActiveTab("garage")}
-          className={`pb-4 uppercase ${
+          className={`pb-4 uppercase transition-colors ${
             activeTab === "garage"
               ? "border-b-2 border-orange-500 text-white font-bold"
-              : "text-neutral-500"
+              : "text-neutral-500 hover:text-neutral-300"
           }`}
         >
           Garage
         </button>
 
         <button
-          onClick={() => setActiveTab("achievements")}
-          className={`pb-4 uppercase ${
-            activeTab === "achievements"
+          onClick={() => setActiveTab("followers")}
+          className={`pb-4 uppercase transition-colors ${
+            activeTab === "followers"
               ? "border-b-2 border-orange-500 text-white font-bold"
-              : "text-neutral-500"
+              : "text-neutral-500 hover:text-neutral-300"
           }`}
         >
-          Achievements
+          Followers
         </button>
       </div>
 
@@ -64,9 +65,9 @@ export default function UserProfileTabs({ userId }: Props) {
         </div>
       )}
 
-      {activeTab === "achievements" && (
-        <div className="p-2 text-neutral-500 font-mono text-xs">
-          Coming soon...
+      {activeTab === "followers" && (
+        <div className="p-2">
+          <UserFollowers userId={userId} />
         </div>
       )}
     </>
