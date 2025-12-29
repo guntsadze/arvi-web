@@ -38,9 +38,9 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
       </div>
 
       {/* Header - Fixed Height (e.g., 64px) */}
-      <div className="relative z-20 flex-none">
+      {/* <div className="relative z-20 flex-none">
         <CarHeader viewMode={viewMode} onBackClick={handleBackClick} />
-      </div>
+      </div> */}
 
       {/* Content - Takes remaining height */}
       <div className="flex-1 relative z-10 overflow-hidden">
@@ -50,7 +50,7 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
             onViewFullDetails={() => setViewMode("full")}
           />
         ) : (
-          <CarFullDetails car={car} onEdit={onEdit} />
+          <CarFullDetails car={car} onEdit={onEdit} onClose={handleBackClick} />
         )}
       </div>
     </div>

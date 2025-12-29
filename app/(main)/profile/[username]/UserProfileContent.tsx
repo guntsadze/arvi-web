@@ -62,16 +62,6 @@ export default function ProfileContentWrapper({ user, userId }: Props) {
         {/* ჰორიზონტალური ტაბები - სადაც მხოლოდ გარაჟი და სხვა საჭირო ტაბები დარჩება */}
         <div className="flex gap-8 border-b border-neutral-800 mb-6 font-mono text-[10px] tracking-widest">
           <button
-            onClick={() => setActiveTab("posts")}
-            className={`pb-4 uppercase transition-colors ${
-              activeTab === "posts"
-                ? "border-b-2 border-orange-500 text-white font-bold"
-                : "text-neutral-500 hover:text-neutral-300"
-            }`}
-          >
-            Telemetry Feed
-          </button>
-          <button
             onClick={() => setActiveTab("garage")}
             className={`pb-4 uppercase transition-colors ${
               activeTab === "garage"

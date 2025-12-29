@@ -16,8 +16,6 @@ export const RightPanel = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const { conversations, loading, error } = useConversations();
 
-  console.log(currentUser, "ddddddddddddddddddddddddd");
-
   const getOtherParticipant = (conversation: any) => {
     return (
       conversation.participants?.find((p: any) => p.user.id !== currentUser?.id)

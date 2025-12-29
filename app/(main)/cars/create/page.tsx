@@ -6,6 +6,7 @@ import { carsService } from "@/services/cars/cars.service";
 import { CarCard } from "@/components/cars/CarCard";
 import { CarDetailView } from "@/components/cars/carDetails";
 import { CarForm } from "@/components/cars/carForm";
+import { useRouter } from "next/navigation";
 
 export default function CarCollectionPage() {
   const [cars, setCars] = useState([]);
@@ -13,6 +14,8 @@ export default function CarCollectionPage() {
   const [editingCar, setEditingCar] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCar, setSelectedCar] = useState(null);
+
+  const router = useRouter();
 
   // როცა ვარედაქტირებთ (ეს ღილაკი უნდა იყოს სადმე, მაგალითად DetailView-ში ან ბარათზე)
   const handleEdit = (car) => {
@@ -128,7 +131,7 @@ export default function CarCollectionPage() {
               <CarCard
                 key={car.id}
                 car={car}
-                onClick={() => setSelectedCar(car)}
+                onClick={() => router.push(`/profile/${car.user.username}`)}
               />
             ))}
           </div>
