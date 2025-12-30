@@ -65,6 +65,10 @@ class CarsService extends BaseApiService<Car> {
   toggleLike(id: string) {
     return apiClient.post(`/cars/${id}/like`, {});
   }
+
+  getCarDetails(carId: string, options?: { headers?: HeadersInit }) {
+    return apiClient.get(`/cars/${carId}`, undefined, options);
+  }
 }
 
 export const carsService = new CarsService();

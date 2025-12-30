@@ -11,16 +11,17 @@ import {
   Users,
   Wrench,
   Car,
-  Menu, // ჰამბურგერის აიქონი
+  Menu,
   X,
-  MessageCircle, // დახურვის აიქონი
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authService } from "@/services/auth/auth.services";
+import { GlobalSearchBar } from "./GlobalSearchBar";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false); // მენიუს სტატუსი
+  const [isOpen, setIsOpen] = useState(false);
 
   // გვერდის შეცვლისას მენიუ ავტომატურად დაიხუროს
   useEffect(() => {
@@ -40,7 +41,7 @@ export function Sidebar() {
     { href: "/", icon: Car, label: "მთავარი" },
     { href: "/feed", icon: Home, label: "სიახლეები" },
     { href: "/user", icon: Users, label: "ავტომოყვარულები" },
-    { href: "/cars/create", icon: Car, label: "ავტომობილები" },
+    { href: "/cars", icon: Car, label: "ავტომობილები" },
     { href: "/messages", icon: MessageCircle, label: "მესიჯები" },
     { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
@@ -48,18 +49,24 @@ export function Sidebar() {
     { href: "/groups", icon: Users, label: "Groups" },
   ];
 
-  // ეს კომპონენტი გამოვიყენოთ როგორც დესკტოპზე, ისე მობილურზე (კოდის დუბლირების თავიდან ასაცილებლად)
   const SidebarContent = () => (
     <>
-      <div className="p-6 pb-2">
+      {/* Header Section */}
+      <div className="p-6 pb-4">
         <div className="flex items-center gap-2 text-stone-500 mb-4 opacity-50">
           <Wrench size={14} />
           <span className="text-[10px] font-mono uppercase tracking-[0.2em]">
             Navigation System
           </span>
         </div>
+
+        {/* Search Bar - განცალკევებით, სწორ ადგილზე */}
+        <div className="mt-4">
+          <GlobalSearchBar />
+        </div>
       </div>
 
+      {/* Navigation Links */}
       <div className="px-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
         {links.map((link) => {
           const Icon = link.icon;
@@ -96,6 +103,7 @@ export function Sidebar() {
         })}
       </div>
 
+      {/* Footer Section */}
       <div className="p-6 border-t-4 border-stone-800 bg-[#151413] space-y-4 mt-auto">
         <div className="h-2 w-full mb-4 bg-[repeating-linear-gradient(45deg,#292524,#292524_10px,#1c1917_10px,#1c1917_20px)] border border-stone-700 opacity-50" />
 
