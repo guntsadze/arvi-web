@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { UserPlus, ShieldCheck, MapPin, Hash, Shield } from "lucide-react";
 import { useToggleFollow } from "@/hooks/useToggleFollow";
 import { useAppSelector } from "@/store/hooks";
@@ -25,10 +26,12 @@ type User = {
 
 export default function UserCard({ user }: { user: User }) {
   const currentUser = useAppSelector(selectCurrentUser);
+  const router = useRouter();
 
   if (!currentUser || currentUser.id === user.id) {
     return null;
   }
+
   const { toggleFollow, isLoading, error, isFollowing, followersCount } =
     useToggleFollow(
       user.id,
@@ -36,10 +39,22 @@ export default function UserCard({ user }: { user: User }) {
       user.followersCount ?? 0
     );
 
+  const handleCardClick = () => {
+    router.push(`/profile/${user.username || user.id}`);
+  };
+
+  const handleFollowClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFollow();
+  };
+
   return (
     <div className="relative group">
       <div className="absolute inset-0 bg-stone-900 translate-x-2 translate-y-2 rounded-sm" />
-      <div className="relative bg-[#dcd8c8] border border-stone-500 rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200">
+      <div
+        onClick={handleCardClick}
+        className="relative bg-[#dcd8c8] border border-stone-500 rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200 cursor-pointer"
+      >
         <div className="relative h-24 bg-stone-800 border-b-2 border-stone-600">
           {user.coverPhoto ? (
             <Image
@@ -100,8 +115,7 @@ export default function UserCard({ user }: { user: User }) {
             <div className="flex items-center gap-4 py-2 border-t border-b border-stone-300 border-dashed">
               <div className="flex flex-col">
                 <span className="text-xs font-black text-stone-800">
-                  {followersCount}{" "}
-                  {/* ← შენ შეგიძლია აქაც განაახლო თუ გინდა, მაგრამ მარტივად დავტოვეთ */}
+                  {followersCount}
                 </span>
                 <span className="text-[9px] text-stone-500 uppercase tracking-wide">
                   Followers
@@ -134,7 +148,7 @@ export default function UserCard({ user }: { user: User }) {
 
           <div className="mt-auto pb-5 flex gap-2">
             <button
-              onClick={toggleFollow}
+              onClick={handleFollowClick}
               disabled={isLoading}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 font-black uppercase tracking-widest text-[10px] transition-all ${
                 isFollowing
@@ -148,6 +162,7 @@ export default function UserCard({ user }: { user: User }) {
 
             <Link
               href={`/profile/${user.username || user.id}`}
+              onClick={(e) => e.stopPropagation()}
               className="flex items-center justify-center px-3 py-2 border-2 border-stone-800 text-stone-800 font-bold hover:bg-stone-200 transition-colors"
               title="View Dossier"
             >
