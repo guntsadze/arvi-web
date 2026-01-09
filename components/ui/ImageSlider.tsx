@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Maximize2, Layers } from "lucide-react";
 
 interface ImageSliderProps {
   images: string[];
@@ -17,138 +17,201 @@ export function ImageSlider({
   const [current, setCurrent] = useState(0);
   const [isMaximized, setIsMaximized] = useState(false);
 
-  // ESC ღილაკით დახურვა
+  // ფუნქციების მემოიზაცია, რათა useEffect-ში უსაფრთხოდ გამოვიყენოთ
+  const next = useCallback(
+    (e?: React.MouseEvent | KeyboardEvent) => {
+      e?.stopPropagation();
+      setCurrent((prev) => (prev + 1) % images.length);
+    },
+    [images.length]
+  );
+
+  const prev = useCallback(
+    (e?: React.MouseEvent | KeyboardEvent) => {
+      e?.stopPropagation();
+      setCurrent((prev) => (prev - 1 + images.length) % images.length);
+    },
+    [images.length]
+  );
+
+  // კლავიატურის ღილაკების კონტროლი
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMaximized(false);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isMaximized) return; // ისრები იმუშავებს მხოლოდ მაშინ, როცა სურათია გადიდებული
+
+      switch (e.key) {
+        case "Escape":
+          setIsMaximized(false);
+          break;
+        case "ArrowRight":
+          next(e);
+          break;
+        case "ArrowLeft":
+          prev(e);
+          break;
+      }
     };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMaximized, next, prev]);
 
   if (!images || images.length === 0) return null;
 
-  const next = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setCurrent((prev) => (prev + 1) % images.length);
+  const openLightbox = (index: number) => {
+    setCurrent(index);
+    setIsMaximized(true);
   };
 
-  const prev = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setCurrent((prev) => (prev - 1 + images.length) % images.length);
+  const renderGrid = () => {
+    const count = images.length;
+
+    const CountBadge = () => (
+      <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2 py-1 border border-white/10 rounded-sm pointer-events-none">
+        <Layers size={12} className="text-amber-500" />
+        <span className="text-[10px] font-mono font-bold text-white tracking-wider">
+          {count} PHOTOS
+        </span>
+      </div>
+    );
+
+    const GridImage = ({
+      src,
+      index,
+      className = "",
+    }: {
+      src: string;
+      index: number;
+      className?: string;
+    }) => (
+      <div
+        className={`relative h-full cursor-zoom-in overflow-hidden group border border-stone-800/50 ${className}`}
+        onClick={() => openLightbox(index)}
+      >
+        <Image
+          src={src}
+          alt="Post"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+      </div>
+    );
+
+    if (count === 1) {
+      return (
+        <div className={`relative w-full ${aspectRatio}`}>
+          <GridImage src={images[0]} index={0} />
+        </div>
+      );
+    }
+
+    if (count === 2) {
+      return (
+        <div className={`relative grid grid-cols-2 gap-2 p-1 ${aspectRatio}`}>
+          <CountBadge />
+          <GridImage src={images[0]} index={0} />
+          <GridImage src={images[1]} index={1} />
+        </div>
+      );
+    }
+
+    if (count === 3) {
+      return (
+        <div className={`relative grid grid-cols-2 gap-2 p-1 ${aspectRatio}`}>
+          <CountBadge />
+          <GridImage src={images[0]} index={0} />
+          <div className="grid grid-rows-2 gap-2">
+            <GridImage src={images[1]} index={1} />
+            <GridImage src={images[2]} index={2} />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`relative grid grid-cols-4 grid-rows-2 gap-2 p-1 ${aspectRatio}`}
+      >
+        <CountBadge />
+        <GridImage
+          src={images[0]}
+          index={0}
+          className="col-span-3 row-span-2"
+        />
+        <GridImage src={images[1]} index={1} />
+        <div
+          className="relative h-full cursor-zoom-in overflow-hidden group border border-stone-800/50"
+          onClick={() => openLightbox(2)}
+        >
+          <Image
+            src={images[2]}
+            alt="Post"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          {count > 3 && (
+            <div className="absolute inset-0 bg-stone-900/90 flex flex-col items-center justify-center text-white border-l border-stone-800">
+              <span className="text-lg font-bold">+{count - 3}</span>
+              <span className="text-[9px] uppercase tracking-tighter opacity-60">
+                More
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
     <>
-      {/* მთავარი სლაიდერი პოსტში */}
-      <div
-        className={`relative ${aspectRatio} overflow-hidden bg-black group/slider cursor-zoom-in`}
-      >
-        <div
-          className="absolute inset-0 z-10"
-          onClick={() => setIsMaximized(true)}
-        />
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="relative w-full h-full"
-          >
-            <Image
-              src={images[current]}
-              alt="Car"
-              fill
-              className="object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Hover Action: Zoom Icon */}
-        <div className="absolute top-4 left-4 z-20 opacity-0 group-hover/slider:opacity-100 transition-opacity">
-          <div className="bg-black/60 backdrop-blur-md p-2 border border-white/10 text-white">
-            <Maximize2 size={16} />
-          </div>
-        </div>
-
-        {/* ისრები */}
-        {images.length > 1 && (
-          <div className="absolute inset-0 flex items-center justify-between px-4 z-20 pointer-events-none">
-            <button
-              onClick={prev}
-              className="p-2 bg-black/40 text-white backdrop-blur-sm hover:bg-amber-600 transition-all pointer-events-auto opacity-0 group-hover/slider:opacity-100"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={next}
-              className="p-2 bg-black/40 text-white backdrop-blur-sm hover:bg-amber-600 transition-all pointer-events-auto opacity-0 group-hover/slider:opacity-100"
-            >
-              <ChevronRight size={24} />
-            </button>
-          </div>
-        )}
-
-        {/* ინდიკატორები */}
-        <div className="absolute bottom-4 w-full flex justify-center gap-1.5 z-20 px-10">
-          {images.map((_, idx) => (
-            <div
-              key={idx}
-              className={`h-1 transition-all duration-300 ${
-                idx === current ? "w-8 bg-amber-500" : "w-2 bg-white/30"
-              }`}
-            />
-          ))}
-        </div>
+      <div className="relative bg-[#1a1817] overflow-hidden border-y border-stone-800">
+        {renderGrid()}
       </div>
 
-      {/* FULLSCREEN MODAL (LIGHTBOX) */}
       <AnimatePresence>
         {isMaximized && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 md:p-10"
+            className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-2xl flex flex-col items-center justify-center p-4 gap-2"
           >
-            {/* Close Button */}
             <button
               onClick={() => setIsMaximized(false)}
-              className="absolute top-6 right-6 z-[110] text-white/50 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+              className="absolute top-6 right-6 z-[110] text-white/30 hover:text-white transition-colors p-2"
             >
-              <X size={32} />
+              <X size={32} strokeWidth={1.5} />
             </button>
 
-            {/* Modal Image Container */}
             <div className="relative w-full h-full flex items-center justify-center">
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
+                key={current}
+                initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 className="relative w-full h-full max-w-6xl max-h-[80vh]"
               >
                 <Image
                   src={images[current]}
-                  alt="Car Fullscreen"
+                  alt="Full"
                   fill
                   className="object-contain"
                   quality={100}
+                  priority
                 />
               </motion.div>
 
-              {/* Modal Navigation */}
               {images.length > 1 && (
                 <>
                   <button
-                    onClick={prev}
-                    className="absolute left-0 p-4 text-white/40 hover:text-amber-500 transition-all"
+                    onClick={(e) => prev(e)}
+                    className="absolute left-4 p-4 text-white/20 hover:text-amber-500 transition-all"
                   >
                     <ChevronLeft size={48} strokeWidth={1} />
                   </button>
                   <button
-                    onClick={next}
-                    className="absolute right-0 p-4 text-white/40 hover:text-amber-500 transition-all"
+                    onClick={(e) => next(e)}
+                    className="absolute right-4 p-4 text-white/20 hover:text-amber-500 transition-all"
                   >
                     <ChevronRight size={48} strokeWidth={1} />
                   </button>
@@ -156,28 +219,20 @@ export function ImageSlider({
               )}
             </div>
 
-            {/* Modal Bottom Info */}
-            <div className="mt-6 flex flex-col items-center gap-2">
-              <div className="flex gap-2">
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrent(idx)}
-                    className={`relative w-16 h-10 border-2 transition-all overflow-hidden ${
-                      idx === current
-                        ? "border-amber-500 scale-110"
-                        : "border-transparent opacity-40 hover:opacity-100"
-                    }`}
-                  >
-                    <Image
-                      src={img}
-                      alt="thumb"
-                      fill
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+            <div className="mt-auto mb-6 flex gap-3 p-2 bg-stone-900/50 border border-white/5 rounded-lg max-w-[90vw]">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrent(idx)}
+                  className={`relative flex-shrink-0 w-16 h-12 border transition-all duration-300 ${
+                    idx === current
+                      ? "border-amber-500 scale-110 opacity-100"
+                      : "border-transparent opacity-30 hover:opacity-60"
+                  }`}
+                >
+                  <Image src={img} alt="thumb" fill className="object-cover" />
+                </button>
+              ))}
             </div>
           </motion.div>
         )}

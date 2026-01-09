@@ -1,15 +1,25 @@
-import Image from "next/image";
-import Link from "next/link";
-import { ShieldCheck, MoreHorizontal } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
+import Link from "next/link";
+import Image from "next/image";
+import { PostMenu } from "./PostMenu"; // იმპორტი
 
 interface PostHeaderProps {
   user: any;
   createdAt: string;
+  onEdit: () => void;
+  onDelete: () => void;
+  isOwner: boolean;
 }
 
-export function PostHeader({ user, createdAt }: PostHeaderProps) {
+export function PostHeader({
+  user,
+  createdAt,
+  onEdit,
+  onDelete,
+  isOwner,
+}: PostHeaderProps) {
   return (
     <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-[#1c1917]">
       <Link
@@ -48,10 +58,7 @@ export function PostHeader({ user, createdAt }: PostHeaderProps) {
           </p>
         </div>
       </Link>
-      <MoreHorizontal
-        className="text-stone-600 cursor-pointer hover:text-amber-600"
-        size={20}
-      />
+      <PostMenu onEdit={onEdit} onDelete={onDelete} isOwner={isOwner} />
     </div>
   );
 }

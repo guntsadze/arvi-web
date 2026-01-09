@@ -9,6 +9,8 @@ import { PostActions } from "./PostActions";
 import { postsService } from "@/services/posts/posts.service";
 import { CommentForm } from "../comments/CommentForm";
 import { CommentItem } from "../comments/CommentItem";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 interface Comment {
   id: string;
@@ -26,10 +28,11 @@ interface Comment {
 interface PostCardProps {
   post: any;
   refresh: () => void;
-  currentUserId?: string;
 }
 
-export function PostCard({ post, refresh, currentUserId }: PostCardProps) {
+export function PostCard({ post, refresh }: PostCardProps) {
+  const currentUser = useAppSelector(selectCurrentUser);
+
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
     isSaved: post.isSaved || false,
@@ -50,7 +53,7 @@ export function PostCard({ post, refresh, currentUserId }: PostCardProps) {
   const setPartialState = (partial: Partial<typeof state>) =>
     setState((prev) => ({ ...prev, ...partial }));
 
-  const isOwner = currentUserId === post.user.id; // ან post.userId
+  const isOwner = currentUser.id === post.user.id;
 
   useEffect(() => {
     if (state.showComments) fetchComments();
@@ -97,14 +100,21 @@ export function PostCard({ post, refresh, currentUserId }: PostCardProps) {
     }
   };
 
-  const handleUpdatePost = async (data: { content: string }) => {
+  const handleUpdatePost = async (data: {
+    content: string;
+    images: string[];
+  }) => {
     try {
       setPartialState({ editingPost: false });
-      post.content = data.content;
 
-      await postsService.updatePost(post.id, data);
+      await postsService.updatePost(post.id, {
+        content: data.content,
+        images: data.images,
+      });
+
+      refresh();
     } catch (err) {
-      console.error(err);
+      alert("ვერ მოხერხდა პოსტის განახლება");
     }
   };
 
@@ -214,11 +224,17 @@ export function PostCard({ post, refresh, currentUserId }: PostCardProps) {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50" />
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50" />
 
-        <PostHeader user={post.user} createdAt={post.createdAt} />
+        <PostHeader
+          user={post.user}
+          createdAt={post.createdAt}
+          onEdit={() => setPartialState({ editingPost: true })}
+          onDelete={handleDeletePost}
+          isOwner={isOwner}
+        />
 
         <div className="p-4 bg-[#201d1b]">
           <PostContent
-            content={post.content}
+            post={post}
             isEditing={state.editingPost}
             onSave={handleUpdatePost}
             onCancel={() => setPartialState({ editingPost: false })}
@@ -234,14 +250,11 @@ export function PostCard({ post, refresh, currentUserId }: PostCardProps) {
           isLiked={state.isLiked}
           commentsCount={post._count?.comments || 0}
           isSaved={state.isSaved}
-          isOwner={isOwner}
           onLike={handleLike}
           onToggleComments={() =>
             setPartialState({ showComments: !state.showComments })
           }
           onSave={handleSave}
-          onEdit={() => setPartialState({ editingPost: true })}
-          onDelete={handleDeletePost}
         />
 
         {state.showComments && (

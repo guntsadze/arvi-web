@@ -1,11 +1,4 @@
-import {
-  Heart,
-  MessageCircle,
-  Share2,
-  Edit2,
-  Trash2,
-  Bookmark,
-} from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
 
 interface PostActionsProps {
   likesCount: number;
@@ -14,8 +7,6 @@ interface PostActionsProps {
   commentsCount: number;
   onLike: () => void;
   onToggleComments: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
   onSave: () => void;
 }
 
@@ -26,12 +17,10 @@ export function PostActions({
   commentsCount,
   onLike,
   onToggleComments,
-  onEdit,
-  onDelete,
   onSave,
 }: PostActionsProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 border-t border-stone-800 bg-[#181615]">
+    <div className="grid grid-cols-4 border-t border-stone-800 bg-[#181615]">
       <button
         onClick={onLike}
         className={`flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase transition-colors hover:bg-stone-800 ${
@@ -54,26 +43,14 @@ export function PostActions({
         <Share2 size={16} />
       </button>
 
-      <div className="flex items-center justify-center gap-4 py-3 border-l border-stone-800 hover:bg-stone-800">
-        <button
-          onClick={onEdit}
-          className="text-stone-600 hover:text-stone-300"
-        >
-          <Edit2 size={14} />
-        </button>
-        <button
-          onClick={onDelete}
-          className="text-stone-600 hover:text-red-900"
-        >
-          <Trash2 size={14} />
-        </button>
-        <button
-          onClick={onSave}
-          className={isSaved ? "text-amber-600" : "text-stone-600"}
-        >
-          <Bookmark size={14} className={isSaved ? "fill-current" : ""} />
-        </button>
-      </div>
+      <button
+        onClick={onSave}
+        className={`flex items-center justify-center gap-2 py-3 border-l border-stone-800 hover:bg-stone-800 transition-colors ${
+          isSaved ? "text-amber-600" : "text-stone-600"
+        }`}
+      >
+        <Bookmark size={16} className={isSaved ? "fill-current" : ""} />
+      </button>
     </div>
   );
 }
