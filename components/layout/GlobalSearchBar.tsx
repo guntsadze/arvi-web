@@ -103,7 +103,7 @@ export function GlobalSearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="ძებნა..."
-          className="w-full pl-10 pr-10 py-3 bg-stone-800 border-2 border-stone-700 text-white placeholder:text-stone-500 focus:border-amber-500 focus:outline-none transition-colors font-mono text-sm rounded-md"
+          className="w-full pl-10 pr-10 py-2 bg-stone-800 text-white placeholder:text-stone-500 focus:border-amber-500 focus:outline-none transition-colors font-mono text-sm rounded-md"
         />
 
         {/* Loading / Clear */}

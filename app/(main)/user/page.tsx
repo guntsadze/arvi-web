@@ -1,46 +1,11 @@
 "use client";
 
 import { Hash } from "lucide-react";
-import { useEffect, useState } from "react";
-import { usersService } from "@/services/user/user.service";
-import { User } from "@/types/user";
 import UserCard from "@/components/user/UserCard";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function Page() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const res = await usersService.findAll({ page: 1, pageSize: 50 });
-
-        console.log("Full API Response:", res);
-
-        let usersArray: User[] = [];
-        if (res.data && res.data.data) {
-          usersArray = res.data.data;
-        } else if (Array.isArray(res.data)) {
-          usersArray = res.data;
-        } else if (res.data) {
-          usersArray = res.data;
-        }
-
-        const validUsers = usersArray.filter((user) => user.username !== null);
-        setUsers(validUsers);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-        setError("Failed to load users. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  const { users, loading, error } = useUsers(1, 50);
 
   if (loading) {
     return (

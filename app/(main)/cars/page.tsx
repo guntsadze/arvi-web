@@ -1,57 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Plus, Car } from "lucide-react";
-import { carsService } from "@/services/cars/cars.service";
+import { Car } from "lucide-react";
 
 import { CarCard } from "@/components/cars/CarCard";
-import { CarDetailView } from "@/components/cars/carDetails";
-import { CarForm } from "@/components/cars/carForm";
 import { useRouter } from "next/navigation";
+import { useCars } from "@/hooks/useCars";
 
 export default function CarCollectionPage() {
-  const [cars, setCars] = useState([]);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingCar, setEditingCar] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedCar, setSelectedCar] = useState(null);
-
   const router = useRouter();
 
-  // როცა ვარედაქტირებთ (ეს ღილაკი უნდა იყოს სადმე, მაგალითად DetailView-ში ან ბარათზე)
-  const handleEdit = (car) => {
-    setEditingCar(car);
-    setIsFormOpen(true);
-  };
-
-  useEffect(() => {
-    loadCars();
-  }, []);
-
-  const loadCars = async () => {
-    try {
-      setIsLoading(true);
-      const data = await carsService.search();
-      setCars(data.data);
-    } catch (error) {
-      console.error("Error loading cars:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // თუ მანქანა არჩეულია, ვაჩვენებთ detail view-ს
-  if (selectedCar) {
-    return (
-      <CarDetailView
-        car={selectedCar}
-        onClose={() => setSelectedCar(null)}
-        onEdit={(car) => {
-          setSelectedCar(null); // ვხურავთ დეტალებს
-          handleEdit(car); // ვხსნით ფორმას
-        }}
-      />
-    );
-  }
+  const { cars, isLoading } = useCars();
 
   return (
     <div className="bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans selection:bg-amber-500 selection:text-stone-900 pb-20">
@@ -68,42 +25,15 @@ export default function CarCollectionPage() {
                   Garage <span className="text-amber-600">Inventory</span>
                 </h1>
                 <p className="text-stone-500 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
-                  Log Record: {cars?.length} units
+                  Log Record: {cars?.length} cars registered
                 </p>
               </div>
             </div>
-
-            <button
-              onClick={() => setIsFormOpen(!isFormOpen)}
-              className="relative group overflow-hidden bg-[#EBE9E1] px-8 py-3 font-black uppercase tracking-widest text-stone-900 border-2 border-transparent hover:border-amber-500 shadow-[6px_6px_0px_0px_#ea580c] hover:shadow-[2px_2px_0px_0px_#ea580c] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                <Plus className="w-5 h-5" />
-                Add New Machine
-              </span>
-            </button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* ADD CAR FORM */}
-        {isFormOpen && (
-          <CarForm
-            key={editingCar?.id || "new"} // <--- დაამატეთ ეს
-            onClose={() => {
-              setIsFormOpen(false);
-              setEditingCar(null); // აუცილებლად გაასუფთავეთ რედაქტირების შემდეგ
-            }}
-            onSuccess={() => {
-              loadCars();
-              setIsFormOpen(false);
-              setEditingCar(null);
-            }}
-            initialData={editingCar}
-          />
-        )}
-
         {/* CARS GRID */}
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
@@ -118,12 +48,6 @@ export default function CarCollectionPage() {
             <p className="text-stone-600 font-mono mb-8">
               No machinery records found.
             </p>
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="text-amber-500 font-bold uppercase tracking-widest underline hover:text-amber-400"
-            >
-              Start First Project
-            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
