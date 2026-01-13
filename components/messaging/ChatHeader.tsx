@@ -1,6 +1,7 @@
 import { ConversationParticipant } from "@/types/messaging.types";
 import Image from "next/image";
 import { ShieldCheck } from "lucide-react";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 interface ChatHeaderProps {
   partner: ConversationParticipant;
@@ -12,13 +13,7 @@ export const ChatHeader = ({ partner }: ChatHeaderProps) => {
   return (
     <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-neutral-900">
       <div className="flex items-center gap-3">
-        <Image
-          src={user?.avatar?.url || "/default-avatar.png"}
-          alt={user?.firstName || "User"}
-          width={40}
-          height={40}
-          className="rounded-full object-cover"
-        />
+        <UserAvatarItem key={user?.avatar} user={user} />
         <div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-white">

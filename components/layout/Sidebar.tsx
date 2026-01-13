@@ -31,6 +31,8 @@ import { ProfileDropdown } from "../right-panel/dropdowns/ProfileDropdown";
 import { DropdownPortal } from "../right-panel/DropdownPortal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationsDropdown } from "../right-panel/dropdowns/NotificationsDropdown";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { CarAvatarItem } from "../ui/CarAvatarItem";
 
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ");
@@ -250,52 +252,9 @@ export function Sidebar() {
             >
               {showUsers
                 ? users.map((user) => (
-                    <Link
-                      key={user.id}
-                      href={`/profile/${user.username || user.id}`}
-                      className="min-w-[64px] group"
-                    >
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-sm border-2 border-stone-700 bg-stone-800 overflow-hidden group-hover:border-amber-500 transition-all">
-                          <img
-                            src={user.avatar || "/default-avatar.png"}
-                            alt={user.username || "User"}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        {user.role === "ADMIN" && (
-                          <div className="absolute -top-1 -right-1 bg-red-900 text-white p-0.5 rounded-sm border border-stone-700">
-                            <Star size={8} />
-                          </div>
-                        )}
-                      </div>
-                      <p className="text-[8px] font-mono text-stone-500 text-center mt-1 truncate group-hover:text-amber-500">
-                        {user.username}
-                      </p>
-                    </Link>
+                    <UserAvatarItem key={user.id} user={user} />
                   ))
-                : cars.map((car) => (
-                    <Link
-                      key={car.id}
-                      href={`/cars/${car.id}`}
-                      className="min-w-[64px] group"
-                    >
-                      <div className="w-16 h-16 rounded-sm border-2 border-stone-700 bg-stone-900 overflow-hidden group-hover:border-amber-500 transition-all flex items-center justify-center">
-                        {car.photos && car.photos.length > 0 ? (
-                          <img
-                            src={car.photos[0].url}
-                            alt={`${car.make} ${car.model}`}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <Car size={24} className="text-stone-600" />
-                        )}
-                      </div>
-                      <p className="text-[8px] font-mono text-stone-500 text-center mt-1 truncate group-hover:text-amber-500">
-                        {car.make}
-                      </p>
-                    </Link>
-                  ))}
+                : cars.map((car) => <CarAvatarItem key={car.id} car={car} />)}
             </div>
           </div>
 

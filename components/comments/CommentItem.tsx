@@ -4,6 +4,7 @@ import { ka } from "date-fns/locale";
 import { CommentForm } from "./CommentForm";
 import { ReplyItem } from "./ReplyItem";
 import Link from "next/link";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 export function CommentItem({
   comment,
@@ -25,17 +26,7 @@ export function CommentItem({
 
       <div className="flex gap-4">
         <div className="relative h-8 w-8 min-w-8">
-          <Link
-            key={comment.user.id}
-            href={`/profile/${comment.user.username}`}
-          >
-            <Image
-              src={comment.user.avatar?.url || "/default-avatar.png"}
-              alt={comment.user.firstName}
-              fill
-              className="border border-stone-600 object-cover grayscale opacity-70 rounded-sm"
-            />
-          </Link>
+          <UserAvatarItem key={comment.user.id} user={comment.user} />
         </div>
 
         <div className="flex-1">

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import MessageButton from "./MessageButton";
 import ProfileContentWrapper from "./UserProfileContent";
+import { UserAvatarItem } from "@/components/ui/UserAvatarItem";
 
 type Props = {
   params: Promise<{
@@ -61,20 +62,23 @@ export default async function Page({ params }: Props) {
             <div className="relative group">
               <div className="w-32 h-32 md:w-44 md:h-44 relative">
                 <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
-                <div className="relative w-full h-full rounded-2xl border-4 border-orange-500 overflow-hidden bg-neutral-900 shadow-2xl">
-                  <Image
-                    src={user.avatar}
-                    alt={user.username}
-                    fill
-                    className="object-cover"
+
+                <div className="relative w-full h-full rounded-xl border-2 border-orange-500 overflow-hidden bg-neutral-900 shadow-xl">
+                  <UserAvatarItem
+                    user={user}
+                    size="xl"
+                    showName={false}
+                    className="w-full h-full border-none shadow-none"
                   />
+
                   {/* Avatar Upload Overlay */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
                     <ImageUploader userId={user.id} type="avatar" />
                   </div>
                 </div>
+
                 {user.showOnlineStatus && (
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-4 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20" />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-3 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20" />
                 )}
               </div>
             </div>

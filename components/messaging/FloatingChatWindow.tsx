@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Minus, Send, Paperclip } from "lucide-react";
+import { X, Minus, Send } from "lucide-react";
 import { FloatingChat } from "@/types/chat.types";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeChat, toggleMinimize } from "@/store/slices/floatingChatsSlice";
 import { useSocket } from "@/hooks/useSocket";
 import { useMessages } from "@/hooks/useMessages";
-import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
-import Image from "next/image";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { cn } from "@/lib/utils";
 
 interface FloatingChatWindowProps {
   chat: FloatingChat;
-  index: number; // რიგითი ნომერი positioning-ისთვის
+  index: number;
 }
 
 export const FloatingChatWindow = ({
@@ -23,7 +23,6 @@ export const FloatingChatWindow = ({
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
   const socket = useSocket(chat.conversationId);
-
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +35,6 @@ export const FloatingChatWindow = ({
     markAsRead,
   } = useMessages(chat.conversationId);
 
-  // Load messages on mount
   useEffect(() => {
     if (!chat.isMinimized) {
       loadMessages();
@@ -44,169 +42,150 @@ export const FloatingChatWindow = ({
     }
   }, [chat.conversationId, chat.isMinimized, loadMessages, markAsRead]);
 
-  // Socket listeners
   useEffect(() => {
     if (!socket) return;
-
     const handleNewMessage = (msg: any) => {
       if (msg?.conversationId === chat.conversationId) {
         addMessage(msg);
-        if (!chat.isMinimized) {
-          markAsRead();
-        }
+        if (!chat.isMinimized) markAsRead();
       }
     };
-
     socket.on("newMessage", handleNewMessage);
     socket.emit("joinConversation", chat.conversationId);
-
     return () => {
       socket.off("newMessage", handleNewMessage);
       socket.emit("leaveConversation", chat.conversationId);
     };
   }, [socket, chat.conversationId, chat.isMinimized, addMessage, markAsRead]);
 
-  // Auto scroll to bottom
   useEffect(() => {
     if (!chat.isMinimized) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, chat.isMinimized]);
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
+  const rightPosition = 24 + index * 80; // როცა მინიმალისტურია, უფრო ახლოს არიან
 
-    await sendMessage(inputValue);
-    setInputValue("");
-  };
+  // --- მინიმალისტური მრგვალი ბუშტი ---
+  if (chat.isMinimized) {
+    return (
+      <div
+        className="fixed bottom-6 z-50 transition-all duration-500 ease-in-out group"
+        style={{ right: `${rightPosition}px` }}
+      >
+        {/* Close Button on Hover */}
+        <button
+          onClick={() => dispatch(closeChat(chat.id))}
+          className="absolute -top-1 -right-1 z-10 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity border-2 border-[#1c1917]"
+        >
+          <X size={10} />
+        </button>
 
-  const handleClose = () => {
-    dispatch(closeChat(chat.id));
-  };
+        {/* Bubble Avatar */}
+        <div
+          onClick={() => dispatch(toggleMinimize(chat.id))}
+          className="cursor-pointer relative transform hover:scale-110 transition-transform active:scale-95"
+        >
+          <UserAvatarItem user={chat.user} size="sm" showName={false} />
+          {/* Online Status Dot */}
+          <div className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#1c1917]" />
+        </div>
+      </div>
+    );
+  }
 
-  const handleToggleMinimize = () => {
-    dispatch(toggleMinimize(chat.id));
-  };
-
-  // Position calculation - Facebook style
-  const rightPosition = 16 + index * 330; // 16px base + 330px per chat
-
+  // --- სრულად გახსნილი ფანჯარა ---
   return (
     <div
-      className="fixed bottom-0 z-50 bg-[#1c1917] border-2 border-stone-800 shadow-2xl flex flex-col transition-all duration-300"
-      style={{
-        right: `${rightPosition}px`,
-        width: "320px",
-        height: chat.isMinimized ? "52px" : "450px",
-      }}
+      className={cn(
+        "fixed bottom-6 z-50 w-[340px] h-[480px] bg-[#1c1917] shadow-[0_20px_50px_rgba(0,0,0,0.5)]",
+        "flex flex-col border-2 border-stone-800 rounded-[24px] overflow-hidden transition-all duration-300"
+      )}
+      style={{ right: `${24 + index * 360}px` }}
     >
-      {/* Header */}
-      <div
-        className="flex items-center justify-between p-3 bg-stone-900 border-b-2 border-stone-800 cursor-pointer"
-        onClick={handleToggleMinimize}
-      >
-        <div className="flex items-center gap-2">
-          <Image
-            src={chat.user?.avatar?.url || "/default-avatar.png"}
-            alt={chat.user.firstName}
-            width={32}
-            height={32}
-            className="rounded-full border-2 border-stone-700"
-          />
+      {/* Header - უფრო მრგვალი და სუფთა */}
+      <div className="p-4 bg-stone-900/50 backdrop-blur-md border-b border-stone-800 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <UserAvatarItem user={chat.user} size="sm" showName={false} />
           <div>
-            <h3 className="text-xs font-black text-stone-200 uppercase tracking-wider">
-              {chat.user.firstName} {chat.user.lastName}
+            <h3 className="text-[11px] font-black text-stone-200 uppercase tracking-tighter leading-none">
+              {chat.user.firstName}
             </h3>
-            <span className="text-[9px] font-mono text-green-500">ONLINE</span>
+            <span className="text-[9px] font-mono text-amber-500/60 uppercase">
+              Frequency Active
+            </span>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleMinimize();
-            }}
-            className="p-1 hover:bg-stone-800 text-stone-400 hover:text-amber-500 transition-colors"
+            onClick={() => dispatch(toggleMinimize(chat.id))}
+            className="p-2 hover:bg-stone-800 rounded-full text-stone-500 transition-colors"
           >
             <Minus size={16} />
           </button>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClose();
-            }}
-            className="p-1 hover:bg-stone-800 text-stone-400 hover:text-red-500 transition-colors"
+            onClick={() => dispatch(closeChat(chat.id))}
+            className="p-2 hover:bg-red-500/10 hover:text-red-500 rounded-full text-stone-500 transition-colors"
           >
             <X size={16} />
           </button>
         </div>
       </div>
 
-      {/* Messages - only visible when not minimized */}
-      {!chat.isMinimized && (
-        <>
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#11100f] custom-scrollbar">
-            {loading ? (
-              <div className="flex items-center justify-center h-full">
-                <span className="text-stone-500 text-xs">Loading...</span>
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full">
-                <span className="text-stone-500 text-xs">No messages yet</span>
-              </div>
-            ) : (
-              messages.map((msg) => {
-                const isMine = msg.senderId === currentUser?.id;
-                return (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      isMine ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-[80%] px-3 py-2 text-[11px] font-mono ${
-                        isMine
-                          ? "bg-amber-600 text-stone-900 border-2 border-amber-800"
-                          : "bg-stone-800 text-stone-200 border-2 border-stone-700"
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                  </div>
-                );
-              })
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Area */}
-          <form
-            onSubmit={handleSend}
-            className="p-2 bg-[#1a1918] border-t-2 border-stone-800"
-          >
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="TYPE MESSAGE..."
-                className="flex-1 bg-stone-900 border-2 border-stone-800 px-2 py-1 text-[10px] font-mono text-amber-500 focus:outline-none focus:border-amber-600 uppercase"
-              />
-              <button
-                type="submit"
-                disabled={!inputValue.trim()}
-                className="p-2 bg-amber-600 border-2 border-amber-800 text-stone-900 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      {/* Messages Area - მომრგვალებული მესიჯებით */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#11100f] custom-scrollbar">
+        {messages.map((msg) => {
+          const isMine = msg.senderId === currentUser?.id;
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${isMine ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={cn(
+                  "max-w-[75%] px-4 py-2.5 text-[11px] font-medium leading-relaxed",
+                  isMine
+                    ? "bg-amber-600 text-stone-950 rounded-[18px] rounded-br-none shadow-lg shadow-amber-600/10"
+                    : "bg-stone-800 text-stone-200 rounded-[18px] rounded-bl-none"
+                )}
               >
-                <Send size={14} />
-              </button>
+                {msg.content}
+              </div>
             </div>
-          </form>
-        </>
-      )}
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Area - მრგვალი ინფუთით */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (inputValue.trim()) {
+            sendMessage(inputValue);
+            setInputValue("");
+          }
+        }}
+        className="p-4 bg-stone-900/30 border-t border-stone-800"
+      >
+        <div className="flex items-center gap-2 bg-stone-900 rounded-full border border-stone-800 p-1 pl-4 focus-within:border-amber-600/50 transition-all">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Signal message..."
+            className="flex-1 bg-transparent py-2 text-[11px] font-mono text-stone-200 focus:outline-none placeholder:text-stone-700"
+          />
+          <button
+            type="submit"
+            disabled={!inputValue.trim()}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-amber-600 text-stone-900 hover:bg-amber-500 disabled:opacity-20 transition-all"
+          >
+            <Send size={14} />
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

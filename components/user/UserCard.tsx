@@ -7,6 +7,7 @@ import { UserPlus, ShieldCheck, MapPin, Hash, Shield } from "lucide-react";
 import { useToggleFollow } from "@/hooks/useToggleFollow";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 type User = {
   id: string;
@@ -77,15 +78,7 @@ export default function UserCard({ user }: { user: User }) {
 
         <div className="px-5 pt-0 flex-1 flex flex-col">
           <div className="relative -mt-10 mb-3 w-fit">
-            <div className="w-20 h-20 rounded-full border-4 border-[#dcd8c8] bg-stone-700 relative overflow-hidden shadow-lg">
-              <Image
-                src={user.avatar || "/default-avatar.png"}
-                alt={user.username || "User"}
-                fill
-                sizes="80px"
-                className="object-cover"
-              />
-            </div>
+            <UserAvatarItem key={user?.avatar} user={user} />
             {user.isVerified && (
               <div className="absolute -bottom-1 -right-1 bg-blue-700 text-white p-1 rounded-full border-2 border-[#dcd8c8]">
                 <ShieldCheck size={12} />

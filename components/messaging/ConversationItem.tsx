@@ -1,6 +1,7 @@
 import { Conversation } from "@/types/messaging.types";
 import Image from "next/image";
 import { ShieldCheck } from "lucide-react";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 interface ConversationItemProps {
   conversation: Conversation;
@@ -21,18 +22,17 @@ export const ConversationItem = ({
   return (
     <div
       onClick={onClick}
-      className={`p-4 border-b border-neutral-800/50 cursor-pointer transition-all hover:bg-orange-500/10 ${
+      className={`p-1 border-b border-neutral-800/50 cursor-pointer transition-all hover:bg-orange-500/10 ${
         isActive ? "bg-orange-500/20 border-r-4 border-r-orange-500" : ""
       }`}
     >
       <div className="flex items-center gap-3">
         <div className="relative">
-          <Image
-            src={user.avatar?.url}
-            alt={user.firstName}
-            width={48}
-            height={48}
-            className="rounded-full object-cover"
+          <UserAvatarItem
+            key={user?.avatar}
+            user={user}
+            size="sm"
+            showName={false}
           />
         </div>
         <div className="flex-1 min-w-0">

@@ -1,3 +1,4 @@
+import { UserAvatarItem } from "@/components/ui/UserAvatarItem";
 import { MessageCircle } from "lucide-react";
 
 interface MessagesDropdownProps {
@@ -31,14 +32,12 @@ export const MessagesDropdown = ({
               onClick={() => onOpenChat(conv)}
               className="p-3 border-b border-stone-800 hover:bg-stone-800/50 cursor-pointer flex gap-3 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-stone-800 border border-stone-700 flex-shrink-0 overflow-hidden">
-                {other?.avatar ? (
-                  <img
-                    src={other.avatar}
-                    className="w-full h-full object-cover"
-                  />
-                ) : null}
-              </div>
+              <UserAvatarItem
+                key={other?.avatar}
+                user={other}
+                size="sm"
+                showName={false}
+              />
               <div className="min-w-0">
                 <h4 className="text-[11px] font-bold text-stone-200 truncate uppercase">
                   {other?.username}

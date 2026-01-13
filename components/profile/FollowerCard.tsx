@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MessageButton from "@/app/(main)/profile/[username]/MessageButton";
 import FollowButton from "./FollowButton";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 type Follower = {
   id: string;
@@ -27,15 +28,7 @@ export default function FollowerCard({ follower }: Props) {
         {/* Avatar & Info */}
         <div className="flex items-start gap-4 mb-4">
           <div className="relative">
-            <div className="w-16 h-16 rounded-xl overflow-hidden border-2 border-neutral-800 group-hover:border-orange-500/30 transition-colors">
-              <Image
-                src={follower.avatar || "/default-avatar.png"}
-                alt={follower.username}
-                width={64}
-                height={64}
-                className="object-cover"
-              />
-            </div>
+            <UserAvatarItem key={follower.avatar} user={follower} />
           </div>
 
           <div className="flex-1 min-w-0">

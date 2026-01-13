@@ -1,6 +1,7 @@
 import { Conversation } from "@/services/messaging.service";
 import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 export const ChatSidebar = ({
   conversations,
@@ -27,11 +28,7 @@ export const ChatSidebar = ({
             }`}
           >
             <div className="relative">
-              <img
-                src={otherUser?.avatar || "/default-avatar.png"}
-                className="w-12 h-12 rounded-full object-cover"
-                alt="avatar"
-              />
+              <UserAvatarItem key={otherUser?.id} user={otherUser} />
               {conv.unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
                   {conv.unreadCount}

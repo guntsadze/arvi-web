@@ -2,6 +2,7 @@ import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
 import Link from "next/link";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 interface ReplyItemProps {
   reply: any; // სასურველია მიუთითო შენი Reply ინტერფეისი
@@ -35,14 +36,7 @@ export function ReplyItem({
       <div className="absolute -left-6 top-4 w-4 h-px bg-stone-800" />
 
       <div className="relative h-6 w-6 min-w-6">
-        <Link key={reply.user.id} href={`/profile/${reply.user.username}`}>
-          <Image
-            src={reply.user.avatar?.url || "/default-avatar.png"}
-            alt={reply.user.firstName}
-            fill
-            className="border border-stone-700 object-cover grayscale opacity-60 rounded-sm"
-          />
-        </Link>
+        <UserAvatarItem key={reply.user.id} user={reply.user} />
       </div>
 
       <div className="flex-1">
