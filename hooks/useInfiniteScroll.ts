@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 export function useInfiniteScroll<T extends { id: string }>(
   fetchFn: (page: number) => Promise<any>,
-  deps: any[] = []
+  deps: any[] = [],
 ) {
   const [data, setData] = useState<T[]>([]);
   const [page, setPage] = useState(1);
@@ -10,7 +10,6 @@ export function useInfiniteScroll<T extends { id: string }>(
   const [hasMore, setHasMore] = useState(true);
 
   const loadedPages = useRef<Set<number>>(new Set());
-  const isInitialLoaded = useRef(false);
 
   const mergeUnique = (prev: T[], next: T[]) => {
     const map = new Map<string, T>();
@@ -28,7 +27,9 @@ export function useInfiniteScroll<T extends { id: string }>(
 
       try {
         const response = await fetchFn(pageNumber);
-        const newData = response.data.data || response.data;
+        const newData = response.data?.data || response.data || response;
+
+        console.log("Loaded data:", newData);
 
         if (!newData || newData.length === 0) {
           setHasMore(false);
@@ -43,13 +44,17 @@ export function useInfiniteScroll<T extends { id: string }>(
         setLoading(false);
       }
     },
-    [fetchFn, loading, hasMore]
+    [fetchFn, loading, hasMore],
   );
 
-  // Initial load (მხოლოდ ერთხელ)
+  // Reset და თავიდან ჩატვირთვა როცა deps იცვლება
   useEffect(() => {
-    if (isInitialLoaded.current) return;
-    isInitialLoaded.current = true;
+    loadedPages.current.clear();
+    setData([]);
+    setPage(1);
+    setHasMore(true);
+    setLoading(false);
+
     loadPage(1);
   }, deps);
 
@@ -77,7 +82,6 @@ export function useInfiniteScroll<T extends { id: string }>(
   // Refresh
   const refresh = useCallback(() => {
     loadedPages.current.clear();
-    isInitialLoaded.current = false;
     setData([]);
     setPage(1);
     setHasMore(true);

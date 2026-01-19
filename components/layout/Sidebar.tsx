@@ -33,6 +33,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationsDropdown } from "../right-panel/dropdowns/NotificationsDropdown";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { CarAvatarItem } from "../ui/CarAvatarItem";
+import { groupsService } from "@/services/groups.service";
 
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ");
@@ -52,10 +53,10 @@ export function Sidebar() {
     // { href: "/user", icon: Users, label: "ავტომოყვარულები" },
     // { href: "/cars", icon: Car, label: "ავტომობილები" },
     // { href: "/messages", icon: MessageCircle, label: "მესიჯები" },
-    { href: "/explore", icon: Compass, label: "Explore" },
+    // { href: "/explore", icon: Compass, label: "Explore" },
+    { href: "/groups", icon: Users, label: "Groups" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
-    { href: "/groups", icon: Users, label: "Groups" },
   ];
 
   const { users } = useUsers();
@@ -98,6 +99,25 @@ export function Sidebar() {
     }
   };
 
+  // Sidebar კომპონენტის შიგნით
+  const [myGroups, setMyGroups] = useState<any[]>([]);
+  const [groupsLoading, setGroupsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMyGroups = async () => {
+      try {
+        const res = await groupsService.getGroups(1, 15);
+        const data = res.data?.data || res.data || res;
+        setMyGroups(data);
+      } catch (err) {
+        console.error("FAILED_TO_LOAD_NODES", err);
+      } finally {
+        setGroupsLoading(false);
+      }
+    };
+    fetchMyGroups();
+  }, []);
+
   const SidebarContent = () => (
     <>
       <div className="p-6 pb-4">
@@ -127,7 +147,7 @@ export function Sidebar() {
                     "p-2 rounded-md transition-all duration-200 relative",
                     isActive
                       ? "bg-amber-500 text-stone-900 shadow-lg"
-                      : "text-stone-500 hover:text-amber-500 hover:bg-stone-800/50"
+                      : "text-stone-500 hover:text-amber-500 hover:bg-stone-800/50",
                   )}
                 >
                   <Icon size={16} strokeWidth={2.5} />
@@ -146,41 +166,70 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Main Navigation Links */}
-      <div className="px-4 space-y-3 flex-1 overflow-y-auto custom-scrollbar">
-        {links.map((link) => {
-          const Icon = link.icon;
-          const isActive = pathname === link.href;
+      {/* --- ჩანაცვლებული ნაწილი: MY_GROUPS_LIST --- */}
+      <div className="px-4 mb-2 flex items-center justify-between">
+        <span className="text-[10px] font-mono text-stone-600 uppercase tracking-[0.3em]">
+          Active_Nodes
+        </span>
+        <Link
+          href="/groups"
+          className="text-[9px] font-mono text-amber-700 hover:underline"
+        >
+          EXPLORE
+        </Link>
+      </div>
 
-          return (
-            <Link key={link.href} href={link.href}>
-              <button
-                className={cn(
-                  "relative w-full flex items-center px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-200 group border-l-4",
-                  isActive
-                    ? "bg-stone-800 text-amber-500 border-amber-500 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
-                    : "border-transparent text-stone-400 hover:text-[#EBE9E1] hover:bg-stone-800/50 hover:border-stone-600"
-                )}
-              >
-                {isActive && (
-                  <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,1)]" />
-                )}
+      <div className="px-4 space-y-1 flex-1 overflow-y-auto custom-scrollbar">
+        {groupsLoading ? (
+          // Skeleton loader ან მარტივი ტექსტი
+          <div className="animate-pulse space-y-3 p-4">
+            <div className="h-4 bg-stone-800 rounded w-3/4" />
+            <div className="h-4 bg-stone-800 rounded w-1/2" />
+          </div>
+        ) : myGroups.length > 0 ? (
+          myGroups.map((group) => {
+            const isActive = pathname === `/groups/${group.slug}`;
 
-                <Icon
+            return (
+              <Link key={group.id} href={`/groups/${group.slug}`}>
+                <button
                   className={cn(
-                    "mr-4 transition-transform duration-300 group-hover:scale-110",
+                    "relative w-full flex items-center px-3 py-2.5 text-xs font-bold transition-all duration-200 group border-l-2",
                     isActive
-                      ? "text-amber-500"
-                      : "text-stone-600 group-hover:text-stone-300"
+                      ? "bg-stone-800/50 text-amber-500 border-amber-500"
+                      : "border-transparent text-stone-500 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
                   )}
-                  size={18}
-                />
+                >
+                  {/* Group Avatar Mini */}
+                  <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
+                    {group.avatar ? (
+                      <img
+                        src={group.avatar}
+                        className="w-full h-full object-cover opacity-70 group-hover:opacity-100"
+                      />
+                    ) : (
+                      <Users size={12} className="text-stone-700" />
+                    )}
+                  </div>
 
-                <span className="font-mono">{link.label}</span>
-              </button>
-            </Link>
-          );
-        })}
+                  <span className="font-mono truncate uppercase tracking-wider">
+                    {group.name}
+                  </span>
+
+                  {isActive && (
+                    <div className="ml-auto w-1 h-1 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,1)]" />
+                  )}
+                </button>
+              </Link>
+            );
+          })
+        ) : (
+          <div className="p-4 border border-dashed border-stone-800 text-center">
+            <p className="text-[10px] font-mono text-stone-700 uppercase">
+              // No_Nodes_Joined
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Featured Section - Bottom Left */}
@@ -217,7 +266,7 @@ export function Sidebar() {
                   "px-2 py-1 text-[9px] font-bold uppercase transition-all border border-transparent",
                   showUsers
                     ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700"
+                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700",
                 )}
               >
                 Users
@@ -231,7 +280,7 @@ export function Sidebar() {
                   "px-2 py-1 text-[9px] font-bold uppercase transition-all border border-transparent",
                   !showUsers
                     ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700"
+                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700",
                 )}
               >
                 Cars
@@ -314,7 +363,7 @@ export function Sidebar() {
               "relative p-2.5 rounded-sm border-2 transition-all",
               activeDropdown === "notifications"
                 ? "bg-amber-500 text-stone-900 border-amber-500"
-                : "bg-stone-900 border-stone-800 text-stone-500 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]"
+                : "bg-stone-900 border-stone-800 text-stone-500 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
             <Bell size={18} strokeWidth={2.5} />
@@ -332,7 +381,7 @@ export function Sidebar() {
               "w-10 h-10 rounded-sm border-2 overflow-hidden transition-all",
               activeDropdown === "profile"
                 ? "border-amber-500 scale-95"
-                : "border-stone-800 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]"
+                : "border-stone-800 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
             {currentUser?.avatar?.url ? (
@@ -383,7 +432,7 @@ export function Sidebar() {
           "fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-300",
           isOpen
             ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
+            : "opacity-0 invisible pointer-events-none",
         )}
         onClick={() => setIsOpen(false)}
       />
@@ -392,7 +441,7 @@ export function Sidebar() {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 w-72 bg-[#1a1918] border-r-4 border-stone-800 z-[70] lg:hidden flex flex-col transition-transform duration-300 ease-in-out shadow-2xl",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="absolute top-4 right-4 z-10">

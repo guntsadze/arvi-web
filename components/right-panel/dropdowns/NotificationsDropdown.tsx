@@ -70,7 +70,7 @@ export const NotificationsDropdown = ({
       </div>
 
       {/* List */}
-      <div className="max-h-[380px] overflow-y-auto custom-scrollbar bg-[#1c1917]">
+      <div className="bg-[#1c1917] overflow-y-auto scrollbar-hide">
         {notifications.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-[10px] font-mono text-stone-600 uppercase italic">
@@ -150,11 +150,6 @@ export const NotificationsDropdown = ({
           ))
         )}
       </div>
-
-      {/* Footer */}
-      <button className="w-full p-2.5 text-center text-[10px] font-black text-stone-500 bg-stone-900/50 border-t border-stone-800 hover:text-amber-500 transition-colors uppercase tracking-widest">
-        View All System Logs
-      </button>
     </>
   );
 };
