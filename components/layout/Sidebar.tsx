@@ -54,9 +54,9 @@ export function Sidebar() {
     // { href: "/cars", icon: Car, label: "ავტომობილები" },
     // { href: "/messages", icon: MessageCircle, label: "მესიჯები" },
     // { href: "/explore", icon: Compass, label: "Explore" },
-    { href: "/groups", icon: Users, label: "Groups" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
+    { href: "/groups", icon: Users, label: "Groups" },
   ];
 
   const { users } = useUsers();
