@@ -39,7 +39,7 @@ export const UserAvatarItem = ({
         <div
           className={cn(
             sizes[size],
-            "rounded-sm border-2 border-stone-700 bg-stone-800 overflow-hidden group-hover:border-amber-500 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            "rounded-sm border-2 border-stone-700 bg-stone-800 overflow-hidden group-hover:border-amber-500 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
           )}
         >
           {avatarUrl ? (

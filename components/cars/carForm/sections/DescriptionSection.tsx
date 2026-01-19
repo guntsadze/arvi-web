@@ -1,11 +1,11 @@
 import { Control, Controller, UseFormRegister } from "react-hook-form";
 import { CarFormData } from "@/types/carForm.types";
 import { ImageUpload } from "../shared/ImageUpload";
-import { RuggedTextarea } from "@/components/ui/RuggedTextarea";
+import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
 
 interface DescriptionSectionProps {
   register: UseFormRegister<CarFormData>;
-  control: Control<CarFormData>; // დაამატე კონტროლი
+  control: Control<CarFormData>;
 }
 
 export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
@@ -14,7 +14,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div className="md:col-span-2">
-      <RuggedTextarea
+      <RuggedTextArea
         label="Vehicle Description"
         name="description"
         register={register}
