@@ -69,6 +69,10 @@ class CarsService extends BaseApiService<Car> {
   getCarDetails(carId: string, options?: { headers?: HeadersInit }) {
     return apiClient.get(`/cars/${carId}`, undefined, options);
   }
+
+  delete(carId: string) {
+    return apiClient.delete(`/cars/${carId}`);
+  }
 }
 
 export const carsService = new CarsService();

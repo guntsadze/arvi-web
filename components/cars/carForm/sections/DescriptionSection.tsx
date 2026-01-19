@@ -18,7 +18,6 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
         label="Vehicle Description"
         name="description"
         register={register}
-        placeholder="Describe modifications..."
         rows={6}
       />
     </div>
@@ -30,23 +29,14 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
       <Controller
         name="photos"
         control={control}
-        render={({ field }) => {
-          // initialData.images შეიძლება იყოს string[] ან {url:string}[]
-          const imageUrls =
-            field.value?.map((file: any) =>
-              typeof file === "string" ? file : file.url
-            ) || [];
-
-          return (
-            <ImageUpload
-              images={imageUrls}
-              onChange={(imgs: any[]) => {
-                // როცა ImageUpload დაბრუნებს string[] ან File[], Field-ს სწორად გადავცემ
-                field.onChange(imgs);
-              }}
-            />
-          );
-        }}
+        render={({ field }) => (
+          <ImageUpload
+            images={field.value || []} // გადააწოდე პირდაპირ მასივი (ობიექტებიანად)
+            onChange={(newImages) => {
+              field.onChange(newImages); // დააბრუნე შეცვლილი მასივი (სადაც წაშლილი უკვე აღარ არის)
+            }}
+          />
+        )}
       />
     </div>
   </div>

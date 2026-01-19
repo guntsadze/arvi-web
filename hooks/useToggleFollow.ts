@@ -15,7 +15,7 @@ interface UseToggleFollowResult {
 export function useToggleFollow(
   userId: string,
   initialFollowing: boolean = false,
-  initialFollowersCount: number = 0
+  initialFollowersCount: number = 0,
 ): UseToggleFollowResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

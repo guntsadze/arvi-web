@@ -1,7 +1,17 @@
 "use client";
 import { ChevronDown, AlertCircle } from "lucide-react";
 
-export const RuggedSelect = ({
+interface RuggedSelectProps {
+  label: string;
+  options: string[];
+  register: any;
+  name: string;
+  required?: boolean;
+  error?: { message?: string };
+  placeholder?: string;
+}
+
+export const RuggedSelect: React.FC<RuggedSelectProps> = ({
   label,
   options,
   register,

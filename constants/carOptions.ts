@@ -50,3 +50,33 @@ export const DEFAULT_FORM_VALUES: CarFormData = {
   isPublic: true,
   images: [],
 };
+
+export const MODIFICATIONS_TYPES = [
+  "ENGINE",
+  "EXHAUST",
+  "SUSPENSION",
+  "BRAKES",
+  "WHEELS",
+  "TIRES",
+  "EXTERIOR",
+  "INTERIOR",
+  "ELECTRONICS",
+  "AUDIO",
+  "LIGHTING",
+  "PERFORMANCE",
+  "COSMETIC",
+  "OTHER",
+] as const;
+
+export const MAINTENANCE_TYPES = [
+  "OIL_CHANGE",
+  "TIRE_ROTATION",
+  "BRAKE_SERVICE",
+  "ENGINE_SERVICE",
+  "TRANSMISSION_SERVICE",
+  "INSPECTION",
+  "REPAIR",
+  "MODIFICATION",
+  "DETAILING",
+  "OTHER",
+] as const;

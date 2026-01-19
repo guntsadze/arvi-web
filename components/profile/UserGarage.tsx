@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { carsService } from "@/services/cars/cars.service";
-import { Plus, Car as CarIcon } from "lucide-react";
+import { Plus, Car as CarIcon, Loader2 } from "lucide-react";
 
 import { ProfileCarCard } from "./ProfileCarCard";
 import { CarForm } from "../cars/carForm";
@@ -22,12 +22,29 @@ export function UserGarage({ userId }: Props) {
 
   const { data: garage, refresh } = useInfiniteScroll(
     (page) => carsService.getUserGarage(userId, page, 10),
-    [userId]
+    [userId],
   );
 
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [editingCar, setEditingCar] = useState<Car | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
+
+  // ახალი სტეიტი ჩატვირთვის ინდიკაციისთვის
+  const [isLoadingDetails, setIsLoadingDetails] = useState<string | null>(null);
+
+  // ფუნქცია სერვერიდან ინფორმაციის წამოსაღებად რედაქტირების წინ
+  const handleEditClick = async (carId: string) => {
+    try {
+      setIsLoadingDetails(carId); // ჩავრთოთ ლოადერი კონკრეტულ ქარდზე
+      const fullCarData = await carsService.getCarDetails(carId);
+      setEditingCar(fullCarData);
+    } catch (error) {
+      console.error("Failed to fetch car details:", error);
+      // აქ შეგიძლიათ დაამატოთ Toast შეტყობინება შეცდომაზე
+    } finally {
+      setIsLoadingDetails(null); // გამოვრთოთ ლოადერი
+    }
+  };
 
   if (selectedCar) {
     return (
@@ -35,7 +52,7 @@ export function UserGarage({ userId }: Props) {
         car={selectedCar}
         onEdit={(car) => {
           setSelectedCar(null);
-          setEditingCar(car);
+          handleEditClick(car.id); // დეტალური გვერდიდანაც რომ ახალი ინფო წამოიღოს
         }}
         onClose={() => setSelectedCar(null)}
         isOwner={selectedCar.userId === currentUser?.id}
@@ -49,7 +66,7 @@ export function UserGarage({ userId }: Props) {
         {isOwner && (
           <button
             onClick={() => setIsAddingNew(true)}
-            className="group relative border-2 border-dashed border-stone-800 hover:border-amber-600 transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-stone-900/20 hover:bg-amber-500/5"
+            className="group relative border-2 border-dashed border-stone-800 hover:border-amber-600 transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-stone-900/20 hover:bg-amber-500/5 min-h-[300px]"
           >
             <div className="w-12 h-12 rounded-full border-2 border-stone-800 group-hover:border-amber-500 flex items-center justify-center transition-colors">
               <Plus
@@ -65,7 +82,6 @@ export function UserGarage({ userId }: Props) {
                 Add to garage storage
               </p>
             </div>
-            {/* დეკორატიული ელემენტი კუთხეში */}
             <div className="absolute bottom-2 right-2 opacity-20 group-hover:opacity-100 transition-opacity">
               <CarIcon
                 size={40}
@@ -77,14 +93,22 @@ export function UserGarage({ userId }: Props) {
 
         {/* GARAGE LIST */}
         {garage.map((car) => (
-          <ProfileCarCard
-            key={car.id}
-            car={car}
-            onClick={() => {
-              if (isOwner) setEditingCar(car);
-            }}
-            onViewFullDetails={(car) => setSelectedCar(car)}
-          />
+          <div key={car.id} className="relative">
+            <ProfileCarCard
+              car={car}
+              onClick={() => {
+                if (isOwner) handleEditClick(car.id); // აქ ვიძახებთ ახალ ფუნქციას
+              }}
+              onViewFullDetails={(car) => setSelectedCar(car)}
+            />
+
+            {/* ლოადერი ქარდზე, სანამ ინფორმაცია მოდის */}
+            {isLoadingDetails === car.id && (
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
+                <Loader2 className="text-amber-500 animate-spin" size={32} />
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
