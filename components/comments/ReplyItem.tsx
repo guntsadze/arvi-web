@@ -13,7 +13,7 @@ interface ReplyItemProps {
     id: string,
     data: { content: string },
     isReply: boolean,
-    parentId: string
+    parentId: string,
   ) => void;
   onDelete: (id: string, isReply: boolean, parentId: string) => void;
   editForm: any;
@@ -36,10 +36,15 @@ export function ReplyItem({
       <div className="absolute -left-6 top-4 w-4 h-px bg-stone-800" />
 
       <div className="relative h-6 w-6 min-w-6">
-        <UserAvatarItem key={reply.user.id} user={reply.user} />
+        <UserAvatarItem
+          key={reply.user.id}
+          user={reply.user}
+          size="sm"
+          showName={false}
+        />
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 ml-4">
         <div className="flex items-baseline gap-2">
           <span className="text-[9px] font-bold text-amber-700/80 uppercase">
             {reply.user.firstName} {reply.user.lastName}
@@ -55,7 +60,7 @@ export function ReplyItem({
         {isEditing ? (
           <form
             onSubmit={editForm.handleSubmit((data: { content: string }) =>
-              onEdit(reply.id, data, true, parentId)
+              onEdit(reply.id, data, true, parentId),
             )}
             className="mt-2 flex gap-2"
           >

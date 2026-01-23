@@ -9,6 +9,7 @@ export const useNotifications = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(notifications);
   // 1. შეტყობინებების და წაუკითხავი რაოდენობის წამოღება
   const fetchNotifications = useCallback(async (page = 1, limit = 20) => {
     try {
@@ -24,7 +25,7 @@ export const useNotifications = () => {
       setNotifications(
         Array.isArray(notificationsRes)
           ? notificationsRes
-          : (notificationsRes as any).data || []
+          : (notificationsRes as any).data || [],
       );
       setUnreadCount(countRes.count || 0);
 
@@ -43,7 +44,7 @@ export const useNotifications = () => {
       await notificationsService.markAsRead(id);
 
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)),
       );
 
       setUnreadCount((prev) => Math.max(0, prev - 1));

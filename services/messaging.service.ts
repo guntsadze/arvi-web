@@ -66,7 +66,7 @@ class MessagingService extends BaseApiService<any> {
   async getMessages(
     conversationId: string,
     page: number = 1,
-    limit: number = 20
+    limit: number = 20,
   ) {
     const data = await apiClient.get(`${this.endpoint}/${conversationId}`);
     console.log(data);
@@ -76,7 +76,7 @@ class MessagingService extends BaseApiService<any> {
   async getOrCreateConversation(userId: string) {
     try {
       const res = await apiClient.get(
-        `${this.endpoint}/conversation/${userId}`
+        `${this.endpoint}/conversation/${userId}`,
       );
 
       return res; // დააბრუნე პირდაპირ მიღებული პასუხი
@@ -90,7 +90,7 @@ class MessagingService extends BaseApiService<any> {
   async sendMessage(payload: { conversationId: string; content: string }) {
     const data = await apiClient.post(
       `${this.endpoint}/${payload.conversationId}`,
-      { content: payload.content }
+      { content: payload.content },
     );
     return data;
   }
@@ -98,7 +98,7 @@ class MessagingService extends BaseApiService<any> {
   // წაკითხულად მონიშვნა
   async markAsRead(conversationId: string) {
     const data = await apiClient.post(
-      `${this.endpoint}/${conversationId}/read`
+      `${this.endpoint}/${conversationId}/read`,
     );
     return data;
   }

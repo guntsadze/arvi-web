@@ -32,6 +32,8 @@ export const NotificationsDropdown = ({
     });
   };
 
+  console.log(notifications);
+
   // აიქონის შერჩევა ტიპის მიხედვით
   const getNotifIcon = (type: string) => {
     switch (type) {

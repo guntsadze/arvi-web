@@ -10,22 +10,39 @@ import { ChatWindow } from "@/components/messaging/ChatWindow";
 import { EmptyState } from "@/components/messaging/EmptyState";
 import { Conversation } from "@/types/messaging.types";
 
-export default function MessagingPage() {
+interface MessagingPageProps {
+  initialActiveId?: string | null;
+}
+
+export default function MessagingPage({ initialActiveId }: MessagingPageProps) {
+  console.log(initialActiveId);
   const searchParams = useSearchParams();
-  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const [activeId, setActiveId] = useState<string | null>(
+    initialActiveId || null,
+  );
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
 
   const { conversations, loading, addOrUpdateConversation } =
     useConversations();
   const socket = useSocket(activeId || undefined);
 
-  // URL-დან ID-ის აღება
+  // 2. თუ პროპსი გარედან შეიცვალა, სთეითიც განახლდეს
+  useEffect(() => {
+    if (initialActiveId) {
+      setActiveId(initialActiveId);
+    }
+  }, [initialActiveId]);
+
+  // 3. URL-დან ID-ის აღება (თუ პროპსი არ გვაქვს, URL-ს მიენიჭოს პრიორიტეტი)
   useEffect(() => {
     const idFromQuery = searchParams.get("id");
-    if (idFromQuery) setActiveId(idFromQuery);
+    if (idFromQuery) {
+      setActiveId(idFromQuery);
+    }
   }, [searchParams]);
 
-  // აქტიური ჩატის სინქრონიზაცია
+  // 4. აქტიური ჩატის სინქრონიზაცია და მონაცემების წამოღება (ეს ლოგიკა უკვე გაქვთ)
   useEffect(() => {
     if (!activeId) {
       setActiveConv(null);
@@ -33,13 +50,13 @@ export default function MessagingPage() {
     }
 
     const syncActiveConversation = async () => {
-      // ჯერ ვეძებთ სიაში
+      // ჯერ ვეძებთ უკვე ჩატვირთულ სიაში
       const foundInList = conversations.find((c) => c.id === activeId);
 
       if (foundInList) {
         setActiveConv(foundInList);
       } else {
-        // თუ არ არის სიაში, ვქმნით API request-ს
+        // თუ სიაში არ არის, ვიძახებთ სერვისს კონკრეტული ჩატის ჩანაწერების წამოსაღებად
         try {
           const data = await messagingService.getConversationById(activeId);
           if (data) {

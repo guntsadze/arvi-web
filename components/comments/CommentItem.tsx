@@ -26,7 +26,12 @@ export function CommentItem({
 
       <div className="flex gap-4">
         <div className="relative h-8 w-8 min-w-8">
-          <UserAvatarItem key={comment.user.id} user={comment.user} />
+          <UserAvatarItem
+            key={comment.user.id}
+            user={comment.user}
+            size="sm"
+            showName={false}
+          />
         </div>
 
         <div className="flex-1">
@@ -47,7 +52,7 @@ export function CommentItem({
           {isEditing ? (
             <form
               onSubmit={editForm.handleSubmit((data: { content: string }) =>
-                onEdit(comment.id, data, false)
+                onEdit(comment.id, data, false),
               )}
               className="mb-3"
             >
