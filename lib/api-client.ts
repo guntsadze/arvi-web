@@ -16,13 +16,13 @@ export class ApiClient {
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
     body?: any,
     query?: Record<string, string | number | boolean>,
-    extraHeaders?: HeadersInit // <-- დავამატეთ გარე ჰედერების მხარდაჭერა
+    extraHeaders?: HeadersInit,
   ) {
     const url = new URL(path, this.baseUrl);
 
     if (query) {
       Object.entries(query).forEach(([key, value]) =>
-        url.searchParams.append(key, String(value))
+        url.searchParams.append(key, String(value)),
       );
     }
 
@@ -61,7 +61,7 @@ export class ApiClient {
   get(
     path: string,
     query?: Record<string, string | number | boolean>,
-    options?: { headers?: HeadersInit }
+    options?: { headers?: HeadersInit },
   ) {
     return this.request(path, "GET", undefined, query, options?.headers);
   }
@@ -80,5 +80,5 @@ export class ApiClient {
 }
 
 export const apiClient = new ApiClient(
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5013"
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5013",
 );
