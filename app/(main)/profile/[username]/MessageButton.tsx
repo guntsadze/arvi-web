@@ -8,7 +8,7 @@ import { selectCurrentUser } from "@/store/slices/userSlice";
 export default function MessageButton({ userId }: { userId: string }) {
   const currentUser = useAppSelector(selectCurrentUser);
 
-  if (!currentUser || currentUser.id === userId) {
+  if (!currentUser || currentUser?.id === userId) {
     return null;
   }
   const router = useRouter();

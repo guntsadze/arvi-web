@@ -29,7 +29,7 @@ export default function UserCard({ user }: { user: User }) {
   const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
 
-  if (!currentUser || currentUser.id === user.id) {
+  if (!currentUser || currentUser?.id === user.id) {
     return null;
   }
 
@@ -37,7 +37,7 @@ export default function UserCard({ user }: { user: User }) {
     useToggleFollow(
       user.id,
       user.isFollowing ?? false,
-      user.followersCount ?? 0
+      user.followersCount ?? 0,
     );
 
   const handleCardClick = () => {

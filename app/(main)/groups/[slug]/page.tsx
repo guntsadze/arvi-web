@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use } from "react";
+import React, { use, useCallback, useEffect } from "react";
 import { groupsService } from "@/services/groups.service";
 import { PostCard } from "@/components/posts/PostCard";
 import { GroupHeader } from "@/components/groups/GroupHeader";
@@ -18,11 +18,11 @@ export default function GroupPage({
 
   const [group, setGroup] = React.useState<any>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     groupsService.getGroupBySlug(slug).then((res) => setGroup(res.data || res));
   }, [slug]);
 
-  const fetchPosts = React.useCallback(
+  const fetchPosts = useCallback(
     (page: number) => {
       if (!group) return Promise.reject("Group not loaded");
       return groupsService.getGroupPosts(group.id, page);

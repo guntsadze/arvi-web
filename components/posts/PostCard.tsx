@@ -53,7 +53,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
   const setPartialState = (partial: Partial<typeof state>) =>
     setState((prev) => ({ ...prev, ...partial }));
 
-  const isOwner = currentUser.id === post.user.id;
+  const isOwner = currentUser?.id === post.user.id;
 
   useEffect(() => {
     if (state.showComments) fetchComments();
@@ -120,21 +120,21 @@ export function PostCard({ post, refresh }: PostCardProps) {
 
   const handleAddComment = async (
     data: { content: string },
-    parentId?: string
+    parentId?: string,
   ) => {
     if (!data.content.trim()) return;
     try {
       const newComment = await postsService.addComment(
         post.id,
         data.content,
-        parentId
+        parentId,
       );
       if (parentId) {
         setPartialState({
           comments: state.comments.map((c) =>
             c.id === parentId
               ? { ...c, replies: [newComment, ...(c.replies || [])] }
-              : c
+              : c,
           ),
           replyTo: null,
         });
@@ -153,12 +153,12 @@ export function PostCard({ post, refresh }: PostCardProps) {
     commentId: string,
     data: { content: string },
     isReply = false,
-    parentId?: string
+    parentId?: string,
   ) => {
     try {
       const updatedComment = await postsService.updateComment(
         commentId,
-        data.content
+        data.content,
       );
 
       if (isReply && parentId) {
@@ -170,17 +170,17 @@ export function PostCard({ post, refresh }: PostCardProps) {
                   replies: c.replies?.map((r) =>
                     r.id === commentId
                       ? { ...r, content: updatedComment.content }
-                      : r
+                      : r,
                   ),
                 }
-              : c
+              : c,
           ),
           editingReplyId: null,
         });
       } else {
         setPartialState({
           comments: state.comments.map((c) =>
-            c.id === commentId ? { ...c, content: updatedComment.content } : c
+            c.id === commentId ? { ...c, content: updatedComment.content } : c,
           ),
           editingCommentId: null,
         });
@@ -194,7 +194,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
   const handleDeleteComment = async (
     commentId: string,
     isReply = false,
-    parentId?: string
+    parentId?: string,
   ) => {
     if (!confirm("Delete comment?")) return;
     try {
@@ -205,7 +205,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
           comments: state.comments.map((c) =>
             c.id === parentId
               ? { ...c, replies: c.replies?.filter((r) => r.id !== commentId) }
-              : c
+              : c,
           ),
         });
       } else {

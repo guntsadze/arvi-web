@@ -34,7 +34,7 @@ export function PostHeader({
             height={40}
             className="grayscale group-hover/user:grayscale-0 transition-all"
           />
-          {user.isVerified && (
+          {user?.isVerified && (
             <div className="absolute -bottom-1 -right-1 bg-stone-900 p-0.5 border border-stone-600">
               <ShieldCheck size={10} className="text-amber-500" />
             </div>
@@ -43,10 +43,10 @@ export function PostHeader({
         <div>
           <div className="flex items-center gap-2">
             <p className="font-bold text-[#EBE9E1] uppercase tracking-wide text-xs group-hover/user:text-amber-500 transition-colors">
-              {user.firstName} {user.lastName}
+              {user?.firstName} {user?.lastName}
             </p>
             <span className="text-[10px] text-stone-600 font-mono">
-              ID: {user.username}
+              ID: {user?.username}
             </span>
           </div>
           <p className="text-[10px] font-mono text-stone-500 uppercase tracking-widest flex items-center gap-2">

@@ -20,13 +20,13 @@ export default function FollowButton({
 }: FollowButtonProps) {
   const currentUser = useAppSelector(selectCurrentUser);
 
-  if (!currentUser || currentUser.id === userId) {
+  if (!currentUser || currentUser?.id === userId) {
     return null;
   }
 
   const { toggleFollow, isLoading, isFollowing } = useToggleFollow(
     userId,
-    initialFollowing
+    initialFollowing,
   );
 
   const handleClick = async (e: React.MouseEvent) => {
