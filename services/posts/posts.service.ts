@@ -29,7 +29,7 @@ class PostsService extends BaseApiService<Posts> {
 
   getExplore(page = 1, limit = 20) {
     return apiClient.get(
-      `${this.endpoint}/explore?page=${page}&limit=${limit}`
+      `${this.endpoint}/explore?page=${page}&limit=${limit}`,
     );
   }
 
@@ -69,6 +69,13 @@ class PostsService extends BaseApiService<Posts> {
     });
   }
 
+  addGroupComment(groupPostId: string, content: string, parentId?: string) {
+    return apiClient.post(`${this.endpoint}/group/${groupPostId}/comments`, {
+      content,
+      parentId,
+    });
+  }
+
   // COMMENTS
   updateComment(commentId: string, content: string) {
     return apiClient.put(`${this.endpoint}/comments/${commentId}`, { content });
@@ -80,14 +87,20 @@ class PostsService extends BaseApiService<Posts> {
 
   getComments(postId: string, page = 1, limit = 20) {
     return apiClient.get(
-      `${this.endpoint}/${postId}/comments?page=${page}&limit=${limit}`
+      `${this.endpoint}/${postId}/comments?page=${page}&limit=${limit}`,
+    );
+  }
+
+  getGroupComments(postId: string, page = 1, limit = 20) {
+    return apiClient.get(
+      `${this.endpoint}/group/${postId}/comments?page=${page}&limit=${limit}`,
     );
   }
 
   // USER POSTS (Profile)
   getByUserId(userId: string, page = 1, limit = 10) {
     return apiClient.get(
-      `${this.endpoint}/user/${userId}?page=${page}&limit=${limit}`
+      `${this.endpoint}/user/${userId}?page=${page}&limit=${limit}`,
     );
   }
 }

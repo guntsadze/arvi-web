@@ -14,6 +14,19 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { Pin } from "lucide-react";
 
+interface Comment {
+  id: string;
+  content: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    username: string;
+    avatar?: { url: string };
+  };
+  createdAt: string;
+  replies?: Comment[];
+}
+
 interface GroupPostCardProps {
   post: any;
   refresh: () => void;
@@ -23,17 +36,44 @@ interface GroupPostCardProps {
 export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
 
+  // const [state, setState] = useState({
+  //   isLiked: post.isLiked || false,
+  //   likesCount: post.likesCount || 0,
+  //   showComments: false,
+  //   comments: [] as any[],
+  //   editingPost: false,
+  //   isPinned: post.isPinned || false,
+  // });
+
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
+    isSaved: post.isSaved || false,
     likesCount: post.likesCount || 0,
     showComments: false,
-    comments: [] as any[],
+    replyTo: null as string | null,
+    comments: [] as Comment[],
     editingPost: false,
-    isPinned: post.isPinned || false,
+    editingCommentId: null as string | null,
   });
+
+  useEffect(() => {
+    if (state.showComments) fetchComments();
+  }, [state.showComments]);
+
+  const fetchComments = async () => {
+    try {
+      const res = await postsService.getGroupComments(post.id.toString());
+      const data = Array.isArray(res) ? res : res.data || [];
+      setPartialState({ comments: data });
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
 
   const setPartialState = (partial: Partial<typeof state>) =>
     setState((prev) => ({ ...prev, ...partial }));
+
+  const editCommentForm = useForm<{ content: string }>();
 
   // პერმისიების ლოგიკა
   const isPostAuthor = currentUser?.id === post?.userId;
@@ -70,10 +110,113 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
     }
   };
 
-  const handleAddComment = async (data: { content: string }) => {
+  // const handleAddComment = async (data: { content: string }) => {
+  //   try {
+  //     const newComment = await postsService.addGroupComment(
+  //       post.id,
+  //       data.content,
+  //     );
+  //     setPartialState({ comments: [newComment, ...state.comments] });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const handleAddComment = async (
+    data: { content: string },
+    parentId?: string,
+  ) => {
+    if (!data.content.trim()) return;
     try {
-      const newComment = await postsService.addComment(post.id, data.content);
-      setPartialState({ comments: [newComment, ...state.comments] });
+      const newComment = await postsService.addGroupComment(
+        post.id,
+        data.content,
+        parentId,
+      );
+      if (parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? { ...c, replies: [newComment, ...(c.replies || [])] }
+              : c,
+          ),
+          replyTo: null,
+        });
+      } else {
+        setPartialState({
+          comments: [newComment, ...state.comments],
+        });
+      }
+      commentForm.reset();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteComment = async (
+    commentId: string,
+    isReply = false,
+    parentId?: string,
+  ) => {
+    if (!confirm("Delete comment?")) return;
+    try {
+      await postsService.deleteComment(commentId);
+
+      if (isReply && parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? { ...c, replies: c.replies?.filter((r) => r.id !== commentId) }
+              : c,
+          ),
+        });
+      } else {
+        setPartialState({
+          comments: state.comments.filter((c) => c.id !== commentId),
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditComment = async (
+    commentId: string,
+    data: { content: string },
+    isReply = false,
+    parentId?: string,
+  ) => {
+    try {
+      const updatedComment = await postsService.updateComment(
+        commentId,
+        data.content,
+      );
+
+      if (isReply && parentId) {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === parentId
+              ? {
+                  ...c,
+                  replies: c.replies?.map((r) =>
+                    r.id === commentId
+                      ? { ...r, content: updatedComment.content }
+                      : r,
+                  ),
+                }
+              : c,
+          ),
+          editingReplyId: null,
+        });
+      } else {
+        setPartialState({
+          comments: state.comments.map((c) =>
+            c.id === commentId ? { ...c, content: updatedComment.content } : c,
+          ),
+          editingCommentId: null,
+        });
+      }
+      editCommentForm.reset();
     } catch (err) {
       console.error(err);
     }
@@ -97,7 +240,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
         {/* Visual Decoration */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-stone-700 to-transparent opacity-50" />
 
-        <PostHeader
+        {/* <PostHeader
           user={post.user}
           createdAt={post.createdAt}
           onEdit={
@@ -108,6 +251,14 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
           onDelete={canManagePost ? handleDeletePost : undefined}
           isOwner={isPostAuthor}
           // აქ შეგიძლია დაამატო "Pin" ღილაკი თუ ადმინია
+        /> */}
+
+        <PostHeader
+          user={post.user}
+          createdAt={post.createdAt}
+          onEdit={() => setPartialState({ editingPost: true })}
+          onDelete={handleDeletePost}
+          isOwner={isPostAuthor}
         />
 
         {/* Pin Button for Admins */}
@@ -150,11 +301,29 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
         {state.showComments && (
           <div className="bg-[#151413] border-t border-stone-800 p-6">
             <CommentForm
-              onSubmit={handleAddComment}
-              placeholder="Append_To_Log..."
+              onSubmit={(data) => handleAddComment(data)} // მთავარი კომენტარი
+              placeholder="Append comment to log..."
               buttonText="Exec"
             />
-            {/* აქ კომენტარების მეპი (იგივე რაც PostCard-ში) */}
+
+            <div className="space-y-8 mt-8 pl-2">
+              {state.comments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  replyTo={state.replyTo}
+                  setReplyTo={(id) => setPartialState({ replyTo: id })}
+                  editingId={state.editingCommentId}
+                  setEditingId={(id) =>
+                    setPartialState({ editingCommentId: id })
+                  }
+                  onEdit={handleEditComment}
+                  onDelete={handleDeleteComment}
+                  editForm={editCommentForm}
+                  onAddReply={handleAddComment} // ← აქ გადაეცემა parentId!
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -28,17 +28,16 @@ type User = {
 export default function UserCard({ user }: { user: User }) {
   const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
-
-  if (!currentUser || currentUser?.id === user.id) {
-    return null;
-  }
-
   const { toggleFollow, isLoading, error, isFollowing, followersCount } =
     useToggleFollow(
       user.id,
       user.isFollowing ?? false,
       user.followersCount ?? 0,
     );
+
+  if (!currentUser || currentUser?.id === user.id) {
+    return null;
+  }
 
   const handleCardClick = () => {
     router.push(`/profile/${user.username || user.id}`);

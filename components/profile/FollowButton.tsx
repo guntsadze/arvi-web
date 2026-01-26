@@ -19,15 +19,14 @@ export default function FollowButton({
   onFollowersChange,
 }: FollowButtonProps) {
   const currentUser = useAppSelector(selectCurrentUser);
-
-  if (!currentUser || currentUser?.id === userId) {
-    return null;
-  }
-
   const { toggleFollow, isLoading, isFollowing } = useToggleFollow(
     userId,
     initialFollowing,
   );
+
+  if (!currentUser || currentUser?.id === userId) {
+    return null;
+  }
 
   const handleClick = async (e: React.MouseEvent) => {
     e.stopPropagation(); // მნიშვნელოვანია: ბარათში რომ არ გადავიდეს პროფილზე
