@@ -40,9 +40,9 @@ export default async function Page({ params }: Props) {
           <ImageUploader userId={user.id} type="cover" />
         </div>
 
-        {user.coverPhoto ? (
+        {user.cover ? (
           <Image
-            src={user.coverPhoto?.url}
+            src={user.cover}
             alt="Cover"
             fill
             className="object-cover"

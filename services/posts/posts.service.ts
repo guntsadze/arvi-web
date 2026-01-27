@@ -46,6 +46,10 @@ class PostsService extends BaseApiService<Posts> {
     return apiClient.put(`${this.endpoint}/${id}`, data);
   }
 
+  updateGroupPost(id: string, data: Partial<Posts>) {
+    return apiClient.put(`${this.endpoint}/group/${id}`, data);
+  }
+
   deletePost(id: string) {
     return apiClient.delete(`${this.endpoint}/${id}`);
   }
@@ -53,6 +57,10 @@ class PostsService extends BaseApiService<Posts> {
   // INTERACTIONS
   likePost(id: string) {
     return apiClient.post(`${this.endpoint}/${id}/like`);
+  }
+
+  likeGroupPost(id: string) {
+    return apiClient.post(`${this.endpoint}/group/${id}/like`);
   }
 
   savePost(id: string, collectionName?: string) {

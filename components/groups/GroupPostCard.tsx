@@ -42,7 +42,6 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
   //   showComments: false,
   //   comments: [] as any[],
   //   editingPost: false,
-  //   isPinned: post.isPinned || false,
   // });
 
   const [state, setState] = useState({
@@ -54,6 +53,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
     comments: [] as Comment[],
     editingPost: false,
     editingCommentId: null as string | null,
+    isPinned: post.isPinned || false,
   });
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
 
   const handleLike = async () => {
     try {
-      const res = await postsService.likePost(post.id);
+      const res = await postsService.likeGroupPost(post.id);
       setPartialState({ isLiked: res.liked, likesCount: res.likesCount });
     } catch (err) {
       console.error(err);
@@ -107,6 +107,24 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
       refresh();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleUpdatePost = async (data: {
+    content: string;
+    images: string[];
+  }) => {
+    try {
+      setPartialState({ editingPost: false });
+
+      await postsService.updateGroupPost(post.id, {
+        content: data.content,
+        images: data.images,
+      });
+
+      refresh();
+    } catch (err) {
+      alert("ვერ მოხერხდა პოსტის განახლება");
     }
   };
 
@@ -262,20 +280,18 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
         />
 
         {/* Pin Button for Admins */}
-        {["OWNER", "ADMIN", "MODERATOR"].includes(myRole || "") && (
-          <button
-            onClick={handlePinPost}
-            className={`absolute top-4 right-12 p-1 transition-colors ${state.isPinned ? "text-amber-500" : "text-stone-700 hover:text-stone-400"}`}
-          >
-            <Pin size={14} />
-          </button>
-        )}
+        <button
+          onClick={handlePinPost}
+          className={`absolute top-4 right-12 p-1 transition-colors ${state.isPinned ? "text-amber-500" : "text-stone-700 hover:text-stone-400"}`}
+        >
+          <Pin size={14} />
+        </button>
 
         <div className="p-4 bg-[#201d1b]">
           <PostContent
             post={post}
             isEditing={state.editingPost}
-            onSave={() => {}} // შენი handleUpdatePost ლოგიკა
+            onSave={handleUpdatePost}
             onCancel={() => setPartialState({ editingPost: false })}
           />
         </div>
@@ -289,8 +305,8 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
         <PostActions
           likesCount={state.likesCount}
           isLiked={state.isLiked}
-          commentsCount={post.commentsCount || 0}
-          isSaved={false} // ჯგუფის პოსტებზე თუ გინდა Save
+          commentsCount={post._count?.comments || 0}
+          isSaved={state.isSaved}
           onLike={handleLike}
           onToggleComments={() =>
             setPartialState({ showComments: !state.showComments })

@@ -16,7 +16,7 @@ type User = {
   firstName: string;
   lastName: string;
   avatar?: string | null;
-  coverPhoto?: string | null;
+  cover?: string | null;
   role: "USER" | "ADMIN";
   isVerified: boolean;
   followersCount: number;
@@ -48,6 +48,8 @@ export default function UserCard({ user }: { user: User }) {
     toggleFollow();
   };
 
+  console.log(user, "usersssss");
+
   return (
     <div className="relative group">
       <div className="absolute inset-0 bg-stone-900 translate-x-2 translate-y-2 rounded-sm" />
@@ -56,9 +58,9 @@ export default function UserCard({ user }: { user: User }) {
         className="relative bg-[#dcd8c8] border border-stone-500 rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200 cursor-pointer"
       >
         <div className="relative h-24 bg-stone-800 border-b-2 border-stone-600">
-          {user.coverPhoto ? (
+          {user.cover ? (
             <Image
-              src={user.coverPhoto}
+              src={user.cover}
               alt="cover"
               fill
               sizes="100vw"

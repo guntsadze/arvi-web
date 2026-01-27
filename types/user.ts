@@ -5,7 +5,7 @@ export type User = {
   firstName: string;
   lastName: string;
   avatar?: string | null;
-  coverPhoto?: string | null;
+  cover?: string | null;
   role: "USER" | "ADMIN";
   isVerified: boolean;
   followersCount: number;
