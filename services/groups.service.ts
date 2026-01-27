@@ -56,6 +56,18 @@ class GroupsService extends BaseApiService<Group> {
   pinGroupPost(groupId: string, postId: string) {
     return apiClient.post(`/groups/${groupId}/posts/${postId}/pin`);
   }
+
+  uploadMedia(
+    groupId: string,
+    type: "avatar" | "cover",
+    data: { file: string },
+  ) {
+    return apiClient.post(`${this.endpoint}/${groupId}/${type}`, data);
+  }
+
+  deleteMedia(groupId: string, type: "avatar" | "cover") {
+    return apiClient.delete(`${this.endpoint}/${groupId}/${type}`);
+  }
 }
 
 export const groupsService = new GroupsService();

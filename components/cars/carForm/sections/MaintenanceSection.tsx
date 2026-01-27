@@ -13,7 +13,7 @@ import {
 import { RuggedSelect } from "@/components/ui/RuggedSelect";
 import { MAINTENANCE_TYPES } from "@/constants/carOptions";
 import { RuggedDateInput } from "@/components/ui/RuggedDateInput";
-import { RuggedTextArea } from "../../../../components/ui/RuggedTextarea";
+import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
 
 export const MaintenanceSection: React.FC<{
   control: Control<any>;

@@ -36,14 +36,6 @@ interface GroupPostCardProps {
 export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
 
-  // const [state, setState] = useState({
-  //   isLiked: post.isLiked || false,
-  //   likesCount: post.likesCount || 0,
-  //   showComments: false,
-  //   comments: [] as any[],
-  //   editingPost: false,
-  // });
-
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
     isSaved: post.isSaved || false,
@@ -127,18 +119,6 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
       alert("ვერ მოხერხდა პოსტის განახლება");
     }
   };
-
-  // const handleAddComment = async (data: { content: string }) => {
-  //   try {
-  //     const newComment = await postsService.addGroupComment(
-  //       post.id,
-  //       data.content,
-  //     );
-  //     setPartialState({ comments: [newComment, ...state.comments] });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
   const handleAddComment = async (
     data: { content: string },
@@ -257,19 +237,6 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
       <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-700 transition-colors duration-300 relative overflow-hidden">
         {/* Visual Decoration */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-stone-700 to-transparent opacity-50" />
-
-        {/* <PostHeader
-          user={post.user}
-          createdAt={post.createdAt}
-          onEdit={
-            isPostAuthor
-              ? () => setPartialState({ editingPost: true })
-              : undefined
-          }
-          onDelete={canManagePost ? handleDeletePost : undefined}
-          isOwner={isPostAuthor}
-          // აქ შეგიძლია დაამატო "Pin" ღილაკი თუ ადმინია
-        /> */}
 
         <PostHeader
           user={post.user}

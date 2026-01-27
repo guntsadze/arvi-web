@@ -2,12 +2,13 @@
 
 import React, { use, useCallback, useEffect } from "react";
 import { groupsService } from "@/services/groups.service";
-import { PostCard } from "@/components/posts/PostCard";
 import { GroupHeader } from "@/components/groups/GroupHeader";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Terminal } from "lucide-react";
 import { GroupPostForm } from "@/components/groups/GroupPostForm";
 import { GroupPostCard } from "@/components/groups/GroupPostCard";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 export default function GroupPage({
   params,
@@ -15,6 +16,8 @@ export default function GroupPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+
+  const currentUser = useAppSelector(selectCurrentUser);
 
   const [group, setGroup] = React.useState<any>(null);
 
@@ -55,12 +58,13 @@ export default function GroupPage({
       />
       <div className="fixed top-0 left-0 w-full h-1 bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-50" />
 
-      <GroupHeader group={group} />
+      <GroupHeader group={group} isOwner={currentUser?.id === group.ownerId} />
 
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid gap-12">
-          {/* LEFT: POSTS AREA */}
-          <div className="lg:col-span-2 space-y-10">
+        {/* <div className="grid gap-12">
+          {/* <div className="lg:col-span-2 space-y-10"> */}
+        <div className="flex justify-center">
+          <div className="w-full lg:w-[60%] space-y-10">
             {/* POST CREATION */}
             <GroupPostForm
               groupId={group.id}
@@ -70,9 +74,16 @@ export default function GroupPage({
 
             {/* POSTS LIST */}
             <div className="space-y-8">
-              {posts.map((post: any) => (
-                <GroupPostCard key={post.id} post={post} refresh={refresh} />
-              ))}
+              {[...posts]
+                .sort((a, b) => Number(b.isPinned) - Number(a.isPinned))
+                .map((post: any) => (
+                  <GroupPostCard
+                    key={post.id}
+                    post={post}
+                    refresh={refresh}
+                    myRole={group.myRole}
+                  />
+                ))}
 
               {loading && (
                 <div className="flex flex-col items-center py-10 gap-3">

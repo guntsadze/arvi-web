@@ -4,13 +4,15 @@ import { useState, useRef } from "react";
 import { Camera, Loader2, Trash2 } from "lucide-react";
 import { usersService } from "@/services/user/user.service";
 import { useRouter } from "next/navigation";
+import { groupsService } from "@/services/groups.service";
 
 interface Props {
-  userId: string;
+  id: string;
   type: "avatar" | "cover";
+  context: "user" | "group";
 }
 
-export default function ImageUploader({ userId, type }: Props) {
+export default function ImageUploader({ id, type, context }: Props) {
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,10 +31,13 @@ export default function ImageUploader({ userId, type }: Props) {
         reader.onerror = (err) => reject(err);
       });
 
-      if (type === "avatar") {
-        await usersService.uploadAvatar(userId, { file: fileBase64 });
+      if (context === "user") {
+        if (type === "avatar")
+          await usersService.uploadAvatar(id, { file: fileBase64 });
+        else await usersService.uploadCover(id, { file: fileBase64 });
       } else {
-        await usersService.uploadCover(userId, { file: fileBase64 });
+        // ჯგუფის შემთხვევაში ვიყენებთ ჩვენს ახალ სერვისს
+        await groupsService.uploadMedia(id, type, { file: fileBase64 });
       }
 
       router.refresh();
@@ -45,18 +50,17 @@ export default function ImageUploader({ userId, type }: Props) {
   };
 
   const handleDelete = async () => {
-    if (!confirm("დარწმუნებული ხარ, რომ გინდა სურათის წაშლა?")) return;
-
+    if (!confirm("დარწმუნებული ხარ?")) return;
     setDeleting(true);
     try {
-      if (type === "avatar") {
-        await usersService.deleteAvatar(userId);
+      if (context === "user") {
+        if (type === "avatar") await usersService.deleteAvatar(id);
+        else await usersService.deleteCover(id);
       } else {
-        await usersService.deleteCover(userId);
+        await groupsService.deleteMedia(id, type);
       }
       router.refresh();
     } catch (error) {
-      console.error("Delete failed", error);
       alert("წაშლა ვერ მოხერხდა");
     } finally {
       setDeleting(false);
@@ -64,7 +68,7 @@ export default function ImageUploader({ userId, type }: Props) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       <input
         type="file"
         ref={fileInputRef}
@@ -75,23 +79,23 @@ export default function ImageUploader({ userId, type }: Props) {
       <button
         onClick={() => fileInputRef.current?.click()}
         disabled={loading}
-        className="flex items-center justify-center p-2 bg-orange-500 hover:bg-orange-600 text-black rounded-lg transition-all shadow-lg disabled:opacity-50"
+        className="p-1.5 bg-amber-600/20 hover:bg-amber-600/40 text-amber-500 border border-amber-600/30 transition-all disabled:opacity-50"
       >
         {loading ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 size={14} className="animate-spin" />
         ) : (
-          <Camera size={20} />
+          <Camera size={14} />
         )}
       </button>
       <button
         onClick={handleDelete}
         disabled={deleting}
-        className="flex items-center justify-center p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all shadow-lg disabled:opacity-50"
+        className="p-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/30 transition-all disabled:opacity-50"
       >
         {deleting ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 size={14} className="animate-spin" />
         ) : (
-          <Trash2 size={20} />
+          <Trash2 size={14} />
         )}
       </button>
     </div>

@@ -1,45 +1,23 @@
 "use client";
 
 import { Group } from "@/types/groups.types";
-import { Activity, ShieldCheck, Settings } from "lucide-react";
+import { ShieldCheck, Settings } from "lucide-react";
+import { GroupAvatarItem } from "../ui/GroupAvatarItem";
+import { GroupCoverItem } from "../ui/GroupCoverItem";
 
-export const GroupHeader = ({ group }: { group: Group }) => {
+export const GroupHeader = ({
+  group,
+  isOwner,
+}: {
+  group: Group;
+  isOwner: boolean;
+}) => {
   return (
     <div className="relative border-b border-stone-800 bg-[#201d1b]/50 backdrop-blur-md overflow-hidden">
-      {/* Cover Photo Area */}
-      <div className="h-48 md:h-64 bg-stone-900 relative">
-        {group.coverPhoto ? (
-          <img
-            src={group.coverPhoto}
-            className="w-full h-full object-cover opacity-40"
-          />
-        ) : (
-          <div
-            className="w-full h-full opacity-10"
-            style={{
-              backgroundImage: `radial-gradient(#44403c 1px, transparent 1px)`,
-              backgroundSize: "20px 20px",
-            }}
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1c1917] to-transparent" />
-      </div>
-
+      <GroupCoverItem group={group} isOwner={isOwner} />
       <div className="max-w-6xl mx-auto px-4 relative">
         <div className="flex flex-col md:flex-row items-end gap-6 -mt-16 pb-8">
-          {/* Avatar */}
-          <div className="w-32 h-32 bg-[#201d1b] border-2 border-stone-800 p-1 relative shadow-2xl">
-            {group.avatar ? (
-              <img src={group.avatar} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-800 text-[10px]">
-                NO_IMG
-              </div>
-            )}
-            <div className="absolute -bottom-2 -right-2 bg-amber-700 p-1.5 border border-[#1c1917]">
-              <Activity size={14} className="text-stone-950" />
-            </div>
-          </div>
+          <GroupAvatarItem group={group} size="lg" isOwner={isOwner} />
 
           {/* Info */}
           <div className="flex-1 space-y-1">

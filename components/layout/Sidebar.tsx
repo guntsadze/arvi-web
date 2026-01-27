@@ -34,6 +34,7 @@ import { NotificationsDropdown } from "../right-panel/dropdowns/NotificationsDro
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { CarAvatarItem } from "../ui/CarAvatarItem";
 import { groupsService } from "@/services/groups.service";
+import { GroupAvatarItem } from "../ui/GroupAvatarItem";
 
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ");
@@ -202,14 +203,7 @@ export function Sidebar() {
                 >
                   {/* Group Avatar Mini */}
                   <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
-                    {group.avatar ? (
-                      <img
-                        src={group.avatar}
-                        className="w-full h-full object-cover opacity-70 group-hover:opacity-100"
-                      />
-                    ) : (
-                      <Users size={12} className="text-stone-700" />
-                    )}
+                    <GroupAvatarItem group={group} size="sm" />
                   </div>
 
                   <span className="font-mono truncate uppercase tracking-wider">

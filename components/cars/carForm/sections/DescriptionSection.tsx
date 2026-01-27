@@ -1,7 +1,7 @@
 import { Control, Controller, UseFormRegister } from "react-hook-form";
 import { CarFormData } from "@/types/carForm.types";
 import { ImageUpload } from "../shared/ImageUpload";
-import { RuggedTextArea } from "../../../../components/ui/RuggedTextarea";
+import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
 
 interface DescriptionSectionProps {
   register: UseFormRegister<CarFormData>;
