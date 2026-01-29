@@ -68,6 +68,14 @@ class GroupsService extends BaseApiService<Group> {
   deleteMedia(groupId: string, type: "avatar" | "cover") {
     return apiClient.delete(`${this.endpoint}/${groupId}/${type}`);
   }
+
+  joinToGroup(groupId: string) {
+    return apiClient.post(`${groupId}/join`);
+  }
+
+  leaveToGroup(groupId: string) {
+    return apiClient.post(`${groupId}/leave`);
+  }
 }
 
 export const groupsService = new GroupsService();
