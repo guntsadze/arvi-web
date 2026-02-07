@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { DEFAULT_FORM_VALUES } from "@/constants/carOptions";
 import { carsService } from "@/services/cars/cars.service";
 import { CarFormData } from "@/types/carForm.types";
+import { storageService } from "@/services/storage.service";
 
 interface UseCarFormProps {
   initialData?: any;
@@ -36,32 +37,47 @@ export const useCarForm = ({
 
   const onSubmit = async (data: CarFormData) => {
     try {
+      let finalPhotos = [];
+
+      // 1. ვახარისხებთ ფოტოებს: რომელია უკვე ატვირთული და რომელია ახალი (File)
+      const existingPhotos = data.photos.filter((p) => !(p instanceof File));
+      const newFiles = data.photos.filter((p) => p instanceof File) as File[];
+
+      // 2. ავტვირთოთ მხოლოდ ახალი ფაილები
+      if (newFiles.length > 0) {
+        const uploadPromises = newFiles.map((file) =>
+          storageService.uploadFile(file, "cars"),
+        );
+        const uploadedResults = await Promise.all(uploadPromises);
+        finalPhotos = [...existingPhotos, ...uploadedResults];
+      } else {
+        finalPhotos = existingPhotos;
+      }
+
+      // 3. მოვამზადოთ საბოლოო მონაცემები ბექენდისთვის
+      const submitData = {
+        ...data,
+        photos: finalPhotos, // აქ უკვე მხოლოდ Cloudinary-ს ობიექტებია
+        modifications: data.modifications.map((m) => ({
+          ...m,
+          carId: initialData?.id,
+        })),
+        maintenanceRecords: data.maintenanceRecords.map((r) => ({
+          ...r,
+          carId: initialData?.id,
+        })),
+      };
+
       if (isEditing) {
-        // modifications თუ არსებობს, დაამატე carId
-        let submitData = { ...data };
-        if (submitData.modifications.length > 0) {
-          submitData.modifications = submitData.modifications.map((mod) => ({
-            ...mod,
-            carId: initialData.id,
-          }));
-        }
-        if (submitData.maintenanceRecords.length > 0) {
-          submitData.maintenanceRecords = submitData.maintenanceRecords.map(
-            (record) => ({
-              ...record,
-              carId: initialData.id,
-            }),
-          );
-        }
-        console.log("Submitting form data:", submitData);
         await carsService.update(initialData.id, submitData);
       } else {
-        await carsService.create(data);
+        await carsService.create(submitData);
       }
+
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error("Submission failed", error);
     }
   };
 

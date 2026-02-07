@@ -1,62 +1,64 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, X, Maximize2, Layers } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Layers } from "lucide-react";
+
+interface MediaItem {
+  url: string;
+  publicId?: string;
+  mediaType?: "IMAGE" | "VIDEO";
+}
 
 interface ImageSliderProps {
-  images: string[];
+  media: MediaItem[];
   aspectRatio?: string;
 }
 
 export function ImageSlider({
-  images,
+  media,
   aspectRatio = "aspect-[16/9]",
 }: ImageSliderProps) {
   const [current, setCurrent] = useState(0);
   const [isMaximized, setIsMaximized] = useState(false);
 
-  // ფუნქციების მემოიზაცია, რათა useEffect-ში უსაფრთხოდ გამოვიყენოთ
+  const imageUrls = useMemo(() => {
+    if (!media) return [];
+    return media.map((item) => (typeof item === "string" ? item : item.url));
+  }, [media]);
+
+  const count = imageUrls.length;
+
   const next = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
       e?.stopPropagation();
-      setCurrent((prev) => (prev + 1) % images.length);
+      setCurrent((prev) => (prev + 1) % count);
     },
-    [images.length]
+    [count],
   );
 
   const prev = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
       e?.stopPropagation();
-      setCurrent((prev) => (prev - 1 + images.length) % images.length);
+      setCurrent((prev) => (prev - 1 + count) % count);
     },
-    [images.length]
+    [count],
   );
 
-  // კლავიატურის ღილაკების კონტროლი
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isMaximized) return; // ისრები იმუშავებს მხოლოდ მაშინ, როცა სურათია გადიდებული
-
-      switch (e.key) {
-        case "Escape":
-          setIsMaximized(false);
-          break;
-        case "ArrowRight":
-          next(e);
-          break;
-        case "ArrowLeft":
-          prev(e);
-          break;
-      }
+      if (!isMaximized) return;
+      if (e.key === "Escape") setIsMaximized(false);
+      if (e.key === "ArrowRight") next(e);
+      if (e.key === "ArrowLeft") prev(e);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMaximized, next, prev]);
 
-  if (!images || images.length === 0) return null;
+  if (!imageUrls || imageUrls.length === 0) return null;
 
   const openLightbox = (index: number) => {
     setCurrent(index);
@@ -64,8 +66,6 @@ export function ImageSlider({
   };
 
   const renderGrid = () => {
-    const count = images.length;
-
     const CountBadge = () => (
       <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2 py-1 border border-white/10 rounded-sm pointer-events-none">
         <Layers size={12} className="text-amber-500" />
@@ -90,7 +90,7 @@ export function ImageSlider({
       >
         <Image
           src={src}
-          alt="Post"
+          alt={`Media ${index}`}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -101,7 +101,7 @@ export function ImageSlider({
     if (count === 1) {
       return (
         <div className={`relative w-full ${aspectRatio}`}>
-          <GridImage src={images[0]} index={0} />
+          <GridImage src={imageUrls[0]} index={0} />
         </div>
       );
     }
@@ -110,8 +110,8 @@ export function ImageSlider({
       return (
         <div className={`relative grid grid-cols-2 gap-2 p-1 ${aspectRatio}`}>
           <CountBadge />
-          <GridImage src={images[0]} index={0} />
-          <GridImage src={images[1]} index={1} />
+          <GridImage src={imageUrls[0]} index={0} />
+          <GridImage src={imageUrls[1]} index={1} />
         </div>
       );
     }
@@ -120,10 +120,10 @@ export function ImageSlider({
       return (
         <div className={`relative grid grid-cols-2 gap-2 p-1 ${aspectRatio}`}>
           <CountBadge />
-          <GridImage src={images[0]} index={0} />
+          <GridImage src={imageUrls[0]} index={0} />
           <div className="grid grid-rows-2 gap-2">
-            <GridImage src={images[1]} index={1} />
-            <GridImage src={images[2]} index={2} />
+            <GridImage src={imageUrls[1]} index={1} />
+            <GridImage src={imageUrls[2]} index={2} />
           </div>
         </div>
       );
@@ -135,18 +135,18 @@ export function ImageSlider({
       >
         <CountBadge />
         <GridImage
-          src={images[0]}
+          src={imageUrls[0]}
           index={0}
           className="col-span-3 row-span-2"
         />
-        <GridImage src={images[1]} index={1} />
+        <GridImage src={imageUrls[1]} index={1} />
         <div
           className="relative h-full cursor-zoom-in overflow-hidden group border border-stone-800/50"
           onClick={() => openLightbox(2)}
         >
           <Image
-            src={images[2]}
-            alt="Post"
+            src={imageUrls[2]}
+            alt="More"
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -192,8 +192,8 @@ export function ImageSlider({
                 className="relative w-full h-full max-w-6xl max-h-[80vh]"
               >
                 <Image
-                  src={images[current]}
-                  alt="Full"
+                  src={imageUrls[current]}
+                  alt={`Full ${current}`}
                   fill
                   className="object-contain"
                   quality={100}
@@ -201,7 +201,7 @@ export function ImageSlider({
                 />
               </motion.div>
 
-              {images.length > 1 && (
+              {count > 1 && (
                 <>
                   <button
                     onClick={(e) => prev(e)}
@@ -220,7 +220,7 @@ export function ImageSlider({
             </div>
 
             <div className="mt-auto mb-6 flex gap-3 p-2 bg-stone-900/50 border border-white/5 rounded-lg max-w-[90vw]">
-              {images.map((img, idx) => (
+              {imageUrls.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrent(idx)}
@@ -230,7 +230,12 @@ export function ImageSlider({
                       : "border-transparent opacity-30 hover:opacity-60"
                   }`}
                 >
-                  <Image src={img} alt="thumb" fill className="object-cover" />
+                  <Image
+                    src={img}
+                    alt={`Thumbnail ${idx}`}
+                    fill
+                    className="object-cover"
+                  />
                 </button>
               ))}
             </div>

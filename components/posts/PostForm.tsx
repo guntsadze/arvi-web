@@ -7,10 +7,11 @@ import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import FileUploader from "../ui/FileUploader";
 import { postsService } from "@/services/posts/posts.service";
+import { storageService } from "@/services/storage.service";
 
 const createPostSchema = z.object({
   content: z.string().min(1).max(5000),
-  images: z.array(z.any()).default([]),
+  media: z.array(z.any()).default([]),
   videos: z.array(z.any()).default([]),
 });
 
@@ -20,15 +21,14 @@ export function PostForm({ refresh }: { refresh: () => void }) {
 
   const { register, handleSubmit, control, watch, reset } = useForm({
     resolver: zodResolver(createPostSchema),
-    defaultValues: { content: "", images: [], videos: [] },
+    defaultValues: { content: "", media: [], videos: [] },
   });
 
-  const [content, images, videos] = watch(["content", "images", "videos"]);
+  const [content, media, videos] = watch(["content", "media", "videos"]);
 
-  // ტექსტის სიმაღლის ავტომატური რეგულირება
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "24px"; // საწყისი მინიმალური სიმაღლე
+      textareaRef.current.style.height = "24px";
       const scrollHeight = textareaRef.current.scrollHeight;
       textareaRef.current.style.height = scrollHeight + "px";
     }
@@ -37,16 +37,32 @@ export function PostForm({ refresh }: { refresh: () => void }) {
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
+      // 1. ამოვიღოთ მხოლოდ ფაილები (File ობიექტები)
+      const imageFiles = data.media?.map((img: any) => img.file) || [];
+      const videoFiles = data.videos?.map((vid: any) => vid.file) || [];
+      const allFiles = [...imageFiles, ...videoFiles];
+
+      let uploadedMedia = [];
+
+      // 2. ატვირთვა Cloudinary-ზე
+      if (allFiles.length > 0) {
+        const uploadPromises = allFiles.map((file) =>
+          storageService.uploadFile(file, "posts"),
+        );
+        uploadedMedia = await Promise.all(uploadPromises);
+      }
+
+      // 3. ბექენდზე გაგზავნა
       const payload = {
         content: data.content,
-        images: data.images?.map((i: any) => i.base64),
-        videos: data.videos?.map((v: any) => v.base64),
+        media: uploadedMedia,
       };
+
       await postsService.createPost(payload);
       reset();
       refresh();
     } catch (e) {
-      console.error(e);
+      console.error("Upload error:", e);
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +104,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
         {/* Action Buttons */}
         <div className="flex items-center gap-1 mb-0.5">
           <Controller
-            name="images"
+            name="media"
             control={control}
             render={({ field }) => (
               <FileUploader
@@ -102,9 +118,9 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                   className="relative p-2 text-stone-600 hover:text-amber-500 hover:bg-stone-900/50 transition-all rounded"
                 >
                   <ImageIcon size={16} />
-                  {images?.length > 0 && (
+                  {media?.length > 0 && (
                     <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-amber-600 text-[8px] text-white flex items-center justify-center font-bold rounded-full">
-                      {images.length}
+                      {media.length}
                     </span>
                   )}
                 </button>

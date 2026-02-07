@@ -100,18 +100,15 @@ export function PostCard({ post, refresh }: PostCardProps) {
     }
   };
 
-  const handleUpdatePost = async (data: {
-    content: string;
-    images: string[];
-  }) => {
+  const handleUpdatePost = async (data: { content: string; media: any[] }) => {
     try {
       setPartialState({ editingPost: false });
 
-      await postsService.updatePost(post.id, {
+      const payload = {
         content: data.content,
-        images: data.images,
-      });
-
+        media: data.media,
+      };
+      await postsService.updatePost(post.id, payload);
       refresh();
     } catch (err) {
       alert("ვერ მოხერხდა პოსტის განახლება");
@@ -241,8 +238,11 @@ export function PostCard({ post, refresh }: PostCardProps) {
           />
         </div>
 
-        {post.images && post.images.length > 0 && (
-          <ImageSlider images={post.images} aspectRatio="aspect-[16/9]" />
+        {post.media && post.media.length > 0 && (
+          <ImageSlider
+            media={post.media.map((m: any) => m.url)}
+            aspectRatio="aspect-[16/9]"
+          />
         )}
 
         <PostActions
@@ -279,7 +279,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
                   onEdit={handleEditComment}
                   onDelete={handleDeleteComment}
                   editForm={editCommentForm}
-                  onAddReply={handleAddComment} // ← აქ გადაეცემა parentId!
+                  onAddReply={handleAddComment}
                 />
               ))}
             </div>

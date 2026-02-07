@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
-import { ImageIcon, X, Save, AlertCircle } from "lucide-react";
+import { ImageIcon, X, Save, AlertCircle, Loader2 } from "lucide-react";
 import FileUploader from "../ui/FileUploader";
+import { storageService } from "@/services/storage.service";
 
 interface EditPostModalProps {
   post: any;
@@ -21,20 +22,24 @@ export function EditPostModal({
   onSave,
 }: EditPostModalProps) {
   const [mounted, setMounted] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const { register, handleSubmit, watch, setValue, reset } = useForm({
+  const { register, handleSubmit, watch, setValue, reset, control } = useForm({
     defaultValues: {
-      content: post.content,
-      images: post.images || [],
+      content: "",
+      media: [] as any[],
     },
   });
 
-  const currentImages = watch("images");
+  const currentMedia = watch("media");
 
   useEffect(() => {
     setMounted(true);
-    if (isOpen) {
-      reset({ content: post.content, images: post.images || [] });
+    if (isOpen && post) {
+      reset({
+        content: post.content,
+        media: post.media || [],
+      });
       document.body.style.overflow = "hidden";
     }
     return () => {
@@ -44,140 +49,171 @@ export function EditPostModal({
 
   if (!mounted || !isOpen) return null;
 
-  const handleRemoveImage = (indexToRemove: number) => {
+  const handleRemoveMedia = (indexToRemove: number) => {
     setValue(
-      "images",
-      currentImages.filter((_: any, i: number) => i !== indexToRemove)
+      "media",
+      currentMedia.filter((_, i) => i !== indexToRemove),
     );
   };
 
   const onSubmit = async (data: any) => {
-    await onSave(data);
-    onClose();
+    setIsUploading(true);
+    try {
+      const existingMedia = data.media.filter((m: any) => !m.file);
+      const newFiles = data.media
+        .filter((m: any) => m.file)
+        .map((m: any) => m.file);
+
+      let newlyUploadedMedia = [];
+      if (newFiles.length > 0) {
+        const uploadPromises = newFiles.map((file: File) =>
+          storageService.uploadFile(file, "posts"),
+        );
+        newlyUploadedMedia = await Promise.all(uploadPromises);
+      }
+
+      const finalMedia = [...existingMedia, ...newlyUploadedMedia].map(
+        (m: any) => ({
+          url: m.url,
+          publicId: m.publicId ?? m.public_id ?? "",
+          mediaType:
+            m.mediaType?.toUpperCase() ??
+            (m.resource_type === "video" ? "VIDEO" : "IMAGE"),
+          bytes: m.bytes ? Number(m.bytes) : 0,
+          format: m.format ?? "",
+        }),
+      );
+
+      const finalPayload = {
+        content: data.content,
+        media: finalMedia,
+      };
+
+      await onSave(finalPayload);
+      onClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  // Portal Content
   const modalContent = (
     <AnimatePresence>
       <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/90 backdrop-blur-md"
         />
 
-        {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
           className="relative w-full max-w-2xl bg-[#1c1917] border border-stone-800 shadow-2xl overflow-hidden"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-stone-800 bg-[#25211f]">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-amber-600 animate-pulse" />
-              <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-stone-300">
-                Edit Protocol:{" "}
-                <span className="text-amber-600">
-                  ID_{post.id.toString().slice(-4)}
-                </span>
-              </h2>
-            </div>
+            <h2 className="text-xs font-mono uppercase tracking-widest text-stone-300">
+              Protocol Update:{" "}
+              <span className="text-amber-600">POST_{post.id.slice(-6)}</span>
+            </h2>
             <button
               onClick={onClose}
-              className="text-stone-500 hover:text-white transition-colors"
+              className="text-stone-500 hover:text-white"
             >
               <X size={20} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-            {/* Text Area Container */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-mono text-stone-500 uppercase tracking-widest">
-                Post Content
-              </label>
-              <textarea
-                {...register("content")}
-                rows={6}
-                className="w-full bg-stone-900/50 border border-stone-800 p-4 font-mono text-sm text-[#EBE9E1] focus:outline-none focus:border-amber-600/50 transition-colors resize-none"
-                placeholder="Enter log data..."
-              />
-            </div>
+            <textarea
+              {...register("content")}
+              className="w-full bg-stone-900/50 border border-stone-800 p-4 font-mono text-sm text-stone-200 focus:border-amber-600/50 outline-none resize-none"
+              rows={5}
+            />
 
-            {/* Media Management */}
             <div className="space-y-3">
-              <label className="text-[10px] font-mono text-stone-500 uppercase tracking-widest flex justify-between">
-                Attached Media <span>{currentImages.length} Units</span>
+              <label className="text-[10px] font-mono text-stone-500 uppercase flex justify-between">
+                Media Assets <span>{currentMedia.length} Total</span>
               </label>
 
-              <div className="grid grid-cols-4 gap-3 bg-stone-900/30 p-3 border border-dashed border-stone-800 min-h-[100px]">
-                {currentImages.map((img: string, index: number) => (
+              <div className="grid grid-cols-4 gap-3 bg-stone-900/30 p-3 border border-stone-800">
+                {currentMedia.map((m: any, index: number) => (
                   <div
                     key={index}
-                    className="relative aspect-square group border border-stone-700"
+                    className="relative aspect-square border border-stone-700 group"
                   >
                     <img
-                      src={img}
-                      alt="preview"
+                      src={m.url || m.preview} // m.url ძველისთვის, m.preview ახლისთვის
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
+                      alt="media"
                     />
                     <button
                       type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-1 right-1 bg-red-900 text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => handleRemoveMedia(index)}
+                      className="absolute top-1 right-1 bg-red-600 text-white p-1 opacity-0 group-hover:opacity-100"
                     >
                       <X size={12} />
                     </button>
+                    {m.mediaType === "VIDEO" && (
+                      <div className="absolute bottom-1 left-1 bg-black/60 text-[8px] px-1 text-white">
+                        VID
+                      </div>
+                    )}
                   </div>
                 ))}
 
-                <FileUploader
-                  accept="image/*"
-                  multiple
-                  onFilesChange={(files) => {
-                    const newBase64s = files.map((f) => f.base64);
-                    setValue("images", [...currentImages, ...newBase64s]);
-                  }}
-                  showPreview={false}
-                >
-                  <button
-                    type="button"
-                    className="w-full h-full flex flex-col items-center justify-center gap-2 border border-dashed border-stone-700 hover:bg-stone-800 text-stone-500 transition-all aspect-square"
-                  >
-                    <ImageIcon size={20} />
-                    <span className="text-[8px] uppercase">Add</span>
-                  </button>
-                </FileUploader>
+                <Controller
+                  name="media"
+                  control={control}
+                  render={({ field }) => (
+                    <FileUploader
+                      accept="image/*,video/*"
+                      multiple
+                      onFilesChange={(newFiles) =>
+                        field.onChange([...currentMedia, ...newFiles])
+                      }
+                      showPreview={false}
+                    >
+                      <button
+                        type="button"
+                        className="w-full h-full flex flex-col items-center justify-center gap-2 border border-dashed border-stone-700 hover:bg-stone-800 text-stone-500 aspect-square"
+                      >
+                        <ImageIcon size={20} />
+                        <span className="text-[8px] uppercase">Add Media</span>
+                      </button>
+                    </FileUploader>
+                  )}
+                />
               </div>
             </div>
 
-            {/* Footer Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-stone-800/50">
-              <div className="flex items-center gap-2 text-stone-600">
-                <AlertCircle size={14} />
-                <span className="text-[9px] font-mono uppercase">
-                  Changes will be permanent
-                </span>
+            <div className="flex items-center justify-between pt-4 border-t border-stone-800">
+              <div className="flex items-center gap-2 text-stone-600 text-[9px] font-mono uppercase">
+                <AlertCircle size={14} /> <span>Cloud Sync Active</span>
               </div>
-
               <div className="flex gap-4">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-[10px] font-mono uppercase text-stone-500 hover:text-white transition-colors"
+                  className="text-[10px] font-mono uppercase text-stone-500"
                 >
                   Discard
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-6 py-2 bg-amber-700 text-stone-900 text-[10px] font-bold uppercase tracking-wider hover:bg-amber-600 transition-all"
+                  disabled={isUploading}
+                  className="flex items-center gap-2 px-6 py-2 bg-amber-600 text-stone-950 text-[10px] font-bold uppercase hover:bg-amber-500 disabled:opacity-50"
                 >
-                  <Save size={14} />
+                  {isUploading ? (
+                    <Loader2 className="animate-spin" size={14} />
+                  ) : (
+                    <Save size={14} />
+                  )}
                   Execute Update
                 </button>
               </div>

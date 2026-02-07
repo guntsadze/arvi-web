@@ -5,6 +5,7 @@ import { Loader2, X, Camera } from "lucide-react";
 
 export interface UploadedFile {
   id: string;
+  file: File;
   base64: string;
   preview: string;
   type: "image" | "video";
@@ -56,9 +57,10 @@ export default function FileUploader({
 
     return {
       id: Math.random().toString(36).substr(2, 9),
+      file,
       base64,
-      preview: base64,
-      type: isVideo ? "video" : "image",
+      preview: URL.createObjectURL(file),
+      type: file.type.startsWith("video/") ? "video" : "image",
     };
   };
 
