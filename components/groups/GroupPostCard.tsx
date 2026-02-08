@@ -104,15 +104,17 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
 
   const handleUpdatePost = async (data: {
     content: string;
-    images: string[];
+    media: string[];
   }) => {
     try {
       setPartialState({ editingPost: false });
 
-      await postsService.updateGroupPost(post.id, {
+      const payload = {
         content: data.content,
-        images: data.images,
-      });
+        media: data.media,
+      };
+
+      await postsService.updateGroupPost(post.id, payload);
 
       refresh();
     } catch (err) {
@@ -263,9 +265,9 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
           />
         </div>
 
-        {post.images && post.images.length > 0 && (
+        {post.media && post.media.length > 0 && (
           <div className="border-y border-stone-800/50">
-            <ImageSlider images={post.images} aspectRatio="aspect-[16/9]" />
+            <ImageSlider media={post.media} aspectRatio="aspect-[16/9]" />
           </div>
         )}
 

@@ -7,10 +7,11 @@ import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import FileUploader from "../ui/FileUploader";
 import { groupsService } from "@/services/groups.service";
+import { storageService } from "@/services/storage.service";
 
 const createGroupPostSchema = z.object({
   content: z.string().min(1, "Broadcast content required").max(5000),
-  images: z.array(z.any()).default([]),
+  media: z.array(z.any()).default([]),
 });
 
 interface GroupPostFormProps {
@@ -31,10 +32,10 @@ export function GroupPostForm({ groupId, refresh }: GroupPostFormProps) {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createGroupPostSchema),
-    defaultValues: { content: "", images: [] },
+    defaultValues: { content: "", media: [] },
   });
 
-  const [content, images] = watch(["content", "images"]);
+  const [content, media] = watch(["content", "media"]);
 
   // ტექსტის სიმაღლის ავტომატური რეგულირება (შენი ლოგიკა)
   useEffect(() => {
@@ -45,24 +46,40 @@ export function GroupPostForm({ groupId, refresh }: GroupPostFormProps) {
     }
   }, [content]);
 
-  const onSubmit = async (data: any) => {
-    setIsSubmitting(true);
-    try {
-      const payload = {
-        content: data.content,
-        images: data.images?.map((i: any) => i.base64), // ბაზაში შენახვა როგორც String[]
-      };
+    const onSubmit = async (data: any) => {
+      setIsSubmitting(true);
+      try {
+        // 1. ამოვიღოთ მხოლოდ ფაილები (File ობიექტები)
+        const imageFiles = data.media?.map((img: any) => img.file) || [];
+        const videoFiles = data.videos?.map((vid: any) => vid.file) || [];
+        const allFiles = [...imageFiles, ...videoFiles];
+  
+        let uploadedMedia = [];
+  
+        // 2. ატვირთვა Cloudinary-ზე
+        if (allFiles.length > 0) {
+          const uploadPromises = allFiles.map((file) =>
+            storageService.uploadFile(file, "groupPosts"),
+          );
+          uploadedMedia = await Promise.all(uploadPromises);
+        }
+  
+        // 3. ბექენდზე გაგზავნა
+        const payload = {
+          content: data.content,
+          media: uploadedMedia,
+        };
+  
+        await groupsService.createGroupPost(groupId, payload);
 
-      await groupsService.createGroupPost(groupId, payload);
-
-      reset();
-      refresh();
-    } catch (e) {
-      console.error("BROADCAST_FAILURE:", e);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        reset();
+        refresh();
+      } catch (e) {
+        console.error("Upload error:", e);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
 
   const { ref, ...contentRegister } = register("content");
 
@@ -100,7 +117,7 @@ export function GroupPostForm({ groupId, refresh }: GroupPostFormProps) {
         {/* Action Controls */}
         <div className="flex items-center gap-1 mb-0.5">
           <Controller
-            name="images"
+            name="media"
             control={control}
             render={({ field }) => (
               <FileUploader
@@ -114,9 +131,9 @@ export function GroupPostForm({ groupId, refresh }: GroupPostFormProps) {
                   className="relative p-2 text-stone-700 hover:text-amber-500 hover:bg-stone-900/50 transition-all rounded group/icon"
                 >
                   <ImageIcon size={16} />
-                  {images?.length > 0 && (
+                  {media?.length > 0 && (
                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-600 text-[8px] text-white flex items-center justify-center font-bold rounded-sm border border-[#1c1917]">
-                      {images.length}
+                      {media.length}
                     </span>
                   )}
                 </button>
