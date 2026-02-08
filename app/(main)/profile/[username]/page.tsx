@@ -37,7 +37,7 @@ export default async function Page({ params }: Props) {
       <div className="relative h-[350px] md:h-[450px] w-full overflow-hidden">
         {/* COVER PHOTO SECTION */}
         <div className="absolute top-6 right-6 z-30">
-          <ImageUploader userId={user.id} type="cover" />
+          <ImageUploader id={user.id} type="cover" context="user" />
         </div>
 
         {user.cover ? (
@@ -73,7 +73,7 @@ export default async function Page({ params }: Props) {
 
                   {/* Avatar Upload Overlay */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
-                    <ImageUploader userId={user.id} type="avatar" />
+                    <ImageUploader id={user.id} type="avatar" context="user" />
                   </div>
                 </div>
 

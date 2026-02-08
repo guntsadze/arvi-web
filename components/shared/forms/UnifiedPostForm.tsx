@@ -2,30 +2,49 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Send, Terminal, Video, ImageIcon, Loader2 } from "lucide-react";
+import { Send, Terminal, ImageIcon, Loader2, Video } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
-import FileUploader from "../ui/FileUploader";
-import { postsService } from "@/services/posts/posts.service";
+import FileUploader from "../../ui/FileUploader";
 import { storageService } from "@/services/storage.service";
 
 const postSchema = z.object({
-  content: z.string().min(1).max(5000),
+  content: z.string().min(1, "Required").max(5000),
   media: z.array(z.any()).default([]),
 });
 
-export function PostForm({ refresh }: { refresh: () => void }) {
+interface UnifiedPostFormProps {
+  onSave: (data: { content: string; media: any[] }) => Promise<void>;
+  storageFolder: string;
+  placeholder?: string;
+  onSuccess?: () => void;
+  variant?: "general" | "group";
+}
+
+export function UnifiedPostForm({
+  onSave,
+  storageFolder,
+  placeholder = "INITIALIZE_BROADCAST...",
+  onSuccess,
+  variant = "general",
+}: UnifiedPostFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const { register, handleSubmit, control, watch, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(postSchema),
     defaultValues: { content: "", media: [] },
   });
 
   const content = watch("content");
 
-  // ტექსტის სიმაღლის ავტომატური რეგულირება
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "24px";
@@ -36,46 +55,51 @@ export function PostForm({ refresh }: { refresh: () => void }) {
   const onSubmit = async (data: z.infer<typeof postSchema>) => {
     setIsSubmitting(true);
     try {
-      let uploadedMedia = [];
+      let uploadedMedia: any = [];
 
       if (data.media.length > 0) {
-        // პარალელური ატვირთვა
         const results = await Promise.all(
           data.media.map((m: any) =>
-            storageService.uploadFile(m.file, "posts"),
+            storageService.uploadFile(m.file, storageFolder),
           ),
         );
 
-        // ბექენდისთვის ფორმატირება
         uploadedMedia = results.map((res, i) => ({
-          ...res,
-          mediaType: data.media[i].type.toUpperCase(), // "IMAGE" ან "VIDEO"
+          url: res.url,
+          publicId: res.publicId,
+          bytes: res.bytes,
+          format: res.format,
+          mediaType: data.media[i].type.toUpperCase().includes("VIDEO")
+            ? "VIDEO"
+            : "IMAGE",
         }));
       }
 
-      await postsService.createPost({
+      await onSave({
         content: data.content,
         media: uploadedMedia,
       });
+
       reset();
-      refresh();
+      if (onSuccess) onSuccess();
     } catch (e) {
-      console.error("Upload error:", e);
+      console.error("Post Creation Error:", e);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // დამხმარე კომპონენტი აიქონებისთვის
-  const MediaButton = ({ type, icon: Icon, count, colorClass }: any) => (
+  const ActionButton = ({ type, icon: Icon, count, activeColor }: any) => (
     <button
       type="button"
-      className={`relative p-2 transition-all rounded hover:bg-stone-900/50 ${colorClass}`}
+      className={`relative p-2 transition-all rounded hover:bg-stone-900/50 text-stone-700 hover:${activeColor}`}
     >
       <Icon size={16} />
       {count > 0 && (
         <span
-          className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-[8px] text-white flex items-center justify-center font-bold rounded-full border border-[#1c1917] ${type === "image" ? "bg-amber-600" : "bg-blue-600"}`}
+          className={`absolute -top-1 -right-1 w-4 h-4 text-[8px] text-white flex items-center justify-center font-bold rounded-sm border border-[#1c1917] ${
+            type === "image" ? "bg-amber-600" : "bg-blue-600"
+          }`}
         >
           {count}
         </span>
@@ -86,22 +110,19 @@ export function PostForm({ refresh }: { refresh: () => void }) {
   const { ref, ...rest } = register("content");
 
   return (
-    <div className="w-full max-w-3xl mx-auto mb-6 px-2">
+    <div className="w-full mb-6 relative">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex items-end gap-2 bg-[#1c1917] border border-stone-800 p-2 min-h-[54px] shadow-lg group focus-within:border-stone-700 transition-all"
+        className="relative flex items-end gap-2 bg-[#1c1917] border border-stone-800 p-2 min-h-[54px] shadow-2xl focus-within:border-stone-700 transition-all"
       >
-        {/* Tech Decor */}
         <div className="absolute -top-px -left-px w-1 h-1 bg-amber-500/50" />
         <div className="absolute -bottom-px -right-px w-1 h-1 bg-amber-500/50" />
 
-        <div className="flex items-center justify-center px-1 mb-1.5 border-r border-stone-800/50">
+        <div className="flex items-center px-1 mb-1.5 border-r border-stone-800/50">
           <Terminal
             size={14}
             className={
-              isSubmitting
-                ? "animate-pulse text-amber-500"
-                : "text-stone-700 group-focus-within:text-amber-600"
+              isSubmitting ? "animate-pulse text-amber-500" : "text-stone-700"
             }
           />
         </div>
@@ -113,8 +134,8 @@ export function PostForm({ refresh }: { refresh: () => void }) {
             textareaRef.current = e;
           }}
           rows={1}
-          placeholder="New status..."
-          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-700 px-2 py-1.5 resize-none overflow-hidden max-h-[200px]"
+          placeholder={placeholder}
+          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-800 px-2 py-1.5 resize-none overflow-hidden max-h-[300px]"
           disabled={isSubmitting}
         />
 
@@ -122,7 +143,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
           <Controller
             name="media"
             control={control}
-            render={({ field }) => (
+            render={({ field }: any) => (
               <>
                 <FileUploader
                   accept="image/*"
@@ -132,13 +153,14 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     field.onChange([...field.value, ...files])
                   }
                 >
-                  <MediaButton
+                  <ActionButton
                     type="image"
                     icon={ImageIcon}
                     count={
-                      field.value.filter((m: any) => m.type === "image").length
+                      field.value.filter((m: any) => m.type.includes("image"))
+                        .length
                     }
-                    colorClass="text-stone-600 hover:text-amber-500"
+                    activeColor="text-amber-500"
                   />
                 </FileUploader>
 
@@ -150,13 +172,14 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     field.onChange([...field.value, ...files])
                   }
                 >
-                  <MediaButton
+                  <ActionButton
                     type="video"
                     icon={Video}
                     count={
-                      field.value.filter((m: any) => m.type === "video").length
+                      field.value.filter((m: any) => m.type.includes("video"))
+                        .length
                     }
-                    colorClass="text-stone-600 hover:text-blue-500"
+                    activeColor="text-blue-500"
                   />
                 </FileUploader>
               </>
@@ -166,15 +189,14 @@ export function PostForm({ refresh }: { refresh: () => void }) {
           <button
             type="submit"
             disabled={isSubmitting || !content?.trim()}
-            className="ml-2 h-9 px-4 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-800/50 disabled:text-stone-600 text-stone-950 font-black text-[10px] tracking-tight uppercase transition-all flex items-center gap-2"
+            className="ml-2 h-9 px-5 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-900 disabled:text-stone-800 text-stone-950 font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             {isSubmitting ? (
               <Loader2 size={12} className="animate-spin" />
             ) : (
               <>
-                <span className="hidden sm:inline">COMMIT</span>{" "}
-                <Send size={12} />
+                COMMIT <Send size={12} />
               </>
             )}
           </button>

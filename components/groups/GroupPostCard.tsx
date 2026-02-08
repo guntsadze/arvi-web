@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ImageSlider } from "../ui/ImageSlider";
+import { MediaSlider } from "../ui/MediaSlider";
 import { PostHeader } from "../posts/PostHeader";
 import { PostContent } from "../posts/PostContent";
 import { PostActions } from "../posts/PostActions";
 import { postsService } from "@/services/posts/posts.service";
-import { groupsService } from "@/services/groups.service"; // ჯგუფის სერვისი
+import { groupsService } from "@/services/groups.service";
 import { CommentForm } from "../comments/CommentForm";
 import { CommentItem } from "../comments/CommentItem";
 import { useAppSelector } from "@/store/hooks";
@@ -267,7 +267,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
 
         {post.media && post.media.length > 0 && (
           <div className="border-y border-stone-800/50">
-            <ImageSlider media={post.media} aspectRatio="aspect-[16/9]" />
+            <MediaSlider media={post.media} aspectRatio="aspect-[16/9]" />
           </div>
         )}
 

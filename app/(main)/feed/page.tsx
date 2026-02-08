@@ -5,6 +5,7 @@ import { PostForm } from "@/components/posts/PostForm";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Activity } from "lucide-react";
 import { postsService } from "@/services/posts/posts.service";
+import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 
 export default function FeedPage() {
   const {
@@ -43,7 +44,14 @@ export default function FeedPage() {
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-stone-700" />
         </div>
 
-        <PostForm refresh={refresh} />
+        <UnifiedPostForm
+          storageFolder="posts"
+          placeholder="What's on your mind, Operator?"
+          onSave={async (data) => {
+            await postsService.createPost(data);
+          }}
+          onSuccess={() => refresh()}
+        />
 
         <div className="mt-16 space-y-8">
           {posts.map((post: any, index: number) => (

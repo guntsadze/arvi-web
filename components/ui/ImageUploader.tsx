@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Camera, Loader2, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Camera, Loader2, Trash2, RefreshCcw } from "lucide-react";
 import { usersService } from "@/services/user/user.service";
 import { useRouter } from "next/navigation";
+import FileUploader, { UploadedFile } from "../ui/FileUploader";
 import { groupsService } from "@/services/groups.service";
 
 interface Props {
@@ -14,89 +15,86 @@ interface Props {
 
 export default function ImageUploader({ id, type, context }: Props) {
   const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleUpload = async (files: UploadedFile[]) => {
+    if (files.length === 0) return;
 
+    const fileToUpload = files[0].file;
     setLoading(true);
-    try {
-      const fileBase64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (err) => reject(err);
-      });
 
+    try {
+      // 1. ფაილის კონვერტაცია Base64-ში (რადგან ბექენდი Buffer/String-ს ელოდება)
+      const base64 = await fileToBase64(fileToUpload);
+
+      // 2. სერვისის გამოძახება კონტექსტის მიხედვით
       if (context === "user") {
-        if (type === "avatar")
-          await usersService.uploadAvatar(id, { file: fileBase64 });
-        else await usersService.uploadCover(id, { file: fileBase64 });
+        if (type === "cover") {
+          await usersService.uploadCover(id, { file: base64 });
+        } else {
+          await usersService.uploadAvatar(id, { file: base64 });
+        }
       } else {
-        // ჯგუფის შემთხვევაში ვიყენებთ ჩვენს ახალ სერვისს
-        await groupsService.uploadMedia(id, type, { file: fileBase64 });
+        if (type === "cover") {
+          await groupsService.uploadMedia(id, "cover", { file: base64 });
+        }
+        if (type === "avatar") {
+          await groupsService.uploadMedia(id, "avatar", { file: base64 });
+        }
       }
 
+      // 3. წარმატების შემთხვევაში გვერდის დაჰიდრატაცია (მონაცემების ხელახლა წამოღება)
       router.refresh();
     } catch (error) {
-      console.error("Upload failed", error);
-      alert("ატვირთვა ვერ მოხერხდა");
+      console.error("Upload Error:", error);
+      alert("ფოტოს განახლება ვერ მოხერხდა");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm("დარწმუნებული ხარ?")) return;
-    setDeleting(true);
-    try {
-      if (context === "user") {
-        if (type === "avatar") await usersService.deleteAvatar(id);
-        else await usersService.deleteCover(id);
-      } else {
-        await groupsService.deleteMedia(id, type);
-      }
-      router.refresh();
-    } catch (error) {
-      alert("წაშლა ვერ მოხერხდა");
-    } finally {
-      setDeleting(false);
-    }
+  // დამხმარე ფუნქცია ფაილის წასაკითხად
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   return (
-    <div className="flex gap-1">
-      <input
-        type="file"
-        ref={fileInputRef}
-        className="hidden"
+    <div className="flex items-center gap-2">
+      <FileUploader
         accept="image/*"
-        onChange={handleFileChange}
-      />
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        disabled={loading}
-        className="p-1.5 bg-amber-600/20 hover:bg-amber-600/40 text-amber-500 border border-amber-600/30 transition-all disabled:opacity-50"
+        multiple={false}
+        showPreview={false} // ვთიშავთ FileUploader-ის შიდა პრევიუს
+        onFilesChange={handleUpload} // ფაილის არჩევისთანავე იწყება ატვირთვა
       >
-        {loading ? (
-          <Loader2 size={14} className="animate-spin" />
-        ) : (
-          <Camera size={14} />
-        )}
-      </button>
+        <button
+          disabled={loading}
+          className="group relative flex items-center gap-2 px-3 py-1.5 bg-black/50 hover:bg-amber-600 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest transition-all disabled:opacity-50"
+        >
+          {loading ? (
+            <Loader2 size={12} className="animate-spin text-amber-500" />
+          ) : (
+            <Camera
+              size={12}
+              className="group-hover:scale-110 transition-transform"
+            />
+          )}
+          <span>{loading ? "Syncing..." : `Update ${type}`}</span>
+        </button>
+      </FileUploader>
+
+      {/* მხოლოდ წაშლის ღილაკი თუ სურათი უკვე არსებობს */}
       <button
-        onClick={handleDelete}
-        disabled={deleting}
-        className="p-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/30 transition-all disabled:opacity-50"
+        onClick={() => {
+          /* წაშლის ლოგიკა */
+        }}
+        className="p-1.5 bg-red-950/40 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white transition-colors"
       >
-        {deleting ? (
-          <Loader2 size={14} className="animate-spin" />
-        ) : (
-          <Trash2 size={14} />
-        )}
+        <Trash2 size={12} />
       </button>
     </div>
   );

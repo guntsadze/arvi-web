@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Activity, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ImageUploader from "../ui/ImageUploader";
+import ImageUploader from "./ImageUploader";
 
 interface GroupAvatarItemProps {
   group: {

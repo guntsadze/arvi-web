@@ -5,7 +5,7 @@ import { groupsService } from "@/services/groups.service";
 import { GroupHeader } from "@/components/groups/GroupHeader";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Terminal } from "lucide-react";
-import { GroupPostForm } from "@/components/groups/GroupPostForm";
+import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { GroupPostCard } from "@/components/groups/GroupPostCard";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
@@ -65,11 +65,13 @@ export default function GroupPage({
           {/* <div className="lg:col-span-2 space-y-10"> */}
         <div className="flex justify-center">
           <div className="w-full lg:w-[60%] space-y-10">
-            {/* POST CREATION */}
-            <GroupPostForm
-              groupId={group.id}
-              refresh={refresh}
-              groupName={group.name}
+            <UnifiedPostForm
+              storageFolder="group-posts"
+              placeholder="What's on your mind, Operator?"
+              onSave={async (data) => {
+                await groupsService.createGroupPost(group.id, data);
+              }}
+              onSuccess={() => refresh()}
             />
 
             {/* POSTS LIST */}

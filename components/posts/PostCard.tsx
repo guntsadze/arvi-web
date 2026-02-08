@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ImageSlider } from "../ui/ImageSlider";
+import { ImageSlider, MediaSlider } from "../ui/MediaSlider";
 import { PostHeader } from "./PostHeader";
 import { PostContent } from "./PostContent";
 import { PostActions } from "./PostActions";
@@ -239,10 +239,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
         </div>
 
         {post.media && post.media.length > 0 && (
-          <ImageSlider
-            media={post.media.map((m: any) => m.url)}
-            aspectRatio="aspect-[16/9]"
-          />
+          <MediaSlider media={post.media} aspectRatio="aspect-[16/9]" />
         )}
 
         <PostActions
