@@ -30,9 +30,9 @@ export default function ImageUploader({ id, type, context }: Props) {
       // 2. სერვისის გამოძახება კონტექსტის მიხედვით
       if (context === "user") {
         if (type === "cover") {
-          await usersService.uploadCover(id, { file: base64 });
+          await usersService.uploadMedia(id, "cover", { file: base64 });
         } else {
-          await usersService.uploadAvatar(id, { file: base64 });
+          await usersService.uploadMedia(id, "avatar", { file: base64 });
         }
       } else {
         if (type === "cover") {
@@ -43,7 +43,6 @@ export default function ImageUploader({ id, type, context }: Props) {
         }
       }
 
-      // 3. წარმატების შემთხვევაში გვერდის დაჰიდრატაცია (მონაცემების ხელახლა წამოღება)
       router.refresh();
     } catch (error) {
       console.error("Upload Error:", error);
@@ -61,6 +60,33 @@ export default function ImageUploader({ id, type, context }: Props) {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("დარწმუნებული ხარ, რომ გინდა სურათის წაშლა?")) return;
+
+    if (context === "user") {
+      if (type === "avatar") {
+        await usersService.deleteUserMedia(id, "avatar");
+      } else {
+        await usersService.deleteUserMedia(id, "cover");
+      }
+    } else {
+      if (type === "cover") {
+        await groupsService.deleteMedia(id, "cover");
+      }
+      if (type === "avatar") {
+        await groupsService.deleteMedia(id, "avatar");
+      }
+    }
+
+    try {
+      router.refresh();
+    } catch (error) {
+      console.error("Delete failed", error);
+      alert("წაშლა ვერ მოხერხდა");
+    } finally {
+    }
   };
 
   return (
@@ -87,11 +113,8 @@ export default function ImageUploader({ id, type, context }: Props) {
         </button>
       </FileUploader>
 
-      {/* მხოლოდ წაშლის ღილაკი თუ სურათი უკვე არსებობს */}
       <button
-        onClick={() => {
-          /* წაშლის ლოგიკა */
-        }}
+        onClick={handleDelete}
         className="p-1.5 bg-red-950/40 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white transition-colors"
       >
         <Trash2 size={12} />
