@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
   },
+  output: "standalone",
 };
 
 export default nextConfig;
