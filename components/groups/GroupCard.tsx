@@ -1,28 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Users, Globe, Lock, ArrowUpRight, Loader2, Plus } from "lucide-react";
 import { Group } from "@/types/groups.types";
-import { groupsService } from "@/services/groups.service";
+import { GroupAvatarItem } from "../ui/GroupAvatarItem";
+import { useGroupMembership } from "@/hooks/useGroupMembership";
+import { GroupMembershipButton } from "./GroupMembershipButton";
 
 export const GroupCard = ({ group }: { group: Group }) => {
-  const [isJoining, setIsJoining] = useState(false);
-  const [joined, setJoined] = useState(false); // იდეალურ შემთხვევაში ბექენდიდან უნდა მოდიოდეს group.isJoined
+  const initialIsMemberStatus = group.members.length > 0;
+  const { isMember, isLoading, toggleMembership } = useGroupMembership(
+    group.id,
+    initialIsMemberStatus,
+  );
 
-  const handleJoin = async (e: React.MouseEvent) => {
-    e.preventDefault(); // რომ ლინკზე არ გადავიდეს
+  const handleAction = async (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
-
-    setIsJoining(true);
-    try {
-      await groupsService.joinGroup(group.id);
-      setJoined(true);
-    } catch (error) {
-      console.error("JOIN_PROTOCOL_FAILED:", error);
-    } finally {
-      setIsJoining(false);
-    }
+    await toggleMembership();
   };
 
   return (
@@ -35,22 +31,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
         {/* Header Area */}
         <div className="flex justify-between items-start">
           <div className="relative">
-            <div className="w-14 h-14 bg-stone-900 border border-stone-800 p-1 relative z-10">
-              {group.avatar ? (
-                <img
-                  src={group.avatar}
-                  alt={group.name}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-stone-950">
-                  <span className="text-[10px] font-mono text-stone-700 uppercase">
-                    n_a
-                  </span>
-                </div>
-              )}
-            </div>
-            {/* Shadow decoration */}
+            <GroupAvatarItem group={group} size="sm" />
             <div className="absolute -bottom-1 -right-1 w-14 h-14 border border-stone-800/50 -z-0" />
           </div>
 
@@ -78,9 +59,6 @@ export const GroupCard = ({ group }: { group: Group }) => {
               className="opacity-0 group-hover:opacity-100 transition-all text-stone-600"
             />
           </h3>
-          <p className="text-stone-600 font-mono text-[10px] line-clamp-2 leading-relaxed uppercase tracking-tighter">
-            {group.description || "// NO_MANIFEST_DATA_AVAILABLE"}
-          </p>
         </div>
 
         {/* Technical Stats */}
@@ -90,7 +68,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
               Active_Members
             </span>
             <span className="text-stone-400 font-mono text-xs">
-              {group.membersCount}
+              {group.membersCount ?? "—"}
             </span>
           </div>
           <div className="flex flex-col">
@@ -98,7 +76,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
               Data_Entries
             </span>
             <span className="text-stone-400 font-mono text-xs">
-              {group.postsCount}
+              {group.postsCount ?? "—"}
             </span>
           </div>
         </div>
@@ -106,29 +84,10 @@ export const GroupCard = ({ group }: { group: Group }) => {
 
       {/* Action Area */}
       <div className="mt-5">
-        {joined ? (
-          <div className="w-full py-2 border border-emerald-900/30 bg-emerald-950/10 text-emerald-600 text-center font-mono text-[10px] uppercase tracking-widest">
-            Protocol_Joined
-          </div>
-        ) : (
-          <button
-            onClick={handleJoin}
-            disabled={isJoining}
-            className="w-full group/btn relative overflow-hidden border border-stone-800 bg-stone-900/50 py-2.5 transition-all hover:border-amber-900/50"
-          >
-            <div className="absolute inset-0 bg-amber-600/5 translate-y-full group-hover/btn:translate-y-0 transition-transform" />
-            <div className="relative flex items-center justify-center gap-2">
-              {isJoining ? (
-                <Loader2 size={14} className="animate-spin text-amber-700" />
-              ) : (
-                <Plus size={14} className="text-amber-700" />
-              )}
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400 group-hover/btn:text-stone-200">
-                {isJoining ? "Connecting..." : "Init_Join_Sequence"}
-              </span>
-            </div>
-          </button>
-        )}
+        <GroupMembershipButton
+          groupId={group.id}
+          initialIsMember={initialIsMemberStatus}
+        />
       </div>
 
       {/* Aesthetic terminal bit */}

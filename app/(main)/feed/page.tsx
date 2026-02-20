@@ -1,7 +1,6 @@
 "use client";
 
 import { PostCard } from "@/components/posts/PostCard";
-import { PostForm } from "@/components/posts/PostForm";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Activity } from "lucide-react";
 import { postsService } from "@/services/posts/posts.service";

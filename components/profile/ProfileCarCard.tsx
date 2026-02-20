@@ -18,6 +18,29 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+const SellButton = ({ onClick }: any) => (
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}
+    className="relative group/sell overflow-hidden px-4 py-1.5 bg-orange-600/10 border border-orange-500/50 hover:bg-orange-500 transition-all duration-300"
+  >
+    {/* Button Shine Effect */}
+    <div className="absolute inset-0 translate-x-[-100%] group-hover/sell:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+    <div className="flex items-center gap-2">
+      <Zap
+        size={12}
+        className="text-orange-500 group-hover/sell:text-black transition-colors"
+      />
+      <span className="text-[10px] font-mono font-black text-orange-500 group-hover/sell:text-black uppercase tracking-tighter">
+        Sell_Vehicle
+      </span>
+    </div>
+  </button>
+);
+
 // --- პორტალის კომპონენტი (INDUSTRIAL THEME) ---
 const InfoPortal = ({ title, isOpen, onClose, children }: any) => {
   if (typeof document === "undefined" || !isOpen) return null;
@@ -80,7 +103,12 @@ const ActionButton = ({ icon: Icon, onClick, label }: any) => (
   </button>
 );
 
-export const ProfileCarCard = ({ car, onClick, onViewFullDetails }: any) => {
+export const ProfileCarCard = ({
+  car,
+  onClick,
+  onViewFullDetails,
+  onSell,
+}: any) => {
   const [modalType, setModalType] = useState<"mods" | "logs" | null>(null);
 
   return (
@@ -167,24 +195,38 @@ export const ProfileCarCard = ({ car, onClick, onViewFullDetails }: any) => {
           </div>
 
           {/* Bottom Action Bar */}
-          <div className="mt-auto pt-4 border-t border-stone-800/50 flex items-center justify-between font-mono">
-            <div className="flex gap-4">
-              <button
-                onClick={() => setModalType("mods")}
-                className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-orange-500 transition-colors"
-              >
-                <Zap size={12} /> [Mods]
-              </button>
-              <button
-                onClick={() => setModalType("logs")}
-                className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-stone-300 transition-colors"
-              >
-                <Database size={12} /> [Logs]
-              </button>
+          <div className="mt-auto pt-4 border-t border-stone-800/50 flex flex-col gap-4">
+            {/* ზედა ზოლი: Mods & Logs */}
+            <div className="flex items-center justify-between font-mono">
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setModalType("mods")}
+                  className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-orange-500 transition-colors"
+                >
+                  <Zap size={10} /> [Mods]
+                </button>
+                <button
+                  onClick={() => setModalType("logs")}
+                  className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-stone-300 transition-colors"
+                >
+                  <Database size={10} /> [Logs]
+                </button>
+              </div>
+              <div className="text-[9px] text-stone-600 font-mono italic">
+                {car.mileage?.toLocaleString() || 0} _KM_LOGGED
+              </div>
             </div>
 
-            <div className="text-[10px] text-stone-600 font-bold">
-              {car.mileage?.toLocaleString() || 0} _KM
+            {/* ქვედა ზოლი: Sell Button */}
+            <div className="flex items-center justify-between gap-2 border-t border-stone-800/30 pt-3">
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
+                <span className="text-[8px] text-stone-600 font-mono uppercase">
+                  System_Active
+                </span>
+              </div>
+
+              <SellButton onClick={() => onSell(car)} />
             </div>
           </div>
         </div>

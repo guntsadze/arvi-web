@@ -25,10 +25,13 @@ export interface Group {
   postsCount: number;
   createdAt: Date;
   updatedAt: Date;
+  isMember?: boolean;
   // Relations
   isJoined?: boolean; // UI-სთვის დამხმარე ველი
   myRole?: GroupMemberRole;
 }
+
+export interface Marketplace {}
 
 export interface GroupPost {
   id: string;
@@ -53,3 +56,5 @@ export interface CreateGroupInput {
   description?: string;
   privacy: GroupPrivacy;
 }
+
+export interface MarketplaceInput {}

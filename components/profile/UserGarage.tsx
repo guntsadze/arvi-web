@@ -11,6 +11,7 @@ import { CarFullDetails } from "../cars/carDetails/CarFullDetails";
 import { Car } from "@/types/car.types";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { useAppSelector } from "@/store/hooks";
+import { MultiStepInspectionForm } from "../marketplace/forms/MultiStepInspectionForm";
 
 type Props = {
   userId: string;
@@ -29,21 +30,38 @@ export function UserGarage({ userId }: Props) {
   const [editingCar, setEditingCar] = useState<Car | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
 
-  // ახალი სტეიტი ჩატვირთვის ინდიკაციისთვის
+  const [showInspectionForm, setShowInspectionForm] = useState(false);
+  const [carToInspect, setCarToInspect] = useState<Car | null>(null);
+
   const [isLoadingDetails, setIsLoadingDetails] = useState<string | null>(null);
 
-  // ფუნქცია სერვერიდან ინფორმაციის წამოსაღებად რედაქტირების წინ
   const handleEditClick = async (carId: string) => {
     try {
-      setIsLoadingDetails(carId); // ჩავრთოთ ლოადერი კონკრეტულ ქარდზე
+      setIsLoadingDetails(carId);
       const fullCarData = await carsService.getCarDetails(carId);
       setEditingCar(fullCarData);
     } catch (error) {
       console.error("Failed to fetch car details:", error);
-      // აქ შეგიძლიათ დაამატოთ Toast შეტყობინება შეცდომაზე
     } finally {
-      setIsLoadingDetails(null); // გამოვრთოთ ლოადერი
+      setIsLoadingDetails(null);
     }
+  };
+
+  const handleSellVehicle = (car: Car) => {
+    setCarToInspect(car);
+    setShowInspectionForm(true);
+  };
+
+  const onInspectionSuccess = (inspectionData: any) => {
+    if (carToInspect) {
+      setShowInspectionForm(false);
+      setCarToInspect(null);
+    }
+  };
+
+  const onInspectionClose = () => {
+    setShowInspectionForm(false);
+    setCarToInspect(null);
   };
 
   if (selectedCar) {
@@ -52,10 +70,20 @@ export function UserGarage({ userId }: Props) {
         car={selectedCar}
         onEdit={(car) => {
           setSelectedCar(null);
-          handleEditClick(car.id); // დეტალური გვერდიდანაც რომ ახალი ინფო წამოიღოს
+          handleEditClick(car.id);
         }}
         onClose={() => setSelectedCar(null)}
         isOwner={selectedCar.userId === currentUser?.id}
+      />
+    );
+  }
+
+  if (showInspectionForm && carToInspect) {
+    return (
+      <MultiStepInspectionForm
+        car={carToInspect}
+        onClose={onInspectionClose}
+        onSuccess={onInspectionSuccess}
       />
     );
   }
@@ -97,9 +125,10 @@ export function UserGarage({ userId }: Props) {
             <ProfileCarCard
               car={car}
               onClick={() => {
-                if (isOwner) handleEditClick(car.id); // აქ ვიძახებთ ახალ ფუნქციას
+                if (isOwner) handleEditClick(car.id);
               }}
               onViewFullDetails={(car) => setSelectedCar(car)}
+              onSell={handleSellVehicle}
             />
 
             {/* ლოადერი ქარდზე, სანამ ინფორმაცია მოდის */}

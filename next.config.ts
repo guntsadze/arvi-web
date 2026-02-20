@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
   },
   output: "standalone",
+  reactStrictMode: false,
 };
 
 export default nextConfig;
