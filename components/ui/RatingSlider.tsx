@@ -1,12 +1,10 @@
 import React from "react";
-import { UseFormRegister } from "react-hook-form";
-import { CarFormData } from "@/types/carForm.types";
 
 interface RatingSliderProps {
   label: string;
-  name: keyof CarFormData["inspection"];
-  register: UseFormRegister<CarFormData>;
-  description: { [key: number]: string }; // Map from rating to description
+  name: any;
+  register: any;
+  description: { [key: number]: string };
 }
 
 export const RatingSlider: React.FC<RatingSliderProps> = ({
@@ -16,7 +14,7 @@ export const RatingSlider: React.FC<RatingSliderProps> = ({
   description,
 }) => {
   const { onChange, ...rest } = register(name, { valueAsNumber: true });
-  const [currentRating, setCurrentRating] = React.useState(7); // Default or initial value
+  const [currentRating, setCurrentRating] = React.useState(7);
 
   const getRatingDescription = (rating: number) => {
     if (rating >= 9) return description[10] || "Excellent (9-10)";

@@ -10,8 +10,9 @@ import { InspectionStep2Chassis } from "./InspectionSteps/InspectionStep2Chassis
 import { InspectionStep3LightsExhaust } from "./InspectionSteps/InspectionStep3LightsExhaust";
 import { InspectionStep4Interior } from "./InspectionSteps/InspectionStep4Interior";
 import { InspectionStep5Engine } from "./InspectionSteps/InspectionStep5Engine";
-import { InspectionStep6Summary } from "./InspectionSteps/InspectionStep6Summary";
+import { InspectionStep7Summary } from "./InspectionSteps/InspectionStep7Summary";
 import { marketplaceService } from "@/services/marketplace.service";
+import { InspectionStep6Contact } from "./InspectionSteps/InspectionStep6Contact";
 
 interface MultiStepInspectionFormProps {
   car: Car;
@@ -27,14 +28,6 @@ export const MultiStepInspectionForm: React.FC<
       carId: car.id,
       type: "CAR",
       title: `${car.year} ${car.make} ${car.model}`,
-      price: "",
-      location: "",
-      description: "",
-      inspection: {
-        bodyCondition: "ORIGINAL",
-        catalystPresent: true,
-        airbagsIntact: true,
-      },
     },
   });
   const [currentStep, setCurrentStep] = useState(0);
@@ -45,7 +38,8 @@ export const MultiStepInspectionForm: React.FC<
     <InspectionStep3LightsExhaust key="step3" />,
     <InspectionStep4Interior key="step4" />,
     <InspectionStep5Engine key="step5" />,
-    <InspectionStep6Summary key="step6" />,
+    <InspectionStep6Contact key="step6" />,
+    <InspectionStep7Summary key="step7" />,
   ];
 
   const totalSteps = steps.length;

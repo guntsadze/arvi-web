@@ -11,6 +11,7 @@ import {
   BRAKE_CONDITION_OPTIONS,
 } from "@/types/carForm.types";
 import { RatingSlider } from "@/components/ui/RatingSlider";
+import { RuggedCheckbox } from "@/components/ui/RuggedCheckbox";
 
 export const InspectionStep5Engine: React.FC = () => {
   const { register } = useFormContext();
@@ -21,47 +22,42 @@ export const InspectionStep5Engine: React.FC = () => {
         5. Engine & Mechanical
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
           <RuggedSelect
-            label="Oil Condition"
+            label="ზეთის მდგომარეობა"
             name="inspection.engineOilStatus"
             register={register}
             options={[...OIL_CONDITION_OPTIONS]}
           />
           <RuggedSelect
-            label="Coolant Status"
+            label="გაგრილების სისტემა"
             name="inspection.coolantStatus"
             register={register}
             options={[...COOLANT_STATUS_OPTIONS]}
           />
           <RuggedInput
-            label="Engine Acoustics"
+            label="ძრავის ხმა"
             name="inspection.engineNoise"
             register={register}
             placeholder="Smooth / No Tapping"
           />
-          <div className="flex items-center gap-4 p-4 border border-stone-800 bg-stone-900/20">
-            <input
-              type="checkbox"
-              {...register("inspection.oilLeaking")}
-              className="w-4 h-4 accent-orange-500 bg-stone-950 border-stone-800 rounded-none"
-            />
-            <label className="text-[10px] uppercase tracking-widest text-stone-400 font-mono">
-              Oil Leaking
-            </label>
-          </div>
+          <RuggedCheckbox
+            name="inspection.oilLeaking"
+            register={register}
+            label="Oil Leaking"
+          />
         </div>
 
         <div className="space-y-4">
           <RuggedSelect
-            label="Transmission Shift"
+            label="გადაცემათა კოლოფის მდგომარეობა"
             name="inspection.transmissionShift"
             register={register}
             options={[...TRANSMISSION_SHIFT_OPTIONS]}
           />
           <RuggedSelect
-            label="Brake Condition"
+            label="მუხრუჭების მდგომარეობა"
             name="inspection.brakeCondition"
             register={register}
             options={[...BRAKE_CONDITION_OPTIONS]}

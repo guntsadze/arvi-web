@@ -4,9 +4,9 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import { CarFormData } from "@/types/carForm.types";
 
-export const InspectionStep6Summary: React.FC = () => {
+export const InspectionStep7Summary: React.FC = () => {
   const { watch } = useFormContext<CarFormData>();
-  const formData = watch("inspection"); // Watch all inspection fields
+  const formData = watch("inspection");
 
   const renderField = (label: string, value: any) => {
     if (typeof value === "boolean") {
@@ -46,7 +46,7 @@ export const InspectionStep6Summary: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-semibold text-white">6. Summary & Notes</h2>
+      <h2 className="text-2xl font-semibold text-white">7. Summary & Notes</h2>
       <p className="text-stone-400">
         Please review the inspection report before submitting.
       </p>
