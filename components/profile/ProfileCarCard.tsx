@@ -20,6 +20,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 const SellButton = ({ onClick }: any) => (
   <button
@@ -128,6 +130,10 @@ export const ProfileCarCard = ({
 }: any) => {
   const [modalType, setModalType] = useState<"mods" | "logs" | null>(null);
 
+  const currentUser = useAppSelector(selectCurrentUser);
+
+  const isOwner = car.userId === currentUser?.id;
+
   const isListed = !!car.listings.length;
   // listings შეიძლება იყოს object ან array — ორივეს ვამუშავებთ
   const listingId = Array.isArray(car.listings)
@@ -184,7 +190,13 @@ export const ProfileCarCard = ({
 
           {/* Hover Actions */}
           <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <ActionButton icon={Edit3} label="Modify_Data" onClick={onClick} />
+            {isOwner && (
+              <ActionButton
+                icon={Edit3}
+                label="Modify_Data"
+                onClick={onClick}
+              />
+            )}
             <ActionButton
               icon={Eye}
               label="View_Telemetry"
@@ -283,7 +295,7 @@ export const ProfileCarCard = ({
               )}
 
               {/* Action: Sell ან View Listing */}
-              {isListed ? (
+              {isListed && car ? (
                 <ViewListingButton listingId={listingId} />
               ) : (
                 <SellButton onClick={() => onSell(car)} />
