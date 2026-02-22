@@ -16,8 +16,18 @@ import {
   Settings2,
   ShieldCheck,
   CircleDollarSign,
+  Edit3,
+  AlertTriangle,
+  Loader2,
+  Trash2,
+  X,
 } from "lucide-react";
 import { MediaSlider } from "@/components/ui/MediaSlider";
+import { UserAvatarItem } from "@/components/ui/UserAvatarItem";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/slices/userSlice";
+import { EditListingPanel } from "@/components/marketplace/EditListingPanel";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DetailItem: React.FC<{
   label: string;
@@ -27,7 +37,7 @@ const DetailItem: React.FC<{
   if (value === null || value === undefined || value === "" || value === 0)
     return null;
 
-  let displayValue =
+  const displayValue =
     typeof value === "boolean" ? (value ? "Yes" : "No") : value;
 
   return (
@@ -43,11 +53,104 @@ const DetailItem: React.FC<{
   );
 };
 
+const DeleteConfirmModal = ({
+  isOpen,
+  title,
+  onConfirm,
+  onCancel,
+  loading,
+}: {
+  isOpen: boolean;
+  title: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  loading: boolean;
+}) => (
+  <AnimatePresence>
+    {isOpen && (
+      <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onCancel}
+          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 12 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.92, y: 12 }}
+          transition={{ type: "spring", damping: 24, stiffness: 300 }}
+          className="relative w-full max-w-sm bg-[#181512] border border-red-900/50 shadow-2xl"
+        >
+          {/* Red top accent */}
+          <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-red-600 to-transparent" />
+
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-8 h-8 bg-red-900/30 border border-red-800/50 flex items-center justify-center shrink-0">
+                <AlertTriangle size={16} className="text-red-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-red-500">
+                  Confirm_Delete
+                </p>
+                <p className="text-[11px] font-mono text-stone-400 mt-0.5 truncate">
+                  {title}
+                </p>
+              </div>
+              <button
+                onClick={onCancel}
+                className="text-stone-700 hover:text-stone-400 transition-colors shrink-0"
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            <p className="text-stone-400 text-xs font-mono leading-relaxed mb-6 border-l-2 border-red-900/50 pl-3">
+              This action is{" "}
+              <span className="text-red-400 font-bold">permanent</span> and
+              cannot be undone. The listing will be removed from the
+              marketplace.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={onCancel}
+                className="flex-1 py-2.5 border border-stone-700 text-stone-400 font-mono text-[10px] uppercase tracking-wider hover:border-stone-500 hover:text-stone-200 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onConfirm}
+                disabled={loading}
+                className="flex-1 py-2.5 bg-red-900/40 border border-red-700/50 hover:bg-red-700 text-red-400 hover:text-white font-mono text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                {loading ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Trash2 size={12} />
+                )}
+                {loading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    )}
+  </AnimatePresence>
+);
+
 const ListingDetailPage: React.FC = () => {
   const { id } = useParams();
   const router = useRouter();
+  const currentUser = useAppSelector(selectCurrentUser);
+
   const [listing, setListing] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -58,6 +161,17 @@ const ListingDetailPage: React.FC = () => {
         .finally(() => setLoading(false));
     }
   }, [id]);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await marketplaceService.deleteListing(listing.id);
+      router.push("/marketplace");
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setDeleting(false);
+    }
+  };
 
   if (loading)
     return (
@@ -70,8 +184,8 @@ const ListingDetailPage: React.FC = () => {
 
   const car = listing.car;
   const inspection = listing.vehicleInspections?.[0];
+  const isOwner = currentUser?.id === listing.userId;
 
-  // მონაცემების მორგება სლაიდერისთვის (თქვენს ობიექტში სურათები car.photos-შია)
   const mediaItems =
     car?.photos?.map((p: any) => ({
       url: p.url,
@@ -91,7 +205,7 @@ const ListingDetailPage: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
-          {/* მარცხენა მხარე: სლაიდერი და დეტალები */}
+          {/* ── LEFT ── */}
           <div className="lg:col-span-8 space-y-8">
             <div className="rounded-2xl overflow-hidden border border-stone-800 shadow-2xl bg-stone-900">
               <MediaSlider media={mediaItems} aspectRatio="aspect-[16/10]" />
@@ -201,17 +315,49 @@ const ListingDetailPage: React.FC = () => {
             )}
           </div>
 
-          {/* მარჯვენა მხარე: ფასი და კონტაქტი */}
+          {/* ── RIGHT SIDEBAR ── */}
           <div className="lg:col-span-4 space-y-6">
             <div className="sticky top-10 space-y-6">
-              {/* ფასის ბარათი */}
+              {/* Price Card */}
               <div className="p-8 rounded-3xl bg-gradient-to-br from-stone-800 to-stone-900 border border-stone-700 shadow-xl">
-                <div className="flex items-center gap-2 text-amber-500 mb-2">
-                  <CircleDollarSign size={20} />
-                  <span className="text-xs font-mono uppercase font-bold tracking-tighter">
-                    Asking Price
-                  </span>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2 text-amber-500">
+                    <CircleDollarSign size={20} />
+                    <span className="text-xs font-mono uppercase font-bold tracking-tighter">
+                      Asking Price
+                    </span>
+                  </div>
+
+                  {/* Edit ღილაკი — მხოლოდ owner-ს უჩანს */}
+                  {isOwner && (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => setEditOpen(true)}
+                        title="Edit listing"
+                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-stone-500 hover:border-amber-500 hover:text-amber-500 transition-all group"
+                      >
+                        <Edit3
+                          size={10}
+                          className="group-hover:rotate-12 transition-transform"
+                        />
+                        <span className="text-[8px] font-mono uppercase tracking-wider">
+                          Edit
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => setDeleteOpen(true)}
+                        title="Delete listing"
+                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-stone-600 hover:border-red-700/60 hover:text-red-500 transition-all"
+                      >
+                        <Trash2 size={10} />
+                        <span className="text-[8px] font-mono uppercase tracking-wider">
+                          Del
+                        </span>
+                      </button>
+                    </div>
+                  )}
                 </div>
+
                 <h2 className="text-5xl font-black text-white mb-6">
                   {listing.price > 0
                     ? `${listing.price.toLocaleString()} ${listing.currency}`
@@ -233,26 +379,33 @@ const ListingDetailPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* გამყიდველის ბარათი */}
-              <div className="p-6 rounded-2xl bg-stone-900/50 border border-stone-800/50 backdrop-blur-md">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-stone-800 flex items-center justify-center border border-stone-700">
-                    <User className="text-stone-500" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold">
-                      {listing.user?.firstName} {listing.user?.lastName}
-                    </h4>
-                    <p className="text-stone-500 text-xs">
-                      @{listing.user?.username}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Seller Card */}
+              <UserAvatarItem user={listing.user} variant="card" />
             </div>
           </div>
         </div>
       </div>
+
+      {/* ── EDIT PANEL ── */}
+      <EditListingPanel
+        listing={listing}
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSave={(updated) => {
+          // server response-ს merge ვუკეთებთ არსებულ listing-ში
+          setListing((prev: any) => ({ ...prev, ...updated }));
+          setEditOpen(false);
+        }}
+        updateFn={(id, data) => marketplaceService.updateListing(id, data)}
+      />
+
+      <DeleteConfirmModal
+        isOpen={deleteOpen}
+        title={listing.title}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteOpen(false)}
+        loading={deleting}
+      />
     </div>
   );
 };

@@ -6,11 +6,14 @@ interface UserAvatarItemProps {
   user: {
     id: string;
     username: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
     avatar?: any;
     role?: string;
   };
   size?: "sm" | "md" | "lg" | "xl";
   showName?: boolean;
+  variant?: "default" | "card";
   className?: string;
 }
 
@@ -18,6 +21,7 @@ export const UserAvatarItem = ({
   user,
   size = "md",
   showName = true,
+  variant = "default",
   className,
 }: UserAvatarItemProps) => {
   const sizes = {
@@ -30,6 +34,58 @@ export const UserAvatarItem = ({
   const avatarUrl =
     typeof user?.avatar === "string" ? user.avatar : user?.avatar?.url;
 
+  const fullName =
+    user.firstName || user.lastName
+      ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
+      : null;
+
+  // ── CARD VARIANT ──────────────────────────────────────────────
+  if (variant === "card") {
+    return (
+      <Link
+        href={`/profile/${user.username || user.id}`}
+        className={cn(
+          "flex items-center gap-4 p-6 rounded-2xl bg-stone-900/50 border border-stone-800/50 backdrop-blur-md group hover:border-amber-500/50 transition-all",
+          className,
+        )}
+      >
+        {/* Avatar */}
+        <div className="relative shrink-0">
+          <div className="w-12 h-12 rounded-full bg-stone-800 overflow-hidden flex items-center justify-center border border-stone-700 group-hover:border-amber-500 transition-all">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={user.username || "User"}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <UserIcon size={20} className="text-stone-500" />
+            )}
+          </div>
+
+          {user.role === "ADMIN" && (
+            <div className="absolute -top-1 -right-1 bg-red-900 text-white p-0.5 rounded-sm border border-stone-700 shadow-md">
+              <Star size={8} fill="currentColor" />
+            </div>
+          )}
+        </div>
+
+        {/* Text */}
+        <div>
+          {fullName && (
+            <h4 className="text-white font-bold group-hover:text-amber-500 transition-colors">
+              {fullName}
+            </h4>
+          )}
+          <p className="text-stone-500 text-xs">
+            @{user.username || "anonymous"}
+          </p>
+        </div>
+      </Link>
+    );
+  }
+
+  // ── DEFAULT VARIANT ───────────────────────────────────────────
   return (
     <Link
       href={`/profile/${user.username || user.id}`}

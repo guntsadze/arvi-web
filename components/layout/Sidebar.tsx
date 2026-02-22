@@ -4,22 +4,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Home,
-  Compass,
   ShoppingBag,
   Calendar,
   Users,
   Wrench,
-  Car,
   Menu,
   X,
-  MessageCircle,
   ChevronLeft,
   ChevronRight,
-  Star,
   TrendingUp,
   User as UserIcon,
   Bell,
+  MapPin,
+  Tag,
+  Car,
 } from "lucide-react";
 import { useUsers } from "@/hooks/useUsers";
 import { useCars } from "@/hooks/useCars";
@@ -35,26 +33,258 @@ import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { CarAvatarItem } from "../ui/CarAvatarItem";
 import { groupsService } from "@/services/groups.service";
 import { GroupAvatarItem } from "../ui/GroupAvatarItem";
+import { marketplaceService } from "@/services/marketplace.service";
 
-const cn = (...classes: (string | boolean | undefined)[]) => {
-  return classes.filter(Boolean).join(" ");
+const cn = (...classes: (string | boolean | undefined)[]) =>
+  classes.filter(Boolean).join(" ");
+
+// ────────────────────────────────────────────────────────────────
+// MINI LISTING CARD
+// ────────────────────────────────────────────────────────────────
+const MiniListingCard = ({ listing }: { listing: any }) => {
+  const car = listing.car;
+  const photo = car?.photos?.[0]?.url;
+
+  return (
+    <Link href={`/listings/${listing.id}`}>
+      <div className="group flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-amber-500 hover:bg-stone-800/30 transition-all cursor-pointer">
+        {/* Thumbnail */}
+        <div className="w-10 h-10 shrink-0 bg-stone-900 border border-stone-800 overflow-hidden group-hover:border-stone-600 transition-colors">
+          {photo ? (
+            <img
+              src={photo}
+              alt={car?.model}
+              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Car size={16} className="text-stone-700" />
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-1">
+            <p className="text-[10px] font-mono font-bold text-stone-300 truncate uppercase tracking-wide group-hover:text-amber-500 transition-colors">
+              {car?.year} {car?.make} {car?.model}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 mt-0.5">
+            <span className="text-[9px] font-mono font-black text-amber-500">
+              {listing.price > 0
+                ? `${listing.price.toLocaleString()} ${listing.currency}`
+                : "Call"}
+            </span>
+            {listing.location && (
+              <span className="flex items-center gap-0.5 text-[8px] font-mono text-stone-600 truncate">
+                <MapPin size={8} />
+                {listing.location}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 };
 
+// ────────────────────────────────────────────────────────────────
+// MINI GROUP ROW (extracted for reuse)
+// ────────────────────────────────────────────────────────────────
+const MiniGroupRow = ({
+  group,
+  isActive,
+}: {
+  group: any;
+  isActive: boolean;
+}) => (
+  <Link href={`/groups/${group.slug}`}>
+    <button
+      className={cn(
+        "relative w-full flex items-center px-3 py-2.5 text-xs font-bold transition-all duration-200 group border-l-2",
+        isActive
+          ? "bg-stone-800/50 text-amber-500 border-amber-500"
+          : "border-transparent text-stone-500 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
+      )}
+    >
+      <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
+        <GroupAvatarItem group={group} size="sm" />
+      </div>
+      <span className="font-mono truncate uppercase tracking-wider">
+        {group.name}
+      </span>
+      {isActive && (
+        <div className="ml-auto w-1 h-1 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,1)]" />
+      )}
+    </button>
+  </Link>
+);
+
+// ────────────────────────────────────────────────────────────────
+// SIDEBAR BOTTOM PANEL (Nodes / Market tabs)
+// ────────────────────────────────────────────────────────────────
+const BottomPanel = ({
+  myGroups,
+  groupsLoading,
+  listings,
+  listingsLoading,
+  pathname,
+}: {
+  myGroups: any[];
+  groupsLoading: boolean;
+  listings: any[];
+  listingsLoading: boolean;
+  pathname: string;
+}) => {
+  const [tab, setTab] = useState<"nodes" | "market">("nodes");
+
+  return (
+    <div className="flex flex-col border-t-4 border-stone-800 bg-[#151413] flex-1 min-h-0">
+      {/* Tab bar */}
+      <div className="flex border-b border-stone-800 shrink-0">
+        <button
+          onClick={() => setTab("nodes")}
+          className={cn(
+            "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
+            tab === "nodes"
+              ? "text-amber-500 border-amber-500 bg-amber-500/5"
+              : "text-stone-600 border-transparent hover:text-stone-400",
+          )}
+        >
+          <Users size={11} />
+          Nodes
+        </button>
+        <div className="w-px bg-stone-800" />
+        <button
+          onClick={() => setTab("market")}
+          className={cn(
+            "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
+            tab === "market"
+              ? "text-amber-500 border-amber-500 bg-amber-500/5"
+              : "text-stone-600 border-transparent hover:text-stone-400",
+          )}
+        >
+          <Tag size={11} />
+          Market
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        {tab === "nodes" && (
+          <>
+            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
+              <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.3em]">
+                Active_Nodes
+              </span>
+
+              <Link
+                href="/groups"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-600 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+              >
+                <span>Explore</span>
+                <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+                  <ChevronRight size={10} />
+                </div>
+              </Link>
+            </div>
+
+            {groupsLoading ? (
+              <div className="animate-pulse space-y-3 p-4">
+                <div className="h-4 bg-stone-800 rounded w-3/4" />
+                <div className="h-4 bg-stone-800 rounded w-1/2" />
+                <div className="h-4 bg-stone-800 rounded w-2/3" />
+              </div>
+            ) : myGroups.length > 0 ? (
+              <div className="py-1">
+                {myGroups.map((group) => (
+                  <MiniGroupRow
+                    key={group.id}
+                    group={group}
+                    isActive={pathname === `/groups/${group.slug}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
+                <p className="text-[9px] font-mono text-stone-700 uppercase">
+                  // No_Nodes_Joined
+                </p>
+              </div>
+            )}
+          </>
+        )}
+
+        {tab === "market" && (
+          <>
+            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
+              <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.3em]">
+                Latest_Listings
+              </span>
+              {/* <Link
+                href="/marketplace"
+                className="text-[8px] font-mono text-amber-700 hover:text-amber-500 transition-colors"
+              >
+                View All →
+              </Link> */}
+              <Link
+                href="/marketplace"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-600 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+              >
+                <span>View All</span>
+                <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+                  <ChevronRight size={10} />
+                </div>
+              </Link>
+            </div>
+
+            {listingsLoading ? (
+              <div className="animate-pulse space-y-3 p-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="w-10 h-10 bg-stone-800 shrink-0" />
+                    <div className="flex-1 space-y-1.5">
+                      <div className="h-3 bg-stone-800 rounded w-3/4" />
+                      <div className="h-2.5 bg-stone-800 rounded w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : listings.length > 0 ? (
+              <div className="py-1">
+                {listings.map((listing) => (
+                  <MiniListingCard key={listing.id} listing={listing} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
+                <p className="text-[9px] font-mono text-stone-700 uppercase">
+                  // No_Active_Listings
+                </p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ────────────────────────────────────────────────────────────────
+// MAIN SIDEBAR
+// ────────────────────────────────────────────────────────────────
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [showUsers, setShowUsers] = useState(true);
-
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+
   const currentUser = useAppSelector(selectCurrentUser);
 
   const links = [
-    // { href: "/user", icon: Users, label: "ავტომოყვარულები" },
-    // { href: "/cars", icon: Car, label: "ავტომობილები" },
-    // { href: "/messages", icon: MessageCircle, label: "მესიჯები" },
-    // { href: "/explore", icon: Compass, label: "Explore" },
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
     { href: "/groups", icon: Users, label: "Groups" },
@@ -74,13 +304,35 @@ export function Sidebar() {
   const currentItems = showUsers ? users : cars;
   const maxIndex = Math.max(0, currentItems.length - 4);
 
-  const nextSlide = () => {
-    setCarouselIndex((prev) => Math.min(prev + 1, maxIndex));
-  };
+  // Groups data
+  const [myGroups, setMyGroups] = useState<any[]>([]);
+  const [groupsLoading, setGroupsLoading] = useState(true);
 
-  const prevSlide = () => {
-    setCarouselIndex((prev) => Math.max(prev - 1, 0));
-  };
+  // Listings data
+  const [listings, setListings] = useState<any[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(true);
+
+  useEffect(() => {
+    groupsService
+      .getGroups(1, 15)
+      .then((res) => {
+        const data = res.data?.data || res.data || res;
+        setMyGroups(data);
+      })
+      .catch((err) => console.error("FAILED_TO_LOAD_NODES", err))
+      .finally(() => setGroupsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    marketplaceService
+      .searchListings(1, {})
+      .then((res) => {
+        const data = res.data?.data || res.data || res;
+        setListings(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => console.error("FAILED_TO_LOAD_LISTINGS", err))
+      .finally(() => setListingsLoading(false));
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -92,39 +344,16 @@ export function Sidebar() {
       setActiveDropdown(null);
     } else {
       const rect = e.currentTarget.getBoundingClientRect();
-      setDropdownPos({
-        top: rect.bottom + 8,
-        right: 16, // მობილურზე ყოველთვის მარჯვენა კიდესთან იყოს
-      });
+      setDropdownPos({ top: rect.bottom + 8, right: 16 });
       setActiveDropdown(type);
     }
   };
 
-  // Sidebar კომპონენტის შიგნით
-  const [myGroups, setMyGroups] = useState<any[]>([]);
-  const [groupsLoading, setGroupsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchMyGroups = async () => {
-      try {
-        const res = await groupsService.getGroups(1, 15);
-        const data = res.data?.data || res.data || res;
-        setMyGroups(data);
-      } catch (err) {
-        console.error("FAILED_TO_LOAD_NODES", err);
-      } finally {
-        setGroupsLoading(false);
-      }
-    };
-    fetchMyGroups();
-  }, []);
-
   const SidebarContent = () => (
     <>
-      <div className="p-6 pb-4">
-        {/* Logo & Quick Nav Icons */}
+      {/* ── TOP: Logo + Nav + Search ── */}
+      <div className="p-6 pb-4 shrink-0">
         <div className="flex items-center justify-between mb-6">
-          {/* Logo */}
           <Link href="/feed" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
@@ -134,7 +363,6 @@ export function Sidebar() {
             </div>
           </Link>
 
-          {/* Quick Navigation Icons */}
           <div className="flex items-center gap-1">
             {links.slice(0, 4).map((link) => {
               const Icon = link.icon;
@@ -161,75 +389,21 @@ export function Sidebar() {
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="mt-4">
-          <GlobalSearchBar />
-        </div>
+        <GlobalSearchBar />
       </div>
 
-      {/* --- ჩანაცვლებული ნაწილი: MY_GROUPS_LIST --- */}
-      <div className="px-4 mb-2 flex items-center justify-between">
-        <span className="text-[10px] font-mono text-stone-600 uppercase tracking-[0.3em]">
-          Active_Nodes
-        </span>
-        <Link
-          href="/groups"
-          className="text-[9px] font-mono text-amber-700 hover:underline"
-        >
-          EXPLORE
-        </Link>
-      </div>
+      {/* ── BOTTOM: Nodes / Market tabs ── */}
+      <BottomPanel
+        myGroups={myGroups}
+        groupsLoading={groupsLoading}
+        listings={listings}
+        listingsLoading={listingsLoading}
+        pathname={pathname}
+      />
 
-      <div className="px-4 space-y-1 flex-1 overflow-y-auto custom-scrollbar">
-        {groupsLoading ? (
-          // Skeleton loader ან მარტივი ტექსტი
-          <div className="animate-pulse space-y-3 p-4">
-            <div className="h-4 bg-stone-800 rounded w-3/4" />
-            <div className="h-4 bg-stone-800 rounded w-1/2" />
-          </div>
-        ) : myGroups.length > 0 ? (
-          myGroups.map((group) => {
-            const isActive = pathname === `/groups/${group.slug}`;
-
-            return (
-              <Link key={group.id} href={`/groups/${group.slug}`}>
-                <button
-                  className={cn(
-                    "relative w-full flex items-center px-3 py-2.5 text-xs font-bold transition-all duration-200 group border-l-2",
-                    isActive
-                      ? "bg-stone-800/50 text-amber-500 border-amber-500"
-                      : "border-transparent text-stone-500 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
-                  )}
-                >
-                  {/* Group Avatar Mini */}
-                  <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
-                    <GroupAvatarItem group={group} size="sm" />
-                  </div>
-
-                  <span className="font-mono truncate uppercase tracking-wider">
-                    {group.name}
-                  </span>
-
-                  {isActive && (
-                    <div className="ml-auto w-1 h-1 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,1)]" />
-                  )}
-                </button>
-              </Link>
-            );
-          })
-        ) : (
-          <div className="p-4 border border-dashed border-stone-800 text-center">
-            <p className="text-[10px] font-mono text-stone-700 uppercase">
-              // No_Nodes_Joined
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Featured Section - Bottom Left */}
-      <div className="px-4 py-4 border-t-4 border-stone-800 bg-[#151413] min-h-[190px]">
-        {/* Section Header with Toggle */}
-        <div className="flex items-center justify-between mb-4">
+      {/* ── MIDDLE: Featured carousel ── */}
+      <div className="px-4 py-4 border-y border-stone-800 bg-[#151413] shrink-0">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <TrendingUp size={14} className="text-amber-500" />
           </div>
@@ -283,48 +457,41 @@ export function Sidebar() {
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative">
-          {/* Carousel Viewport */}
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-300 ease-out gap-2"
-              style={{
-                transform: `translateX(-${carouselIndex * 68}px)`,
-              }}
-            >
-              {showUsers
-                ? users.map((user) => (
-                    <UserAvatarItem key={user.id} user={user} />
-                  ))
-                : cars.map((car) => <CarAvatarItem key={car.id} car={car} />)}
-            </div>
+        <div className="relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-out gap-2"
+            style={{ transform: `translateX(-${carouselIndex * 68}px)` }}
+          >
+            {showUsers
+              ? users.map((user) => (
+                  <UserAvatarItem key={user.id} user={user} />
+                ))
+              : cars.map((car) => <CarAvatarItem key={car.id} car={car} />)}
           </div>
-
-          {/* Carousel Controls */}
-          {currentItems.length > 4 && (
-            <div className="flex justify-center gap-2 mt-3">
-              <button
-                onClick={prevSlide}
-                disabled={carouselIndex === 0}
-                className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-              >
-                <ChevronLeft size={12} />
-              </button>
-              <button
-                onClick={nextSlide}
-                disabled={carouselIndex >= maxIndex}
-                className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-              >
-                <ChevronRight size={12} />
-              </button>
-            </div>
-          )}
         </div>
+
+        {currentItems.length > 4 && (
+          <div className="flex justify-center gap-2 mt-2">
+            <button
+              onClick={() => setCarouselIndex((p) => Math.max(p - 1, 0))}
+              disabled={carouselIndex === 0}
+              className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 transition-all"
+            >
+              <ChevronLeft size={12} />
+            </button>
+            <button
+              onClick={() => setCarouselIndex((p) => Math.min(p + 1, maxIndex))}
+              disabled={carouselIndex >= maxIndex}
+              className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 transition-all"
+            >
+              <ChevronRight size={12} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Logout Footer */}
-      <div className="p-2 border-t-4 border-stone-800 bg-[#151413]">
+      {/* ── FOOTER ── */}
+      <div className="p-2 border-t-4 border-stone-800 bg-[#151413] shrink-0">
         <span className="text-[9px] text-stone-600 font-mono uppercase">
           VINTAGE MOTORS © 2026
         </span>
@@ -334,9 +501,8 @@ export function Sidebar() {
 
   return (
     <>
-      {/* --- MOBILE HEADER (Top Bar) --- */}
+      {/* MOBILE HEADER */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#1a1918]/80 backdrop-blur-md border-b-2 border-stone-800 z-50 flex items-center justify-between px-4">
-        {/* Hamburger */}
         <button
           onClick={() => setIsOpen(true)}
           className="p-2 bg-stone-900 border border-stone-700 text-amber-500 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)] active:translate-y-0.5 active:shadow-none transition-all"
@@ -344,13 +510,11 @@ export function Sidebar() {
           <Menu size={20} />
         </button>
 
-        {/* Logo or Title in center (Optional) */}
         <span className="text-amber-500 font-black italic tracking-tighter text-lg">
           ARVI
         </span>
 
         <div className="flex items-center gap-3">
-          {/* Notifications Button */}
           <button
             onClick={(e) => toggleDropdown(e, "notifications")}
             className={cn(
@@ -368,7 +532,6 @@ export function Sidebar() {
             )}
           </button>
 
-          {/* Profile Button */}
           <button
             onClick={(e) => toggleDropdown(e, "profile")}
             className={cn(
@@ -399,8 +562,6 @@ export function Sidebar() {
         >
           {activeDropdown === "notifications" && (
             <div className="w-[calc(100vw-32px)] max-w-[360px]">
-              {" "}
-              {/* მობილურზე სიგანის კონტროლი */}
               <NotificationsDropdown
                 notifications={notifications}
                 unreadCount={unreadCount}

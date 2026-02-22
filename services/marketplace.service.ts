@@ -28,6 +28,14 @@ class MarketplaceService extends BaseApiService<Marketplace> {
   getListingById(id: string) {
     return apiClient.get(`${this.endpoint}/${id}`);
   }
+
+  updateListing(id: string, data: MarketplaceInput) {
+    return apiClient.put(`${this.endpoint}/${id}`, data);
+  }
+
+  deleteListing(id: string) {
+    return apiClient.delete(`${this.endpoint}/${id}`);
+  }
 }
 
 export const marketplaceService = new MarketplaceService();

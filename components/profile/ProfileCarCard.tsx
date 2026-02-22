@@ -14,9 +14,12 @@ import {
   Database,
   X,
   Terminal,
+  Tag,
+  ExternalLink,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const SellButton = ({ onClick }: any) => (
   <button
@@ -26,9 +29,7 @@ const SellButton = ({ onClick }: any) => (
     }}
     className="relative group/sell overflow-hidden px-4 py-1.5 bg-orange-600/10 border border-orange-500/50 hover:bg-orange-500 transition-all duration-300"
   >
-    {/* Button Shine Effect */}
     <div className="absolute inset-0 translate-x-[-100%] group-hover/sell:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-
     <div className="flex items-center gap-2">
       <Zap
         size={12}
@@ -41,7 +42,25 @@ const SellButton = ({ onClick }: any) => (
   </button>
 );
 
-// --- პორტალის კომპონენტი (INDUSTRIAL THEME) ---
+// "View Listing" ღილაკი — listing-ზე გადასასვლელი
+const ViewListingButton = ({ listingId }: { listingId: string }) => (
+  <Link
+    href={`/listings/${listingId}`}
+    onClick={(e) => e.stopPropagation()}
+    className="relative group/view overflow-hidden px-4 py-1.5 bg-emerald-600/10 border border-emerald-500/50 hover:bg-emerald-500 transition-all duration-300 flex items-center gap-2"
+  >
+    <div className="absolute inset-0 translate-x-[-100%] group-hover/view:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+    <ExternalLink
+      size={12}
+      className="text-emerald-500 group-hover/view:text-black transition-colors"
+    />
+    <span className="text-[10px] font-mono font-black text-emerald-500 group-hover/view:text-black uppercase tracking-tighter">
+      View_Listing
+    </span>
+  </Link>
+);
+
+// --- პორტალის კომპონენტი ---
 const InfoPortal = ({ title, isOpen, onClose, children }: any) => {
   if (typeof document === "undefined" || !isOpen) return null;
 
@@ -60,7 +79,6 @@ const InfoPortal = ({ title, isOpen, onClose, children }: any) => {
         exit={{ opacity: 0, scale: 0.95 }}
         className="relative w-full max-w-md bg-[#201d1b] border border-stone-800 shadow-2xl overflow-hidden"
       >
-        {/* Terminal Header */}
         <div className="flex items-center justify-between p-3 border-b border-stone-800 bg-black/20">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-orange-500 animate-pulse" />
@@ -84,7 +102,6 @@ const InfoPortal = ({ title, isOpen, onClose, children }: any) => {
   );
 };
 
-// --- ACTION BUTTON (SYSTEM STYLE) ---
 const ActionButton = ({ icon: Icon, onClick, label }: any) => (
   <button
     onClick={(e) => {
@@ -111,10 +128,16 @@ export const ProfileCarCard = ({
 }: any) => {
   const [modalType, setModalType] = useState<"mods" | "logs" | null>(null);
 
+  const isListed = !!car.listings.length;
+  // listings შეიძლება იყოს object ან array — ორივეს ვამუშავებთ
+  const listingId = Array.isArray(car.listings)
+    ? car.listings[0]?.id
+    : car.listings?.id;
+
   return (
     <>
       <div className="group relative bg-[#201d1b] border border-stone-800 transition-all hover:border-stone-700 flex flex-col h-full overflow-hidden">
-        {/* Image Section with Scanline effect */}
+        {/* ──── IMAGE SECTION ──── */}
         <div className="relative h-48 bg-black overflow-hidden border-b border-stone-800">
           {car.photos?.[0] ? (
             <img
@@ -128,15 +151,36 @@ export const ProfileCarCard = ({
             </div>
           )}
 
-          {/* Overlay Grid */}
+          {/* Carbon texture */}
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
 
-          {/* Plate Number (System Tag) */}
+          {/* License Plate */}
           <div className="absolute top-4 left-4 font-mono">
             <div className="bg-orange-500 text-black text-[9px] font-bold px-2 py-0.5 uppercase tracking-tighter">
               {car.licensePlate || "NO_DATA"}
             </div>
           </div>
+
+          {/* ── LISTED FOR SALE OVERLAY BADGE ── */}
+          {isListed && (
+            <div className="absolute top-4 right-4">
+              <div className="flex items-center gap-1.5 bg-emerald-950/90 border border-emerald-500/60 px-2 py-1 backdrop-blur-sm">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                </span>
+                <Tag size={9} className="text-emerald-400" />
+                <span className="text-[9px] font-mono font-black text-emerald-400 uppercase tracking-wider">
+                  Listed_For_Sale
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* ── LISTED: სურათზე მსუბუქი მწვანე border glow ── */}
+          {isListed && (
+            <div className="absolute inset-0 pointer-events-none border-2 border-emerald-500/20" />
+          )}
 
           {/* Hover Actions */}
           <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -149,9 +193,8 @@ export const ProfileCarCard = ({
           </div>
         </div>
 
-        {/* Info Section */}
+        {/* ──── INFO SECTION ──── */}
         <div className="p-5 flex-1 flex flex-col relative">
-          {/* Subtle Terminal Icon Background */}
           <Terminal
             size={60}
             className="absolute bottom-4 right-4 opacity-[0.03] text-stone-500 pointer-events-none"
@@ -194,9 +237,9 @@ export const ProfileCarCard = ({
             />
           </div>
 
-          {/* Bottom Action Bar */}
+          {/* ──── BOTTOM ACTION BAR ──── */}
           <div className="mt-auto pt-4 border-t border-stone-800/50 flex flex-col gap-4">
-            {/* ზედა ზოლი: Mods & Logs */}
+            {/* Mods & Logs + mileage */}
             <div className="flex items-center justify-between font-mono">
               <div className="flex gap-4">
                 <button
@@ -217,22 +260,40 @@ export const ProfileCarCard = ({
               </div>
             </div>
 
-            {/* ქვედა ზოლი: Sell Button */}
+            {/* Status + Action */}
             <div className="flex items-center justify-between gap-2 border-t border-stone-800/30 pt-3">
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
-                <span className="text-[8px] text-stone-600 font-mono uppercase">
-                  System_Active
-                </span>
-              </div>
+              {/* Status indicator */}
+              {isListed ? (
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                  </span>
+                  <span className="text-[8px] text-emerald-600 font-mono uppercase">
+                    On_Market
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
+                  <span className="text-[8px] text-stone-600 font-mono uppercase">
+                    System_Active
+                  </span>
+                </div>
+              )}
 
-              <SellButton onClick={() => onSell(car)} />
+              {/* Action: Sell ან View Listing */}
+              {isListed ? (
+                <ViewListingButton listingId={listingId} />
+              ) : (
+                <SellButton onClick={() => onSell(car)} />
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* --- Portals (MODS & LOGS) --- */}
+      {/* ──── PORTALS ──── */}
       <AnimatePresence>
         {modalType === "mods" && (
           <InfoPortal
@@ -245,7 +306,7 @@ export const ProfileCarCard = ({
                 {car.modifications.map((mod: any) => (
                   <div
                     key={mod.id}
-                    className="p-3 bg-black/20 border border-stone-800/50 flex justify-between items-center group hover:border-orange-500/30 transition-colors"
+                    className="p-3 bg-black/20 border border-stone-800/50 flex justify-between items-center hover:border-orange-500/30 transition-colors"
                   >
                     <div>
                       <div className="text-[10px] font-bold text-stone-300 uppercase">
@@ -308,7 +369,6 @@ export const ProfileCarCard = ({
   );
 };
 
-// დამხმარე კომპონენტი ინფოსთვის
 function DataField({ label, value, icon, isOrange }: any) {
   return (
     <div className="space-y-1">
