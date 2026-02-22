@@ -208,7 +208,6 @@ export function MediaSlider({
             className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-2xl flex flex-col items-center justify-center p-4"
           >
             <button
-              onClick={() => setIsMaxmitting(false)} // შეცდომა იყო აქ, გამოვასწორე ქვემოთ
               onClickCapture={() => setIsMaximized(false)}
               className="absolute top-6 right-6 z-[110] text-white/30 hover:text-white transition-colors p-2"
             >
