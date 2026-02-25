@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient } from "@/lib/api";
 import { BaseApiService } from "@/services/common/base-api.service";
 
 // შეტყობინების გამომგზავნის ინტერფეისი (Prisma-ს select-ის მიხედვით)
