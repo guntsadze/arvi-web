@@ -4,13 +4,29 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // images: {
+  //   domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
+  // },
   images: {
-    domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.bmwgroup-classic.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
   output: "standalone",
   reactStrictMode: false,
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production'
+    removeConsole: process.env.NODE_ENV === "production",
   },
 };
 
