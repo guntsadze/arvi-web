@@ -82,10 +82,6 @@ class AuthService {
     return `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   }
 
-  getFacebookAuthUrl() {
-    return `${process.env.NEXT_PUBLIC_API_URL}/auth/facebook`;
-  }
-
   getAppleAuthUrl() {
     return `${process.env.NEXT_PUBLIC_API_URL}/auth/apple`;
   }

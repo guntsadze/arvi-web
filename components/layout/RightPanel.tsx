@@ -127,14 +127,14 @@ export const RightPanel = () => {
         {" "}
         {/* min-h-0 არის კრიტიკული სქროლისთვის */}
         {/* Module Close Bar */}
-        {activeView !== "messages" && (
+        {/* {activeView !== "messages" && (
           <button
             onClick={() => setActiveView("messages")}
             className="w-full bg-amber-900/10 hover:bg-amber-900/20 text-[8px] font-mono text-amber-700 py-1.5 border-b border-stone-800 flex items-center justify-center gap-2 uppercase tracking-widest transition-all"
           >
             <X size={10} /> Exit_Current_Module
           </button>
-        )}
+        )} */}
         {/* CONTENT RENDERING */}
         <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#1c1917]">
           {activeView === "messages" && (

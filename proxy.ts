@@ -6,7 +6,21 @@ export default function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const publicRoutes = ["/login", "/register", "/forgot-password"];
+  if (pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
+  const publicRoutes = [
+    "/auth/login",
+    "/auth/register",
+    "/forgot-password",
+    "/auth/callback",
+  ];
+
+  if (pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
   );
@@ -16,7 +30,7 @@ export default function proxy(request: NextRequest) {
   }
 
   if (!isPublicRoute && !token) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL("/auth/login", request.url);
 
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);

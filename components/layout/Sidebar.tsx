@@ -302,6 +302,7 @@ export function Sidebar() {
   } = useNotifications();
 
   const currentItems = showUsers ? users : cars;
+  const filteredUsers = users.filter((u) => u.id !== currentUser?.id);
   const maxIndex = Math.max(0, currentItems.length - 4);
 
   // Groups data
@@ -463,7 +464,7 @@ export function Sidebar() {
             style={{ transform: `translateX(-${carouselIndex * 68}px)` }}
           >
             {showUsers
-              ? users.map((user) => (
+              ? filteredUsers.map((user) => (
                   <UserAvatarItem key={user.id} user={user} />
                 ))
               : cars.map((car) => <CarAvatarItem key={car.id} car={car} />)}

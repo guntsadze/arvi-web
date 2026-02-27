@@ -6,6 +6,7 @@ import { useUsers } from "@/hooks/useUsers";
 
 export default function Page() {
   const { users, loading, error } = useUsers(1, 50);
+  console.log("🚀 ~ Page ~ users:", users);
 
   if (loading) {
     return (

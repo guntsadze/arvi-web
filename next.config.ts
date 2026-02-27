@@ -4,22 +4,19 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // images: {
-  //   domains: ["www.bmwgroup-classic.com", "res.cloudinary.com"],
-  // },
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "www.bmwgroup-classic.com",
-        port: "",
-        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        port: "",
-        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "res.cloudinary.com",
       },
     ],
   },
