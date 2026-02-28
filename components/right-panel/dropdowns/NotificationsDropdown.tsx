@@ -1,3 +1,4 @@
+import { UserAvatarItem } from "@/components/ui/UserAvatarItem";
 import {
   Bell,
   CheckCheck,
@@ -93,17 +94,12 @@ export const NotificationsDropdown = ({
               {/* Avatar & Icon */}
               <div className="relative flex-shrink-0">
                 <div className="w-10 h-10 border-2 border-stone-800 overflow-hidden bg-stone-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  {notif.sender?.avatar ? (
-                    <img
-                      src={notif.sender.avatar}
-                      alt="avatar"
-                      className="w-full h-full object-cover"
+                  <UserAvatarItem
+                      key={notif.sender}
+                      user={notif.sender}
+                      size="sm"
+                      showName={false}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-stone-700">
-                      <User size={20} />
-                    </div>
-                  )}
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#1c1917] border border-stone-800 rounded-full flex items-center justify-center shadow-lg">
                   {getNotifIcon(notif.type)}
