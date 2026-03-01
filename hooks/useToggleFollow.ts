@@ -1,4 +1,3 @@
-// hooks/useToggleFollow.ts
 import { useState, useCallback } from "react";
 import { socialService } from "@/services/social/social.service";
 

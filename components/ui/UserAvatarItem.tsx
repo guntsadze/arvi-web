@@ -11,6 +11,7 @@ interface UserAvatarItemProps {
     avatar?: any;
     role?: string;
   };
+  isOnline?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
   showName?: boolean;
   variant?: "default" | "card";
@@ -19,6 +20,7 @@ interface UserAvatarItemProps {
 
 export const UserAvatarItem = ({
   user,
+  isOnline = false,
   size = "md",
   showName = true,
   variant = "default",
@@ -63,6 +65,19 @@ export const UserAvatarItem = ({
             )}
           </div>
 
+          {/* 🟢 Neon Online Indicator */}
+          {isOnline && (
+            <div className="absolute -bottom-0.5 -right-0.5 z-20 flex items-center justify-center">
+              {/* Background Glow (ანიმაციური ნათება) */}
+              <div className="absolute w-3 h-3 bg-green-500/60 blur-[3px] animate-pulse rounded-none" />
+
+              {/* The Core LED (მყარი ცენტრი) */}
+              <div className="relative w-2 h-2 bg-green-400 border border-green-900 rounded-none shadow-[0_0_8px_rgba(74,222,128,0.8)]">
+                {/* პატარა თეთრი წერტილი ცენტრში რეალისტური LED ეფექტისთვის */}
+                <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white/40" />
+              </div>
+            </div>
+          )}
           {user.role === "ADMIN" && (
             <div className="absolute -top-1 -right-1 bg-red-900 text-white p-0.5 rounded-sm border border-stone-700 shadow-md">
               <Star size={8} fill="currentColor" />
@@ -110,6 +125,20 @@ export const UserAvatarItem = ({
             </div>
           )}
         </div>
+
+        {/* 🟢 Neon Online Indicator */}
+        {isOnline && (
+          <div className="absolute -bottom-0.5 -right-0.5 z-20 flex items-center justify-center">
+            {/* Background Glow (ანიმაციური ნათება) */}
+            <div className="absolute w-3 h-3 bg-green-500/60 blur-[3px] animate-pulse rounded-none" />
+
+            {/* The Core LED (მყარი ცენტრი) */}
+            <div className="relative w-2 h-2 bg-green-400 border border-green-900 rounded-none shadow-[0_0_8px_rgba(74,222,128,0.8)]">
+              {/* პატარა თეთრი წერტილი ცენტრში რეალისტური LED ეფექტისთვის */}
+              <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white/40" />
+            </div>
+          </div>
+        )}
 
         {user.role === "ADMIN" && (
           <div className="absolute -top-1 -right-1 bg-red-900 text-white p-0.5 rounded-sm border border-stone-700 shadow-md">

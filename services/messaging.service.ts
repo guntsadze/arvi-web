@@ -87,10 +87,14 @@ class MessagingService extends BaseApiService<any> {
   }
 
   // 2. კონკრეტულ საუბარში მესიჯის გაგზავნა
-  async sendMessage(payload: { conversationId: string; content: string }) {
+  async sendMessage(payload: {
+    conversationId: string;
+    content: string;
+    clientSideId?: string;
+  }) {
     const data = await apiClient.post(
       `${this.endpoint}/${payload.conversationId}`,
-      { content: payload.content },
+      { content: payload.content, clientSideId: payload.clientSideId },
     );
     return data;
   }
