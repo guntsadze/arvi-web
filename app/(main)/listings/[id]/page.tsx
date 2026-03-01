@@ -28,6 +28,7 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { EditListingPanel } from "@/components/marketplace/EditListingPanel";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePresence } from "@/context/PresenceContext";
 
 const DetailItem: React.FC<{
   label: string;
@@ -145,7 +146,7 @@ const ListingDetailPage: React.FC = () => {
   const { id } = useParams();
   const router = useRouter();
   const currentUser = useAppSelector(selectCurrentUser);
-
+  const { isUserOnline } = usePresence();
   const [listing, setListing] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
@@ -185,6 +186,7 @@ const ListingDetailPage: React.FC = () => {
   const car = listing.car;
   const inspection = listing.vehicleInspections?.[0];
   const isOwner = currentUser?.id === listing.userId;
+  const online = isUserOnline(listing.user.id);
 
   const mediaItems =
     car?.photos?.map((p: any) => ({
@@ -380,7 +382,11 @@ const ListingDetailPage: React.FC = () => {
               </div>
 
               {/* Seller Card */}
-              <UserAvatarItem user={listing.user} variant="card" />
+              <UserAvatarItem
+                user={listing.user}
+                variant="card"
+                isOnline={online}
+              />
             </div>
           </div>
         </div>

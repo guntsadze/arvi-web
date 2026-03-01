@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Minus, Send } from "lucide-react";
+import { X, Minus, Send, Smile } from "lucide-react";
 import { FloatingChat } from "@/types/chat.types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeChat, toggleMinimize } from "@/store/slices/floatingChatsSlice";
@@ -9,7 +9,11 @@ import { useMessages } from "@/hooks/useMessages";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { cn } from "@/lib/utils";
-import { usePresence } from "@/hooks/usePresence";
+import { usePresence } from "@/context/PresenceContext";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
+
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 interface FloatingChatWindowProps {
   chat: FloatingChat;
@@ -24,10 +28,11 @@ export const FloatingChatWindow = ({
   const currentUser = useAppSelector(selectCurrentUser);
   const { isUserOnline } = usePresence();
   const online = isUserOnline(chat.user.id);
-  console.log("🚀 ~ FloatingChatWindow ~ online:", online);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isTypingSent, setIsTypingSent] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
 
   const {
     messages,
@@ -38,6 +43,23 @@ export const FloatingChatWindow = ({
     sendStopTyping,
     loadMessages,
   } = useMessages(chat.conversationId);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const onEmojiClick = (emojiData: any) => {
+    setInputValue((prev) => prev + emojiData.emoji);
+  };
 
   useEffect(() => {
     if (!chat.isMinimized) {
@@ -81,24 +103,51 @@ export const FloatingChatWindow = ({
     return (
       <div
         className="fixed bottom-0 z-50 transition-all duration-300 group"
-        style={{ right: `${24 + index * 70}px` }}
+        style={{ right: `${24 + index * 180}px` }} // გავზარდეთ დაშორება, რადგან ტაბი უფრო განიერია
       >
         <button
-          onClick={() => dispatch(closeChat(chat.id))}
-          className="absolute -top-2 -right-2 z-10 bg-red-600 text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity border border-black"
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(closeChat(chat.id));
+          }}
+          className="absolute -top-2 -right-1 z-20 bg-red-600 text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity border border-black shadow-lg"
         >
           <X size={10} />
         </button>
+
+        {/* Minimized Tab UI */}
         <div
           onClick={() => dispatch(toggleMinimize(chat.id))}
-          className="cursor-pointer border-t-2 border-amber-600 bg-stone-950 p-1 hover:bg-stone-900 transition-colors shadow-2xl"
+          className={cn(
+            "cursor-pointer w-[160px] h-10 bg-stone-950 border-t-2 border-x border-stone-800",
+            "flex items-center gap-2 px-2 hover:bg-stone-900 transition-all relative overflow-hidden",
+            "border-t-amber-600 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]",
+          )}
         >
+          {/* Scanline effect for minimized tab */}
+          <div className="absolute inset-0 pointer-events-none opacity-5  bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_2px]" />
+
           <UserAvatarItem
             user={chat.user}
-            size="sm"
+            size="exsm"
             showName={false}
-            className="rounded-none"
+            disableLink={true}
+            className="w-7 h-7 scale-75"
             isOnline={online}
+          />
+
+          <div className="flex flex-col flex-1 truncate">
+            <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest truncate">
+              {chat.user.firstName}
+            </span>
+          </div>
+
+          {/* Activity light */}
+          <div
+            className={cn(
+              "w-1 h-1 rounded-full",
+              online ? "bg-green-500 shadow-[0_0_5px_#22c55e]" : "bg-stone-800",
+            )}
           />
         </div>
       </div>
@@ -124,7 +173,6 @@ export const FloatingChatWindow = ({
               user={chat.user}
               size="sm"
               showName={false}
-              className="rounded-none border border-stone-700"
               isOnline={online}
             />
           </div>
@@ -198,7 +246,7 @@ export const FloatingChatWindow = ({
               {/* 👁️ SEEN INDICATOR (მხოლოდ ჩემს მესიჯებზე) */}
               {isMine && !isPending && isSeen && (
                 <span className="text-[6px] font-mono text-amber-600/60 mt-1 uppercase tracking-widest">
-                  // STATUS: RECEIVED_BY_NODE
+                  // Seen
                 </span>
               )}
             </div>
@@ -206,11 +254,34 @@ export const FloatingChatWindow = ({
         })}
         {Object.values(typingUsers).length > 0 && (
           <div className="text-[8px] font-mono text-amber-600/50 animate-pulse uppercase">
-            // {Object.values(typingUsers).join(", ")} IS_TRANSMITTING_DATA...
+            // {Object.values(typingUsers).join(", ")} Typing...
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
+
+      <AnimatePresence>
+        {showEmojiPicker && (
+          <motion.div
+            ref={emojiPickerRef}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            className="absolute bottom-[70px] right-4 z-[100] shadow-2xl border border-stone-800 scrollbar-hide"
+          >
+            <EmojiPicker
+              theme={"dark" as any}
+              onEmojiClick={onEmojiClick}
+              autoFocusSearch={false}
+              width={280}
+              height={350}
+              skinTonesDisabled
+              searchDisabled
+              previewConfig={{ showPreview: false }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Input Area - Command Line Style */}
       <form
@@ -218,7 +289,19 @@ export const FloatingChatWindow = ({
         className="p-3 bg-stone-950 border-t border-stone-800"
       >
         <div className="flex items-center gap-2 border border-stone-800 bg-black p-1 transition-all focus-within:border-amber-600/50">
-          <div className="pl-2 text-amber-600 font-mono text-[10px]">&gt;_</div>
+          <div className="pl-1 text-amber-600 font-mono text-[8px]">&gt;_</div>
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className={cn(
+              "pl-2 transition-colors",
+              showEmojiPicker
+                ? "text-amber-500"
+                : "text-stone-700 hover:text-amber-600",
+            )}
+          >
+            <Smile size={16} />
+          </button>
           <input
             type="text"
             value={inputValue}

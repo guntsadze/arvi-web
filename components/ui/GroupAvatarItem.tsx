@@ -9,7 +9,7 @@ interface GroupAvatarItemProps {
     slug: string;
     name: string;
     avatar?: any;
-  };
+  } | null;
   size?: "sm" | "md" | "lg"; // sm: 16x16, md: 32x32 (შენი ზომა), lg: 40x40
   isOwner?: boolean;
   showName?: boolean;
@@ -23,6 +23,8 @@ export const GroupAvatarItem = ({
   showName = false,
   className,
 }: GroupAvatarItemProps) => {
+  if (!group) return null;
+
   const sizes = {
     sm: "w-16 h-16",
     md: "w-32 h-32",

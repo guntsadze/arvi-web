@@ -34,6 +34,7 @@ import { CarAvatarItem } from "../ui/CarAvatarItem";
 import { groupsService } from "@/services/groups.service";
 import { GroupAvatarItem } from "../ui/GroupAvatarItem";
 import { marketplaceService } from "@/services/marketplace.service";
+import { usePresence } from "@/context/PresenceContext";
 
 const cn = (...classes: (string | boolean | undefined)[]) =>
   classes.filter(Boolean).join(" ");
@@ -281,9 +282,9 @@ export function Sidebar() {
   const [showUsers, setShowUsers] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+  const { isUserOnline } = usePresence();
 
   const currentUser = useAppSelector(selectCurrentUser);
-
   const links = [
     { href: "/marketplace", icon: ShoppingBag, label: "Marketplace" },
     { href: "/events", icon: Calendar, label: "Events" },
@@ -465,7 +466,11 @@ export function Sidebar() {
           >
             {showUsers
               ? filteredUsers.map((user) => (
-                  <UserAvatarItem key={user.id} user={user} />
+                  <UserAvatarItem
+                    key={user.id}
+                    user={user}
+                    isOnline={isUserOnline(user.id)}
+                  />
                 ))
               : cars.map((car) => <CarAvatarItem key={car.id} car={car} />)}
           </div>

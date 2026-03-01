@@ -1,3 +1,4 @@
+import { usePresence } from "@/context/PresenceContext";
 import { Radio, Search } from "lucide-react";
 import { useState } from "react";
 
@@ -7,6 +8,7 @@ export const ActiveFrequencies = ({
   getOtherParticipant,
 }: any) => {
   const [query, setQuery] = useState("");
+  const { isUserOnline } = usePresence();
 
   // ფილტრაცია პირდაპირ რენდერში
   const filtered = conversations.filter((conv: any) => {
@@ -60,7 +62,7 @@ export const ActiveFrequencies = ({
                   </span>
                   <div
                     className={`w-1 h-1 rounded-full ${
-                      user?.online
+                      isUserOnline(user?.id)
                         ? "bg-green-500 shadow-[0_0_5px_green]"
                         : "bg-stone-700"
                     }`}

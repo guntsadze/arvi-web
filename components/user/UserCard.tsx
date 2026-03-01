@@ -8,6 +8,7 @@ import { useToggleFollow } from "@/hooks/useToggleFollow";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { usePresence } from "@/context/PresenceContext";
 
 type User = {
   id: string;
@@ -28,6 +29,7 @@ type User = {
 export default function UserCard({ user }: { user: User }) {
   const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
+  const { isUserOnline } = usePresence();
   const { toggleFollow, isLoading, error, isFollowing, followersCount } =
     useToggleFollow(
       user.id,
@@ -79,7 +81,11 @@ export default function UserCard({ user }: { user: User }) {
 
         <div className="px-5 pt-0 flex-1 flex flex-col">
           <div className="relative -mt-10 mb-3 w-fit">
-            <UserAvatarItem key={user?.avatar} user={user} />
+            <UserAvatarItem
+              key={user?.avatar}
+              user={user}
+              isOnline={isUserOnline(user.id)}
+            />
             {user.isVerified && (
               <div className="absolute -bottom-1 -right-1 bg-blue-700 text-white p-1 rounded-full border-2 border-[#dcd8c8]">
                 <ShieldCheck size={12} />

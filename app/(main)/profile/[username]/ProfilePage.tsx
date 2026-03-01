@@ -10,9 +10,12 @@ import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import { usePresence } from "@/context/PresenceContext";
 
 export default function ProfilePage({ user }: { user: any }) {
   const currentUser = useAppSelector(selectCurrentUser);
+  const { isUserOnline } = usePresence();
+
   const isOwner = currentUser?.id === user.id;
 
   const [lightbox, setLightbox] = useState<{
@@ -21,7 +24,7 @@ export default function ProfilePage({ user }: { user: any }) {
   } | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-orange-500/30">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-orange-500/30 scrollbar-hide">
       {/* Carbon Fiber Background */}
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
 
@@ -69,28 +72,18 @@ export default function ProfilePage({ user }: { user: any }) {
               <div className="w-32 h-32 md:w-44 md:h-44 relative">
                 <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
 
-                <button
+                <UserAvatarItem
+                  user={user}
+                  variant="profile"
+                  isOnline={isUserOnline(user.id)}
+                  className="pointer-events-auto"
                   onClick={() =>
                     setLightbox({
                       src: user.avatar || null,
                       type: "avatar",
                     })
                   }
-                  className="relative w-full h-full rounded-xl border-2 border-orange-500 overflow-hidden bg-neutral-900 shadow-xl cursor-zoom-in"
-                  aria-label="View profile photo"
-                >
-                  <UserAvatarItem
-                    user={user}
-                    size="xl"
-                    showName={false}
-                    className="w-full h-full border-none shadow-none"
-                  />
-
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <Camera size={20} className="text-white drop-shadow-lg" />
-                  </div>
-                </button>
+                />
 
                 {user.showOnlineStatus && (
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20 pointer-events-none" />

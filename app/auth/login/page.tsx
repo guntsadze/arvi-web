@@ -10,31 +10,43 @@ import { loginSchema } from "@/lib/validations/auth";
 import { authService } from "@/services/auth/auth.services";
 import { AuthForm } from "@/components/ui/auth/AuthForm";
 import Input from "@/components/ui/Input";
+import { setUser } from "@/store/slices/userSlice";
+import { useAppDispatch } from "@/store/hooks";
+import { AxiosError } from "axios";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [globalError, setGlobalError] = useState("");
   const router = useRouter();
 
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
+    // resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
 
   const onLogin = async (data: LoginForm) => {
     setIsLoading(true);
-    setGlobalError("");
     try {
-      await authService.login(data);
+      const res = await authService.login(data);
+
+      dispatch(
+        setUser({
+          user: res.user,
+          token: res.token,
+        }),
+      );
+
       router.push("/feed");
-    } catch {
-      setGlobalError("შესვლა ვერ მოხერხდა");
+    } catch (err: any) {
+      const errorMessage = JSON.parse(err.message.split(" - ")[1]).message;
+      setError("identifier", { message: errorMessage });
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +60,7 @@ export default function LoginPage() {
     <AuthForm
       onSubmit={handleSubmit(onLogin)}
       isLoading={isLoading}
-      globalError={globalError}
+      globalError={errors.identifier?.message}
       submitLabel="ავტორიზაცია"
       linkText="არ გაქვს ანგარიში? რეგისტრაცია"
       linkHref="/auth/register"

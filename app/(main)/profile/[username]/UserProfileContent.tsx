@@ -38,8 +38,8 @@ export default function ProfileContentWrapper({ user, userId }: Props) {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-10 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-10 py-10 ">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 ">
           {/* SIDEBAR - SYSTEM STATUS & BIO */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-[#201d1b] border border-stone-800 p-6 relative overflow-hidden group">

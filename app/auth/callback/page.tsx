@@ -5,10 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Cookie from "js-cookie";
 import { apiClient } from "@/lib/api";
 import { Wrench, Activity, Shield } from "lucide-react";
+import { setUser } from "@/store/slices/userSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 function AuthCallbackHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -18,15 +22,27 @@ function AuthCallbackHandler() {
       return;
     }
 
-    Cookie.set("token", token, { expires: 7 });
+    Cookie.set("token", token, { expires: 7, path: "/" });
 
     const fetchUser = async () => {
       try {
-        const user = await apiClient.get("/users/profile");
-        localStorage.setItem("user", JSON.stringify(user));
+        const res = await apiClient.get("/users/profile");
+
+        const userData = res;
+
+        dispatch(
+          setUser({
+            user: userData,
+            token: token,
+          }),
+        );
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
         router.push("/feed");
-      } catch {
-        router.push("/feed");
+      } catch (error) {
+        console.error("Sync Error:", error);
+        router.push("/login?error=sync_failed");
       }
     };
 
