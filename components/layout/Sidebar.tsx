@@ -35,6 +35,7 @@ import { groupsService } from "@/services/groups.service";
 import { GroupAvatarItem } from "../ui/GroupAvatarItem";
 import { marketplaceService } from "@/services/marketplace.service";
 import { usePresence } from "@/context/PresenceContext";
+import Image from "next/image";
 
 const cn = (...classes: (string | boolean | undefined)[]) =>
   classes.filter(Boolean).join(" ");
@@ -359,8 +360,15 @@ export function Sidebar() {
           <Link href="/feed" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
-                <Wrench size={18} className="text-stone-900 -rotate-12" />
+                <Image
+                  src="/logo.svg"
+                  alt="Logo"
+                  width={18}
+                  height={18}
+                  className="-rotate-12"
+                />
               </div>
+
               <div className="absolute inset-0 bg-amber-500/20 blur-lg -z-10" />
             </div>
           </Link>
