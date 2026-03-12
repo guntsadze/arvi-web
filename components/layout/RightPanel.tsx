@@ -28,6 +28,7 @@ export const RightPanel = () => {
 
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
+  console.log("🚀 ~ RightPanel ~ currentUser:", currentUser);
   const { conversations, loading } = useConversations();
   const {
     notifications,

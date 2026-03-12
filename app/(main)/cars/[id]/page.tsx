@@ -43,7 +43,7 @@ export default async function CarPage({ params }: { params: { id: string } }) {
   const { id } = await params;
 
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("access_token")?.value;
 
   const car = await carsService.getCarDetails(id, {
     headers: { Authorization: `Bearer ${token}` },

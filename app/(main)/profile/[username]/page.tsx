@@ -10,7 +10,7 @@ type Props = {
 export default async function Page({ params }: Props) {
   const { username } = await params;
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("access_token")?.value;
 
   const user = await usersService.getByUsername(username, {
     headers: { Authorization: `Bearer ${token}` },
