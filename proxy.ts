@@ -17,10 +17,6 @@ export default function proxy(request: NextRequest) {
     "/auth/callback",
   ];
 
-  if (pathname.startsWith("/auth/callback")) {
-    return NextResponse.next();
-  }
-
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
   );
