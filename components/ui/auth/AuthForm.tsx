@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ShieldCheck, Cpu } from "lucide-react";
 
 interface AuthFormProps {
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   onSubmit: (data: any) => void;
   isLoading: boolean;
   children: React.ReactNode;

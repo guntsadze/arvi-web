@@ -34,15 +34,7 @@ export default function LoginPage() {
   const onLogin = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      const res = await authService.login(data);
-
-      dispatch(
-        setUser({
-          user: res.user,
-          token: res.token,
-        }),
-      );
-
+      await authService.login(data);
       router.push("/feed");
     } catch (err: any) {
       const errorMessage = JSON.parse(err.message.split(" - ")[1]).message;

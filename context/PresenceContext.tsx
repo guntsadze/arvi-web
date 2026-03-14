@@ -11,7 +11,6 @@ import React, {
 import { io } from "socket.io-client";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
-import Cookie from "js-cookie";
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -33,17 +32,13 @@ export const PresenceProvider = ({
   const currentUser = useAppSelector(selectCurrentUser);
 
   useEffect(() => {
-    const token = Cookie.get("token");
-    console.log("🚀 ~ PresenceProvider ~ token:", token);
-
-    // თუ იუზერი არ არის ან ტოკენი არ გვაქვს, არ ვუკავშირდებით
-    if (!currentUser?.id || !token) {
+    if (!currentUser?.id) {
       setOnlineUsers([]);
       return;
     }
 
     const socket = io(`${SOCKET_URL}/presence`, {
-      auth: { token, userId: currentUser.id },
+      withCredentials: true,
       transports: ["websocket"],
     });
 
@@ -58,7 +53,7 @@ export const PresenceProvider = ({
     return () => {
       socket.disconnect();
     };
-  }, [currentUser?.id]); // 👈 მხოლოდ ID-ზე დამოკიდებულება
+  }, [currentUser?.id]);
 
   const isUserOnline = useCallback(
     (userId: string) => onlineUsers.includes(userId),

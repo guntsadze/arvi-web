@@ -7,13 +7,8 @@ export const useSocket = (namespace: string = "/") => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const token = document.cookie.match(/(^| )token=([^;]+)/)?.at(2);
-
-    if (!token) return;
-
-    // ვუერთდებით კონკრეტულ namespace-ს (მაგ: /notifications)
     const socketInstance = io(`${SOCKET_URL}${namespace}`, {
-      auth: { token },
+      withCredentials: true,
       transports: ["websocket"],
     });
 
