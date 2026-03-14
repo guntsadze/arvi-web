@@ -42,23 +42,17 @@ export const GroupAvatarItem = ({
           "bg-[#201d1b] border-2 border-stone-800 p-1 relative shadow-2xl group/avatar",
         )}
       >
-        {/* ძირითადი კონტენტი (Link-ით) */}
-        <Link
-          href={`/groups/${group.slug || group.id}`}
-          className="block w-full h-full"
-        >
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={group.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-800 text-[10px]">
-              NO_IMG
-            </div>
-          )}
-        </Link>
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={group.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-800 text-[10px]">
+            NO_IMG
+          </div>
+        )}
 
         {/* ატვირთვის ღილაკი (მხოლოდ პატრონისთვის) */}
         {isOwner && (

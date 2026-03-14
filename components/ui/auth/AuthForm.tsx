@@ -105,16 +105,7 @@ export const AuthForm = ({
               clipPath:
                 "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
             }}
-            className="
-                w-full py-4 mt-6
-                bg-amber-700 text-stone-900
-                font-black uppercase tracking-[0.2em] text-sm
-                hover:bg-amber-600 
-                transition-all duration-200
-                shadow-[0_0_20px_rgba(180,83,9,0.2)]
-                hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]
-                disabled:opacity-50 disabled:cursor-not-allowed
-            "
+            className="w-full py-4 mt-6 bg-amber-700 text-stone-900 font-black uppercase tracking-[0.2em] text-sm hover:bg-amber-600 transition-all duration-200 shadow-[0_0_20px_rgba(180,83,9,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <span className="animate-pulse">Processing...</span>

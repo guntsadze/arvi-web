@@ -27,7 +27,7 @@ export default function GroupPage({
 
   const fetchPosts = useCallback(
     (page: number) => {
-      if (!group) return Promise.reject("Group not loaded");
+      if (!group?.id) return Promise.resolve({ data: [], total: 0 });
       return groupsService.getGroupPosts(group.id, page);
     },
     [group?.id],
