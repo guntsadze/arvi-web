@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    qualities: [75, 100],
     remotePatterns: [
       {
         protocol: "https",
@@ -39,6 +40,9 @@ const nextConfig: NextConfig = {
   },
   compress: true,
   reactCompiler: true,
+  experimental: {
+    optimizeCss: true,
+  },
 };
 
 export default nextConfig;

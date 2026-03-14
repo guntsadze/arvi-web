@@ -13,6 +13,7 @@ import { CommentItem } from "../comments/CommentItem";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { Pin } from "lucide-react";
+import { usePresence } from "@/context/PresenceContext";
 
 interface Comment {
   id: string;
@@ -35,6 +36,8 @@ interface GroupPostCardProps {
 
 export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
+  const { isUserOnline } = usePresence();
+  const online = isUserOnline(post.user.id);
 
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
@@ -246,6 +249,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
           onEdit={() => setPartialState({ editingPost: true })}
           onDelete={handleDeletePost}
           isOwner={isPostAuthor}
+          online={online}
         />
 
         {/* Pin Button for Admins */}

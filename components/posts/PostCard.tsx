@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ImageSlider, MediaSlider } from "../ui/MediaSlider";
+import { MediaSlider } from "../ui/MediaSlider";
 import { PostHeader } from "./PostHeader";
 import { PostContent } from "./PostContent";
 import { PostActions } from "./PostActions";
@@ -11,6 +11,7 @@ import { CommentForm } from "../comments/CommentForm";
 import { CommentItem } from "../comments/CommentItem";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import { usePresence } from "@/context/PresenceContext";
 
 interface Comment {
   id: string;
@@ -32,6 +33,8 @@ interface PostCardProps {
 
 export function PostCard({ post, refresh }: PostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
+  const { isUserOnline } = usePresence();
+  const online = isUserOnline(post.user.id);
 
   const [state, setState] = useState({
     isLiked: post.isLiked || false,
@@ -227,6 +230,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
           onEdit={() => setPartialState({ editingPost: true })}
           onDelete={handleDeletePost}
           isOwner={isOwner}
+          online={online}
         />
 
         <div className="p-4 bg-[#201d1b]">

@@ -115,7 +115,9 @@ export function MediaSlider({
               src={item.url}
               alt={`Media ${index}`}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
+              priority={index === 0}
             />
           )}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
@@ -176,6 +178,7 @@ export function MediaSlider({
               src={media[2].url}
               alt="More"
               fill
+              sizes="(max-width: 768px) 25vw, 15vw"
               className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
           )}
@@ -281,6 +284,7 @@ export function MediaSlider({
                       src={item.url}
                       alt={`Thumbnail ${idx}`}
                       fill
+                      sizes="64px"
                       className="object-cover"
                     />
                   )}

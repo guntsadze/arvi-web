@@ -27,7 +27,6 @@ export default function proxy(request: NextRequest) {
 
   if (!isPublicRoute && !token) {
     const loginUrl = new URL("/auth/login", request.url);
-
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }

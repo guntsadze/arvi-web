@@ -1,40 +1,4 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* ინარჩუნებს dark mode-ს თუ გჭირდება */
 @custom-variant dark (&:is(.dark *));
-
-@layer base {
-  * {
-    @apply border-gray-300 outline-none;
-  }
-
-  body {
-    @apply bg-white text-gray-900;
-  }
-}
-
-/* Optional: dark mode */
-.dark body {
-  @apply bg-gray-900 text-gray-100;
-}
-
-/* სქროლბარის დამალვა */
-/* .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-} */
-
-.scrollbar-hide,
-.scrollbar-hide * {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar,
-.scrollbar-hide *::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
-}
