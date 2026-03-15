@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { SearchResults, searchService } from "@/services/search.service";
+import Image from "next/image";
 
 export function GlobalSearchBar() {
   const [query, setQuery] = useState("");
@@ -83,7 +84,7 @@ export function GlobalSearchBar() {
     if (!results) return 0;
     return Object.values(results).reduce(
       (acc, arr) => acc + (arr?.length || 0),
-      0
+      0,
     );
   };
 
@@ -146,9 +147,11 @@ export function GlobalSearchBar() {
                     >
                       <div className="w-10 h-10 rounded-full bg-stone-700 flex items-center justify-center text-amber-500 font-bold overflow-hidden">
                         {user.avatar ? (
-                          <img
+                          <Image
                             src={user.avatar?.url}
                             alt={user.username}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -297,7 +300,7 @@ export function GlobalSearchBar() {
                         )}
                         <div className="text-stone-500 text-xs">
                           {new Date(event.startDate).toLocaleDateString(
-                            "ka-GE"
+                            "ka-GE",
                           )}
                         </div>
                       </div>

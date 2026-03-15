@@ -17,17 +17,20 @@ import {
   ArrowUpDown,
   X,
 } from "lucide-react";
+import Image from "next/image";
 
 const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
   return (
     <Link href={`/listings/${listing.id}`} className="group">
       <div className="relative bg-stone-900/40 border border-stone-800/50 rounded-xl overflow-hidden hover:border-stone-600 transition-all duration-300 flex flex-col h-full">
         {listing?.car?.photos && listing?.car?.photos.length > 0 ? (
-          <div className="aspect-video w-full overflow-hidden">
-            <img
+          <div className="relative aspect-video w-full overflow-hidden">
+            <Image
               src={listing.car.photos[0].url}
               alt={listing.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
         ) : (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Activity, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageUploader from "./ImageUploader";
+import Image from "next/image";
 
 interface GroupAvatarItemProps {
   group: {
@@ -43,9 +44,11 @@ export const GroupAvatarItem = ({
         )}
       >
         {avatarUrl ? (
-          <img
+          <Image
             src={avatarUrl}
             alt={group.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="w-full h-full object-cover"
           />
         ) : (

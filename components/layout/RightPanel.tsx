@@ -20,6 +20,7 @@ import { NotificationsDropdown } from "../right-panel/dropdowns/NotificationsDro
 import { MessagesDropdown } from "../right-panel/dropdowns/MessagesDropdown";
 import { ProfileDropdown } from "../right-panel/dropdowns/ProfileDropdown";
 import { ActiveFrequencies } from "../right-panel/ActiveFrequencies";
+import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 export const RightPanel = () => {
   const [activeView, setActiveView] = useState<
@@ -109,7 +110,7 @@ export const RightPanel = () => {
                 : "border-stone-800 grayscale"
             }`}
           >
-            {currentUser?.avatar?.url ? (
+            {/* {currentUser?.avatar?.url ? (
               <img
                 src={currentUser.avatar.url}
                 className="w-full h-full object-cover"
@@ -118,7 +119,14 @@ export const RightPanel = () => {
               <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-700">
                 <UserIcon size={16} />
               </div>
-            )}
+            )} */}
+            <UserAvatarItem
+              key={currentUser?.id}
+              user={currentUser}
+              size="sm"
+              showName={false}
+              disableLink={true}
+            />
           </button>
         </div>
       </div>

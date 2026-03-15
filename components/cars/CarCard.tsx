@@ -8,6 +8,7 @@ import {
   Activity,
   ArrowRightLeft,
 } from "lucide-react";
+import Image from "next/image";
 
 export const CarCard = ({ car, onClick }) => {
   return (
@@ -24,10 +25,12 @@ export const CarCard = ({ car, onClick }) => {
 
       <div className="h-44 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
         {car.photos && car.photos.length > 0 ? (
-          <img
-            src={car.photos[0].url} // პირველი სურათი
-            alt={car.make + " " + car.model}
-            className="object-cover w-full h-full"
+          <Image
+            src={car.photos[0].url}
+            alt={`${car.make} ${car.model}`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
           />
         ) : (
           <Car className="w-24 h-24 text-stone-700 group-hover:text-amber-500 transition-colors duration-500" />

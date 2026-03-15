@@ -8,6 +8,7 @@ import { usersService } from "@/services/user/user.service";
 import { groupsService } from "@/services/groups.service";
 import { useRouter } from "next/navigation";
 import FileUploader, { UploadedFile } from "../ui/FileUploader";
+import Image from "next/image";
 
 interface Props {
   id: string;
@@ -130,9 +131,11 @@ export default function MediaEditorModal({
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]" />
 
                   {currentCover ? (
-                    <img
+                    <Image
                       src={currentCover}
                       className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       alt="Cover"
                     />
                   ) : (
@@ -174,9 +177,11 @@ export default function MediaEditorModal({
                   <div className="relative w-28 h-28 shrink-0 border border-amber-500/50 p-1 bg-black shadow-[0_0_15px_rgba(245,158,11,0.1)]">
                     <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center overflow-hidden">
                       {currentAvatar ? (
-                        <img
+                        <Image
                           src={currentAvatar}
                           className="w-full h-full object-cover"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           alt="Avatar"
                         />
                       ) : (

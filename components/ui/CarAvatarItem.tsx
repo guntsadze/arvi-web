@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Car as CarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface CarAvatarItemProps {
   car: {
@@ -40,13 +41,15 @@ export const CarAvatarItem = ({
           sizes[size],
           "rounded-sm border-2 border-stone-700 bg-stone-900 overflow-hidden",
           "group-hover:border-amber-500 transition-all duration-300",
-          "flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+          "flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
         )}
       >
         {mainPhoto ? (
-          <img
+          <Image
             src={mainPhoto}
             alt={`${car.make} ${car.model}`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (

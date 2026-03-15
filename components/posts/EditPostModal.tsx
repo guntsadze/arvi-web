@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ImageIcon, X, Save, AlertCircle, Loader2, Play } from "lucide-react";
 import FileUploader from "../ui/FileUploader";
 import { storageService } from "@/services/storage.service";
+import Image from "next/image";
 
 interface EditPostModalProps {
   post: any;
@@ -111,9 +112,11 @@ export function EditPostModal({
             className="w-full h-full object-cover opacity-60"
           />
         ) : (
-          <img
+          <Image
             src={m.url || m.preview}
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt=""
           />
         )}

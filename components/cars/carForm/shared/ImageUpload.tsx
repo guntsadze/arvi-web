@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { Upload, X } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploadProps {
   images: any[]; // აქ იქნება ან არსებული URL-ები (ბაზიდან), ან ახალი File ობიექტები
@@ -48,9 +49,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             key={index}
             className="relative aspect-square border border-stone-700 group"
           >
-            <img
+            <Image
               src={getImageUrl(img)}
               alt="preview"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="w-full h-full object-cover"
             />
             <button

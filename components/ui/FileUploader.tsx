@@ -2,6 +2,7 @@
 
 import { useState, useRef, ReactNode } from "react";
 import { Loader2, X } from "lucide-react";
+import Image from "next/image";
 
 export interface UploadedFile {
   id: string;
@@ -88,8 +89,11 @@ export default function FileUploader({
         <div className="flex flex-wrap gap-2 mt-3">
           {files.map((file) => (
             <div key={file.id} className="relative w-16 h-16 group">
-              <img
+              <Image
                 src={file.preview}
+                alt={file.file.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="w-full h-full object-cover rounded border"
               />
               <button

@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
+import Image from "next/image";
 
 const SellButton = ({ onClick }: any) => (
   <button
@@ -146,9 +147,11 @@ export const ProfileCarCard = ({
         {/* ──── IMAGE SECTION ──── */}
         <div className="relative h-48 bg-black overflow-hidden border-b border-stone-800">
           {car.photos?.[0] ? (
-            <img
+            <Image
               src={car.photos[0].url}
               alt={car.model}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 grayscale hover:grayscale-0"
             />
           ) : (

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Star, User as UserIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface UserAvatarItemProps {
   user: {
@@ -66,9 +67,11 @@ export const UserAvatarItem = ({
   const AvatarImage = () => (
     <>
       {avatarUrl ? (
-        <img
+        <Image
           src={avatarUrl}
           alt={user.username || "User"}
+          fill
+          sizes={sizes[size]}
           className="w-full h-full object-cover"
         />
       ) : (

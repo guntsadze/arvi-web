@@ -53,10 +53,12 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
         {/* Thumbnail */}
         <div className="w-10 h-10 shrink-0 bg-stone-900 border border-stone-800 overflow-hidden group-hover:border-stone-600 transition-colors">
           {photo ? (
-            <img
+            <Image
               src={photo}
-              alt={car?.model}
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+              alt={car?.model ?? "Car"}
+              fill
+              sizes="(max-width: 768px) 100vw, 300px"
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -361,10 +363,9 @@ export function Sidebar() {
             <div className="relative">
               <div className="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.webp"
                   alt="Logo"
-                  width={18}
-                  height={18}
+                  fill
                   className="-rotate-12"
                 />
               </div>
@@ -555,7 +556,7 @@ export function Sidebar() {
                 : "border-stone-800 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
-            {currentUser?.avatar?.url ? (
+            {/* {currentUser?.avatar?.url ? (
               <img
                 src={currentUser.avatar.url}
                 className="w-full h-full object-cover"
@@ -564,7 +565,14 @@ export function Sidebar() {
               <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-500">
                 <UserIcon size={18} />
               </div>
-            )}
+            )} */}
+            <UserAvatarItem
+              key={currentUser?.id}
+              user={currentUser}
+              size="sm"
+              showName={false}
+              disableLink={true}
+            />
           </button>
         </div>
       </div>

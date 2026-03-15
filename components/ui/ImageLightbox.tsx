@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { usersService } from "@/services/user/user.service";
 import { groupsService } from "@/services/groups.service";
 import FileUploader, { UploadedFile } from "../ui/FileUploader";
+import Image from "next/image";
 
 interface ImageLightboxProps {
   src: string | null;
@@ -172,9 +173,11 @@ export const ImageLightbox = ({
                   transition={{ type: "spring", damping: 20 }}
                   className="relative p-1 bg-stone-900 border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
                 >
-                  <img
+                  <Image
                     src={src}
                     alt={alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className={`object-contain ${
                       type === "avatar"
                         ? "max-h-[60vh] md:max-h-[70vh] aspect-square rounded-none"

@@ -3,6 +3,7 @@
 import { Activity, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageUploader from "./ImageUploader";
+import Image from "next/image";
 
 interface GroupCoverItemProps {
   group: {
@@ -33,9 +34,11 @@ export const GroupCoverItem = ({
     >
       {/* 1. Background Image or Pattern */}
       {coverUrl ? (
-        <img
+        <Image
           src={coverUrl}
           alt={`${group.name} cover`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="w-full h-full object-cover opacity-50 group-hover/cover:opacity-40 transition-opacity duration-500"
         />
       ) : (

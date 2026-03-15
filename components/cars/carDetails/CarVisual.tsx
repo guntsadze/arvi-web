@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Car, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { Car as CarType } from "../../../types/car.types";
+import Image from "next/image";
 
 interface CarVisualProps {
   car: CarType;
@@ -18,7 +19,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
       e?.stopPropagation();
       setCurrentIndex((prev) => (prev + 1) % photos.length);
     },
-    [photos.length]
+    [photos.length],
   );
 
   const prevImage = useCallback(
@@ -26,7 +27,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
       e?.stopPropagation();
       setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
     },
-    [photos.length]
+    [photos.length],
   );
 
   const closeSlider = () => setIsSliderOpen(false);
@@ -83,9 +84,11 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
         )}
 
         {/* Image */}
-        <img
+        <Image
           src={photos[currentIndex]?.url}
           alt={`${car.make} ${car.model}`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="max-w-full max-h-[80vh] object-contain select-none shadow-2xl shadow-amber-500/10 transition-all duration-500"
         />
 
@@ -101,9 +104,11 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
                   : "border-white/10 opacity-40 hover:opacity-100"
               }`}
             >
-              <img
+              <Image
                 src={photo.url}
                 className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt="thumbnail"
               />
             </button>
@@ -122,9 +127,11 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
       >
         <div className="w-full h-full flex items-center justify-center">
           {photos.length > 0 ? (
-            <img
+            <Image
               src={photos[0].url}
               alt={`${car.make} ${car.model}`}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover w-full h-full"
             />
           ) : (

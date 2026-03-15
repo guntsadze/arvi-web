@@ -31,7 +31,7 @@ interface PostCardProps {
   refresh: () => void;
 }
 
-export function PostCard({ post, refresh }: PostCardProps) {
+export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
   const { isUserOnline } = usePresence();
   const online = isUserOnline(post.user.id);
