@@ -50,14 +50,14 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
   return (
     <Link href={`/listings/${listing.id}`}>
       <div className="group flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-amber-500 hover:bg-stone-800/30 transition-all cursor-pointer">
-        {/* Thumbnail */}
-        <div className="w-10 h-10 shrink-0 bg-stone-900 border border-stone-800 overflow-hidden group-hover:border-stone-600 transition-colors">
+        {/* Thumbnail - დავამატეთ relative, h-10 და aspect-square */}
+        <div className="relative w-10 h-10 aspect-square shrink-0 bg-stone-900 border border-stone-800 overflow-hidden group-hover:border-stone-600 transition-colors">
           {photo ? (
             <Image
               src={photo}
-              alt={car?.model ?? "Car"}
+              alt={car?.model || "Car image"}
               fill
-              sizes="(max-width: 768px) 100vw, 300px"
+              sizes="40px"
               className="object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
             />
           ) : (
