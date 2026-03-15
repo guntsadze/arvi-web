@@ -21,8 +21,13 @@ export function UserGarage({ userId }: Props) {
   const currentUser = useAppSelector(selectCurrentUser);
   const isOwner = currentUser?.id === userId;
 
-  const { data: garage, refresh } = useInfiniteScroll(
-    (page) => carsService.getUserGarage(userId, page, 10),
+  const {
+    data: garage,
+    loading,
+    refresh,
+    error,
+  } = useInfiniteScroll(
+    (page) => carsService.getUserGarage(userId, { page, limit: 10 }),
     [userId],
   );
 

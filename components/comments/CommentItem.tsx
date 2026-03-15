@@ -52,7 +52,7 @@ export function CommentItem({
           {isEditing ? (
             <form
               onSubmit={editForm.handleSubmit((data: { content: string }) =>
-                onEdit(comment.id, data, false),
+                onEdit(comment.id, data),
               )}
               className="mb-3"
             >

@@ -11,7 +11,10 @@ export default function FeedPage() {
     data: posts,
     loading,
     refresh,
-  } = useInfiniteScroll((page) => postsService.getFeed(page), []);
+  } = useInfiniteScroll(
+    (page) => postsService.getFeed({ page, limit: 10 }),
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-[#1c1917] relative">

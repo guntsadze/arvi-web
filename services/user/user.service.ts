@@ -1,41 +1,19 @@
 import { apiClient } from "@/lib/api";
-import {
-  BaseApiService,
-  PaginationParams,
-} from "@/services/common/base-api.service";
-
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  avatar?: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { BaseApiService } from "@/services/common/base-api.service";
+import { PaginationParams } from "@/types/pagination.types";
+import { User } from "@/types/user";
 
 class UsersService extends BaseApiService<User> {
   protected endpoint = "/users";
 
-  getByUsername(username: string, options?: { headers?: HeadersInit }) {
-    return apiClient.get(`/Users/by-username/${username}`, undefined, options);
+  getFollowers(userId: string, params?: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/${userId}/followers`, params);
   }
 
-  // 1. გასწორებული getFollowers - იღებს userId-ს და pagination-ს
-  getFollowers(userId: string, params?: { page?: number; limit?: number }) {
-    const query = new URLSearchParams(params as any).toString();
-    return apiClient.get(`${this.endpoint}/${userId}/followers?${query}`);
+  getFollowing(userId: string, params?: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/${userId}/following`, params);
   }
 
-  // 2. თუ დაგჭირდება getFollowing (ვის აფოლოვებს იუზერი)
-  getFollowing(userId: string, params?: { page?: number; limit?: number }) {
-    const query = new URLSearchParams(params as any).toString();
-    return apiClient.get(`${this.endpoint}/${userId}/following?${query}`);
-  }
-
-  // Fix: Pass params as the second argument
   findAll(params: PaginationParams) {
     return apiClient.get(this.endpoint, params);
   }

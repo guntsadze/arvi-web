@@ -1,26 +1,10 @@
 import { apiClient } from "@/lib/api";
+import {
+  PaginatedResult,
+  PaginationParams,
+  QueryParams,
+} from "@/types/pagination.types";
 import { AxiosRequestConfig } from "axios";
-
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-  orderBy?: string;
-  order?: "asc" | "desc";
-}
-
-export interface PaginatedResult<T> {
-  data: T[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-export interface QueryParams {
-  [key: string]: any;
-}
 
 export abstract class BaseApiService<T> {
   protected abstract endpoint: string;
@@ -38,14 +22,14 @@ export abstract class BaseApiService<T> {
    */
   async findAll(
     params?: QueryParams & PaginationParams,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T[] | PaginatedResult<T>> {
     const response = await apiClient.get<T[] | PaginatedResult<T>>(
       `${this.endpoint}`,
       {
         params,
         ...config,
-      }
+      },
     );
     return response.data;
   }
@@ -63,7 +47,7 @@ export abstract class BaseApiService<T> {
    */
   async findOneBy(
     params: QueryParams,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T | null> {
     const response = await apiClient.get<T | null>(`${this.endpoint}/find`, {
       params,
@@ -78,12 +62,12 @@ export abstract class BaseApiService<T> {
   async update(
     id: string | number,
     data: Partial<T>,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> {
     const response = await apiClient.put<T>(
       `${this.endpoint}/${id}`,
       data,
-      config
+      config,
     );
     return response.data;
   }
@@ -94,12 +78,12 @@ export abstract class BaseApiService<T> {
   async updateMany(
     where: QueryParams,
     data: Partial<T>,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
     const response = await apiClient.patch<{ count: number }>(
       `${this.endpoint}/bulk`,
       { where, data },
-      config
+      config,
     );
     return response.data;
   }
@@ -110,7 +94,7 @@ export abstract class BaseApiService<T> {
   async remove(id: string | number, config?: AxiosRequestConfig): Promise<T> {
     const response = await apiClient.delete<T>(
       `${this.endpoint}/${id}`,
-      config
+      config,
     );
     return response.data;
   }
@@ -120,11 +104,11 @@ export abstract class BaseApiService<T> {
    */
   async hardRemove(
     id: string | number,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> {
     const response = await apiClient.delete<T>(
       `${this.endpoint}/${id}/hard`,
-      config
+      config,
     );
     return response.data;
   }
@@ -134,14 +118,14 @@ export abstract class BaseApiService<T> {
    */
   async removeMany(
     where: QueryParams,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
     const response = await apiClient.delete<{ count: number }>(
       `${this.endpoint}/bulk`,
       {
         data: { where },
         ...config,
-      }
+      },
     );
     return response.data;
   }
@@ -151,14 +135,14 @@ export abstract class BaseApiService<T> {
    */
   async exists(
     where: QueryParams,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<boolean> {
     const response = await apiClient.get<{ exists: boolean }>(
       `${this.endpoint}/exists`,
       {
         params: where,
         ...config,
-      }
+      },
     );
     return response.data.exists;
   }
@@ -168,14 +152,14 @@ export abstract class BaseApiService<T> {
    */
   async count(
     where?: QueryParams,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<number> {
     const response = await apiClient.get<{ count: number }>(
       `${this.endpoint}/count`,
       {
         params: where,
         ...config,
-      }
+      },
     );
     return response.data.count;
   }
@@ -186,12 +170,12 @@ export abstract class BaseApiService<T> {
   async createMany(
     data: Partial<T>[],
     skipDuplicates = false,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
     const response = await apiClient.post<{ count: number }>(
       `${this.endpoint}/bulk`,
       { data, skipDuplicates },
-      config
+      config,
     );
     return response.data;
   }
@@ -203,7 +187,7 @@ export abstract class BaseApiService<T> {
     path: string,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<R> {
     const url = `${this.endpoint}${path}`;
 
@@ -257,7 +241,7 @@ class ProductService extends BaseApiService<Product> {
   // Custom method: Get products by category
   async getByCategory(
     categoryId: string,
-    pagination?: PaginationParams
+    pagination?: PaginationParams,
   ): Promise<PaginatedResult<Product>> {
     return this.findAll({ categoryId, ...pagination }) as Promise<
       PaginatedResult<Product>
@@ -302,7 +286,7 @@ class OrderService extends BaseApiService<Order> {
 
   // Custom method: Get user orders
   async getMyOrders(
-    pagination?: PaginationParams
+    pagination?: PaginationParams,
   ): Promise<PaginatedResult<Order>> {
     return this.custom<PaginatedResult<Order>>("/my-orders", "GET", pagination);
   }

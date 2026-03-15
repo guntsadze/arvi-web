@@ -2,7 +2,6 @@
 
 import { Hash } from "lucide-react";
 import UserCard from "@/components/user/UserCard";
-import { useUsers } from "@/hooks/useUsers";
 import { usersService } from "@/services/user/user.service";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
@@ -13,8 +12,10 @@ export default function Page() {
     hasMore,
     refresh,
     error,
-  } = useInfiniteScroll((page) => usersService.findAll({ page, limit: 5 }), []);
-  console.log("🚀 ~ Page ~ users:", users);
+  } = useInfiniteScroll(
+    (page) => usersService.findAll({ page, limit: 10 }),
+    [],
+  );
 
   if (loading && users.length === 0) {
     return (

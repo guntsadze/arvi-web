@@ -14,8 +14,8 @@ export function UserPosts({ userId }: Props) {
     loading,
     refresh,
   } = useInfiniteScroll(
-    (page) => postsService.getByUserId(userId, page, 10),
-    [userId]
+    (page) => postsService.getByUserId(userId, { page, limit: 10 }),
+    [userId],
   );
 
   return (

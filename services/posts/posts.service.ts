@@ -1,39 +1,19 @@
 import { apiClient } from "@/lib/api";
 import { BaseApiService } from "@/services/common/base-api.service";
-
-export interface Posts {
-  type?: string;
-  content?: string;
-  images?: string[];
-  videos?: string[];
-  carId?: string;
-  location?: string;
-  latitude?: number;
-  longitude?: number;
-  commentsEnabled?: boolean;
-  isPublic?: boolean;
-  isPinned?: boolean;
-  // Hashtags: #cars #bmw
-  tags?: string[];
-  // Mentions: ["userId1", "userId2"]
-  mentions?: string[];
-}
+import { PaginationParams } from "@/types/pagination.types";
+import { Posts } from "@/types/post.types";
 
 class PostsService extends BaseApiService<Posts> {
   protected endpoint = "/posts";
 
-  // FEED
-  getFeed(page = 1, limit = 20) {
-    return apiClient.get(`${this.endpoint}/feed?page=${page}&limit=${limit}`);
+  getFeed(params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/feed`, params);
   }
 
-  getExplore(page = 1, limit = 20) {
-    return apiClient.get(
-      `${this.endpoint}/explore?page=${page}&limit=${limit}`,
-    );
+  getExplore(params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/explore`, params);
   }
 
-  // POSTS
   getPost(id: string) {
     return apiClient.get(`${this.endpoint}/${id}`);
   }
@@ -42,11 +22,11 @@ class PostsService extends BaseApiService<Posts> {
     return apiClient.post(this.endpoint, data);
   }
 
-  updatePost(id: string, data: Partial<Posts>) {
+  updatePost(id: string, data: Posts) {
     return apiClient.put(`${this.endpoint}/${id}`, data);
   }
 
-  updateGroupPost(id: string, data: Partial<Posts>) {
+  updateGroupPost(id: string, data: Posts) {
     return apiClient.put(`${this.endpoint}/group/${id}`, data);
   }
 
@@ -93,23 +73,16 @@ class PostsService extends BaseApiService<Posts> {
     return apiClient.delete(`${this.endpoint}/comments/${commentId}`);
   }
 
-  getComments(postId: string, page = 1, limit = 20) {
-    return apiClient.get(
-      `${this.endpoint}/${postId}/comments?page=${page}&limit=${limit}`,
-    );
+  getComments(postId: string, params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/${postId}/comments`, params);
   }
 
-  getGroupComments(postId: string, page = 1, limit = 20) {
-    return apiClient.get(
-      `${this.endpoint}/group/${postId}/comments?page=${page}&limit=${limit}`,
-    );
+  getGroupComments(postId: string, params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/group/${postId}/comments`, params);
   }
 
-  // USER POSTS (Profile)
-  getByUserId(userId: string, page = 1, limit = 10) {
-    return apiClient.get(
-      `${this.endpoint}/user/${userId}?page=${page}&limit=${limit}`,
-    );
+  getByUserId(userId: string, params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/user/${userId}`, params);
   }
 }
 

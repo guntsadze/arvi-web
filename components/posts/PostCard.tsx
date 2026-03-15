@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { MediaSlider } from "../ui/MediaSlider";
 import { PostHeader } from "./PostHeader";
@@ -12,6 +12,7 @@ import { CommentItem } from "../comments/CommentItem";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { usePresence } from "@/context/PresenceContext";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 interface Comment {
   id: string;
@@ -28,67 +29,63 @@ interface Comment {
 
 interface PostCardProps {
   post: any;
-  refresh: () => void;
 }
 
-export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
+export function PostCard({ post }: PostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
   const { isUserOnline } = usePresence();
   const online = isUserOnline(post.user.id);
 
-  const [state, setState] = useState({
-    isLiked: post.isLiked || false,
-    isSaved: post.isSaved || false,
-    likesCount: post.likesCount || 0,
-    showComments: false,
-    replyTo: null as string | null,
-    comments: [] as Comment[],
-    editingPost: false,
-    editingCommentId: null as string | null,
-  });
+  const commentsRef = useRef(null);
 
-  const commentForm = useForm<{ content: string }>();
-  const editPostForm = useForm<{ content: string }>({
-    defaultValues: { content: post.content },
-  });
+  // ── Post UI state ──────────────────────────────────────────
+  const [editingPost, setEditingPost] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+
+  // ── Like / Save optimistic state ───────────────────────────
+  const [isLiked, setIsLiked] = useState<boolean>(post.isLiked ?? false);
+  const [likesCount, setLikesCount] = useState<number>(post.likesCount ?? 0);
+  const [isSaved, setIsSaved] = useState<boolean>(post.isSaved ?? false);
+
+  // ── Comment UI state ───────────────────────────────────────
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+
+  const {
+    data: comments,
+    loading,
+    hasMore,
+    refresh,
+  } = useInfiniteScroll<Comment>(
+    (page) => postsService.getComments(post.id.toString(), { page, limit: 3 }),
+    [],
+    commentsRef,
+  );
+
   const editCommentForm = useForm<{ content: string }>();
-
-  const setPartialState = (partial: Partial<typeof state>) =>
-    setState((prev) => ({ ...prev, ...partial }));
 
   const isOwner = currentUser?.id === post.user.id;
 
-  useEffect(() => {
-    if (state.showComments) fetchComments();
-  }, [state.showComments]);
-
-  const fetchComments = async () => {
-    try {
-      const res = await postsService.getComments(post.id.toString());
-      const data = Array.isArray(res) ? res : res.data || [];
-      setPartialState({ comments: data });
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  };
+  // ── Handlers ───────────────────────────────────────────────
 
   const handleLike = async () => {
+    setIsLiked((prev) => !prev);
+    setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
     try {
-      const res = await postsService.likePost(post.id);
-      setPartialState({
-        isLiked: res.liked,
-        likesCount: res.likesCount,
-      });
+      await postsService.likePost(post.id);
     } catch (err) {
+      setIsLiked((prev) => !prev);
+      setLikesCount((prev) => (isLiked ? prev + 1 : prev - 1));
       console.error(err);
     }
   };
 
   const handleSave = async () => {
+    setIsSaved((prev) => !prev);
     try {
-      const res = await postsService.savePost(post.id);
-      setPartialState({ isSaved: res.saved });
+      await postsService.savePost(post.id);
     } catch (err) {
+      setIsSaved((prev) => !prev);
       console.error(err);
     }
   };
@@ -105,13 +102,7 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
 
   const handleUpdatePost = async (data: { content: string; media: any[] }) => {
     try {
-      setPartialState({ editingPost: false });
-
-      const payload = {
-        content: data.content,
-        media: data.media,
-      };
-      await postsService.updatePost(post.id, payload);
+      setEditingPost(false);
       refresh();
     } catch (err) {
       alert("ვერ მოხერხდა პოსტის განახლება");
@@ -124,26 +115,8 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
   ) => {
     if (!data.content.trim()) return;
     try {
-      const newComment = await postsService.addComment(
-        post.id,
-        data.content,
-        parentId,
-      );
-      if (parentId) {
-        setPartialState({
-          comments: state.comments.map((c) =>
-            c.id === parentId
-              ? { ...c, replies: [newComment, ...(c.replies || [])] }
-              : c,
-          ),
-          replyTo: null,
-        });
-      } else {
-        setPartialState({
-          comments: [newComment, ...state.comments],
-        });
-      }
-      commentForm.reset();
+      await postsService.addComment(post.id, data.content, parentId);
+      refresh();
     } catch (err) {
       console.error(err);
     }
@@ -152,67 +125,22 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
   const handleEditComment = async (
     commentId: string,
     data: { content: string },
-    isReply = false,
-    parentId?: string,
   ) => {
     try {
-      const updatedComment = await postsService.updateComment(
-        commentId,
-        data.content,
-      );
-
-      if (isReply && parentId) {
-        setPartialState({
-          comments: state.comments.map((c) =>
-            c.id === parentId
-              ? {
-                  ...c,
-                  replies: c.replies?.map((r) =>
-                    r.id === commentId
-                      ? { ...r, content: updatedComment.content }
-                      : r,
-                  ),
-                }
-              : c,
-          ),
-          editingReplyId: null,
-        });
-      } else {
-        setPartialState({
-          comments: state.comments.map((c) =>
-            c.id === commentId ? { ...c, content: updatedComment.content } : c,
-          ),
-          editingCommentId: null,
-        });
-      }
+      await postsService.updateComment(commentId, data.content);
       editCommentForm.reset();
+      setEditingCommentId(null);
+      refresh();
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleDeleteComment = async (
-    commentId: string,
-    isReply = false,
-    parentId?: string,
-  ) => {
+  const handleDeleteComment = async (commentId: string) => {
     if (!confirm("Delete comment?")) return;
     try {
       await postsService.deleteComment(commentId);
-
-      if (isReply && parentId) {
-        setPartialState({
-          comments: state.comments.map((c) =>
-            c.id === parentId
-              ? { ...c, replies: c.replies?.filter((r) => r.id !== commentId) }
-              : c,
-          ),
-        });
-      } else {
-        setPartialState({
-          comments: state.comments.filter((c) => c.id !== commentId),
-        });
-      }
+      refresh();
     } catch (err) {
       console.error(err);
     }
@@ -227,7 +155,7 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
         <PostHeader
           user={post.user}
           createdAt={post.createdAt}
-          onEdit={() => setPartialState({ editingPost: true })}
+          onEdit={() => setEditingPost(true)}
           onDelete={handleDeletePost}
           isOwner={isOwner}
           online={online}
@@ -236,9 +164,9 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
         <div className="p-4 bg-[#201d1b]">
           <PostContent
             post={post}
-            isEditing={state.editingPost}
+            isEditing={editingPost}
             onSave={handleUpdatePost}
-            onCancel={() => setPartialState({ editingPost: false })}
+            onCancel={() => setEditingPost(false)}
           />
         </div>
 
@@ -247,42 +175,52 @@ export function PostCard({ post, refresh, index = 0 }: PostCardProps) {
         )}
 
         <PostActions
-          likesCount={state.likesCount}
-          isLiked={state.isLiked}
-          commentsCount={post._count?.comments || 0}
-          isSaved={state.isSaved}
+          likesCount={likesCount}
+          isLiked={isLiked}
+          commentsCount={post.commentsCount || 0}
+          isSaved={isSaved}
           onLike={handleLike}
-          onToggleComments={() =>
-            setPartialState({ showComments: !state.showComments })
-          }
+          onToggleComments={() => setShowComments((prev) => !prev)}
           onSave={handleSave}
         />
 
-        {state.showComments && (
+        {showComments && (
           <div className="bg-[#151413] border-t border-stone-800 p-6">
             <CommentForm
-              onSubmit={(data) => handleAddComment(data)} // მთავარი კომენტარი
+              onSubmit={(data) => handleAddComment(data)}
               placeholder="Append comment to log..."
               buttonText="Exec"
             />
 
-            <div className="space-y-8 mt-8 pl-2">
-              {state.comments.map((comment) => (
+            <div
+              ref={commentsRef}
+              className="space-y-8 mt-8 pl-2 overflow-y-auto max-h-[500px]"
+            >
+              {comments.map((comment) => (
                 <CommentItem
                   key={comment.id}
                   comment={comment}
-                  replyTo={state.replyTo}
-                  setReplyTo={(id) => setPartialState({ replyTo: id })}
-                  editingId={state.editingCommentId}
-                  setEditingId={(id) =>
-                    setPartialState({ editingCommentId: id })
-                  }
+                  replyTo={replyTo}
+                  setReplyTo={setReplyTo}
+                  editingId={editingCommentId}
+                  setEditingId={setEditingCommentId}
                   onEdit={handleEditComment}
                   onDelete={handleDeleteComment}
                   editForm={editCommentForm}
                   onAddReply={handleAddComment}
                 />
               ))}
+
+              {loading && (
+                <p className="text-stone-500 text-sm text-center py-2">
+                  Loading...
+                </p>
+              )}
+              {!hasMore && comments.length > 0 && (
+                <p className="text-stone-600 text-xs text-center py-2">
+                  — end of comments —
+                </p>
+              )}
             </div>
           </div>
         )}

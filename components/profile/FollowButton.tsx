@@ -24,40 +24,56 @@ export default function FollowButton({
     initialFollowing,
   );
 
-  if (!currentUser || currentUser?.id === userId) {
-    return null;
-  }
+  if (!currentUser || currentUser?.id === userId) return null;
 
   const handleClick = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // მნიშვნელოვანია: ბარათში რომ არ გადავიდეს პროფილზე
+    e.stopPropagation();
     e.preventDefault();
     await toggleFollow();
-    if (onFollowersChange) {
-      onFollowersChange(isFollowing ? followersCount - 1 : followersCount + 1);
-    }
+    onFollowersChange?.(isFollowing ? followersCount - 1 : followersCount + 1);
   };
 
   return (
     <button
       onClick={handleClick}
       disabled={isLoading}
-      className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 md:py-3 text-xs md:text-sm font-black uppercase italic tracking-tighter transition-all skew-x-[-12deg] ${
-        isFollowing
-          ? "bg-orange-600 text-black shadow-[3px_3px_0px_0px_#000]"
-          : "bg-neutral-800 text-white shadow-[3px_3px_0px_0px_#ea580c]"
-      } hover:opacity-90 disabled:opacity-50 active:translate-y-[1px] active:shadow-none min-w-[120px]`}
+      className={`
+        group flex-1 flex items-center justify-center gap-2
+        px-4 py-2 rounded
+        font-mono text-[11px] uppercase tracking-widest font-semibold
+        border transition-all duration-150
+        disabled:opacity-40 disabled:cursor-not-allowed
+        ${
+          isFollowing
+            ? "bg-orange-500/15 border-orange-500/60 text-orange-300 hover:bg-red-500/10 hover:border-red-500/60 hover:text-red-300"
+            : "bg-transparent border-orange-500 text-orange-500 hover:bg-orange-500/10"
+        }
+      `}
     >
-      <span className="flex items-center gap-2 skew-x-[12deg]">
+      {isLoading ? (
+        <Loader2 size={13} className="animate-spin" />
+      ) : isFollowing ? (
+        <UserMinus size={13} className="group-hover:hidden" />
+      ) : (
+        <UserPlus size={13} />
+      )}
+
+      {/* Following → hover-ზე "Unfollow" გამოჩნდეს */}
+      <span>
         {isLoading ? (
-          <Loader2 size={18} className="animate-spin" />
+          isFollowing ? (
+            "Following"
+          ) : (
+            "Follow"
+          )
         ) : isFollowing ? (
-          <UserMinus size={18} />
+          <span>
+            <span className="group-hover:hidden">Following</span>
+            <span className="hidden group-hover:inline">Unfollow</span>
+          </span>
         ) : (
-          <UserPlus size={18} />
+          "Follow"
         )}
-        <span className="whitespace-nowrap">
-          {isFollowing ? "Unfollow" : "Follow"}
-        </span>
       </span>
     </button>
   );

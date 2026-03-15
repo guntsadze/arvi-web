@@ -42,11 +42,10 @@ export function PostHeader({
               {user?.firstName} {user?.lastName}
             </p>
             <span className="text-[10px] text-stone-600 font-mono">
-              ID: {user?.username}
+              Username: {user?.username}
             </span>
           </div>
           <p className="text-[10px] font-mono text-stone-500 uppercase tracking-widest flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-900 border border-emerald-700 animate-pulse"></span>
             {formatDistanceToNow(new Date(createdAt), {
               addSuffix: true,
               locale: ka,

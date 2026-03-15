@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 export function useInfiniteScroll<T extends { id: string }>(
   fetchFn: (page: number) => Promise<any>,
   deps: any[] = [],
+  containerRef?: any,
 ) {
   const [data, setData] = useState<T[]>([]);
   const [page, setPage] = useState(1);
@@ -56,12 +57,11 @@ export function useInfiniteScroll<T extends { id: string }>(
     setPage(1);
     setHasMore(true);
     setLoading(false);
-
     loadPage(1);
   }, deps);
 
-  // Scroll listener
   useEffect(() => {
+    const target = containerRef?.current ?? window;
     let lastCall = 0;
 
     const handleScroll = () => {
@@ -69,19 +69,25 @@ export function useInfiniteScroll<T extends { id: string }>(
       if (now - lastCall < 300) return;
       lastCall = now;
 
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 800
-      ) {
-        loadPage(page);
+      const el = containerRef?.current;
+      if (el) {
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 200) {
+          loadPage(page);
+        }
+      } else {
+        if (
+          window.innerHeight + window.scrollY >=
+          document.documentElement.scrollHeight - 800
+        ) {
+          loadPage(page);
+        }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadPage, page]);
+    target.addEventListener("scroll", handleScroll);
+    return () => target.removeEventListener("scroll", handleScroll);
+  }, [loadPage, page, containerRef]);
 
-  // Refresh
   const refresh = useCallback(() => {
     loadedPages.current.clear();
     setData([]);

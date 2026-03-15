@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/api";
 import { BaseApiService } from "@/services/common/base-api.service";
+import { PaginationParams } from "@/types/pagination.types";
 
 export interface Car {
   id: string;
@@ -52,14 +53,12 @@ class CarsService extends BaseApiService<Car> {
     return apiClient.get(`/trending?limit=${limit}`);
   }
 
-  search(page = 1, limit = 20) {
-    return apiClient.get(`${this.endpoint}/search?page=${page}&limit=${limit}`);
+  search(params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/search`, params);
   }
 
-  getUserGarage(userId: string, page = 1, limit = 10) {
-    return apiClient.get(
-      `${this.endpoint}/garage/${userId}?page=${page}&limit=${limit}`
-    );
+  getUserGarage(userId: string, params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/garage/${userId}`, params);
   }
 
   toggleLike(id: string) {
