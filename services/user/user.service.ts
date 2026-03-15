@@ -1,5 +1,8 @@
 import { apiClient } from "@/lib/api";
-import { BaseApiService } from "@/services/common/base-api.service";
+import {
+  BaseApiService,
+  PaginationParams,
+} from "@/services/common/base-api.service";
 
 export interface User {
   id: string;
@@ -32,8 +35,9 @@ class UsersService extends BaseApiService<User> {
     return apiClient.get(`${this.endpoint}/${userId}/following?${query}`);
   }
 
-  findAll(params: { page: number; pageSize: number }) {
-    return apiClient.get(`${this.endpoint}`);
+  // Fix: Pass params as the second argument
+  findAll(params: PaginationParams) {
+    return apiClient.get(this.endpoint, params);
   }
 
   async uploadMedia(

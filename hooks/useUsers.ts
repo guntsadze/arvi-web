@@ -10,7 +10,7 @@ export const useUsers = (page = 1, pageSize = 50) => {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await usersService.findAll({ page, pageSize });
+      const res = await usersService.findAll({ page, limit: pageSize });
 
       console.log("Full API Response:", res);
 

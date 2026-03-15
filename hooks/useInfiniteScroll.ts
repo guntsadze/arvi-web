@@ -8,6 +8,7 @@ export function useInfiniteScroll<T extends { id: string }>(
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const loadedPages = useRef<Set<number>>(new Set());
 
@@ -40,6 +41,7 @@ export function useInfiniteScroll<T extends { id: string }>(
         setPage(pageNumber + 1);
       } catch (error) {
         console.error("InfiniteScroll error:", error);
+        setError(error.message || "An unexpected error occurred");
       } finally {
         setLoading(false);
       }
@@ -88,5 +90,5 @@ export function useInfiniteScroll<T extends { id: string }>(
     loadPage(1);
   }, [loadPage]);
 
-  return { data, loading, hasMore, refresh };
+  return { data, loading, hasMore, refresh, error };
 }

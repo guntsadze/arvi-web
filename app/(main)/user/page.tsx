@@ -3,14 +3,22 @@
 import { Hash } from "lucide-react";
 import UserCard from "@/components/user/UserCard";
 import { useUsers } from "@/hooks/useUsers";
+import { usersService } from "@/services/user/user.service";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function Page() {
-  const { users, loading, error } = useUsers(1, 50);
+  const {
+    data: users,
+    loading,
+    hasMore,
+    refresh,
+    error,
+  } = useInfiniteScroll((page) => usersService.findAll({ page, limit: 5 }), []);
   console.log("🚀 ~ Page ~ users:", users);
 
-  if (loading) {
+  if (loading && users.length === 0) {
     return (
-      <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
+      <div className="min-h-screen bg-[#1c1917] flex items-center justify-center">
         <div className="max-w-7xl mx-auto text-center text-stone-500 font-mono py-20">
           INITIALIZING DATABASE...
         </div>
@@ -41,11 +49,19 @@ export default function Page() {
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {users.length > 0 ? (
-          users.map((user) => <UserCard key={user.id} user={user} />)
-        ) : (
-          <div className="col-span-full text-center text-stone-500 font-mono py-20">
-            NO PERSONNEL RECORDS FOUND IN DATABASE.
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+
+        {loading && (
+          <div className="col-span-full text-center text-amber-600 font-mono py-10 animate-pulse">
+            FETCHING MORE DATA...
+          </div>
+        )}
+
+        {!hasMore && users.length > 0 && (
+          <div className="col-span-full text-center text-stone-600 font-mono py-10">
+            END OF DATABASE.
           </div>
         )}
       </div>
