@@ -6,7 +6,7 @@ export async function serverGet<T>(path: string): Promise<T> {
   const cookieHeader = cookieStore.toString();
 
   const response = await fetch(
-    `${process.env.API_URL || "http://localhost:5013"}${path}`,
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5013"}${path}`,
     {
       headers: {
         "Content-Type": "application/json",
