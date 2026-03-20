@@ -21,9 +21,10 @@ type TabType = "posts" | "garage" | "followers" | "following";
 interface Props {
   user: any;
   userId: string;
+  online: boolean;
 }
 
-export default function ProfileContentWrapper({ user, userId }: Props) {
+export default function ProfileContentWrapper({ user, userId, online }: Props) {
   const [activeTab, setActiveTab] = useState<TabType>("posts");
 
   return (
@@ -55,11 +56,15 @@ export default function ProfileContentWrapper({ user, userId }: Props) {
               <div className="space-y-4 font-mono text-xs">
                 <div className="flex justify-between border-b border-stone-800/50 pb-2">
                   <span className="text-stone-500 uppercase">Status</span>
-                  <span className="text-green-500">ONLINE_IDLE</span>
+                  <span className="text-green-500">
+                    {online ? "ONLINE" : "OFFLINE"}
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-stone-800/50 pb-2">
                   <span className="text-stone-500 uppercase">Sector</span>
-                  <span className="text-stone-300">Tbilisi, GE</span>
+                  <span className="text-stone-300">
+                    {user.location || "// NO_DATA_STREAM_FOUND"}
+                  </span>
                 </div>
                 <div className="pt-2">
                   <span className="text-stone-500 uppercase block mb-2 text-[9px]">

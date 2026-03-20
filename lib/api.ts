@@ -126,9 +126,21 @@ export class ApiClient {
 
   delete<T = any>(
     path: string,
+    body?: any,
     options?: { headers?: AxiosRequestConfig["headers"] },
   ): Promise<T> {
     return this.client.delete(path, {
+      data: body,
+      headers: options?.headers,
+    });
+  }
+
+  patch<T = any>(
+    path: string,
+    body?: any,
+    options?: { headers?: AxiosRequestConfig["headers"] },
+  ): Promise<T> {
+    return this.client.patch(path, body, {
       headers: options?.headers,
     });
   }

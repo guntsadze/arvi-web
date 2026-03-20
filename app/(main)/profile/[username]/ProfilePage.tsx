@@ -84,10 +84,6 @@ export default function ProfilePage({ user }: { user: any }) {
                     })
                   }
                 />
-
-                {user.showOnlineStatus && (
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20 pointer-events-none" />
-                )}
               </div>
             </div>
 
@@ -128,7 +124,11 @@ export default function ProfilePage({ user }: { user: any }) {
       </div>
 
       {/* ── CONTENT ── */}
-      <ProfileContentWrapper user={user} userId={user.id} />
+      <ProfileContentWrapper
+        user={user}
+        userId={user.id}
+        online={isUserOnline(user.id)}
+      />
 
       {/* ── LIGHTBOX ── */}
       <ImageLightbox

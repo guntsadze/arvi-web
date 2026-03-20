@@ -84,6 +84,10 @@ class PostsService extends BaseApiService<Posts> {
   getByUserId(userId: string, params: PaginationParams) {
     return apiClient.get(`${this.endpoint}/user/${userId}`, params);
   }
+
+  getGroupPost(id: string) {
+    return apiClient.get(`${this.endpoint}/group/${id}`);
+  }
 }
 
 export const postsService = new PostsService();

@@ -1,9 +1,7 @@
-import { ShieldCheck } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale";
 import Link from "next/link";
-import Image from "next/image";
-import { PostMenu } from "./PostMenu"; // იმპორტი
+import { PostMenu } from "./PostMenu";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 
 interface PostHeaderProps {

@@ -12,6 +12,7 @@ import Image from "next/image";
 interface EditPostModalProps {
   post: any;
   isOpen: boolean;
+  isLoading?: boolean;
   onClose: () => void;
   onSave: (data: any) => Promise<void>;
 }
@@ -19,6 +20,7 @@ interface EditPostModalProps {
 export function EditPostModal({
   post,
   isOpen,
+  isLoading = false,
   onClose,
   onSave,
 }: EditPostModalProps) {
@@ -45,6 +47,7 @@ export function EditPostModal({
   if (!mounted || !isOpen) return null;
 
   const onSubmit = async (data: any) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     try {
       const existingMedia = data.media.filter((m: any) => !m.file);
@@ -167,7 +170,7 @@ export function EditPostModal({
           <div className="flex items-center justify-between px-6 py-4 border-b border-stone-800 bg-[#25211f]">
             <h2 className="text-[10px] font-mono uppercase tracking-widest text-stone-400">
               Update Protocol:{" "}
-              <span className="text-amber-600">POST_{post.id.slice(-6)}</span>
+              {/* <span className="text-amber-600">POST_{post.id.slice(-6)}</span> */}
             </h2>
             <button
               onClick={onClose}
@@ -177,75 +180,88 @@ export function EditPostModal({
             </button>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-            <textarea
-              {...register("content")}
-              className="w-full bg-stone-900/50 border border-stone-800 p-4 font-mono text-sm text-stone-200 focus:border-amber-600/50 outline-none resize-none min-h-[120px]"
-            />
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="flex flex-col items-center gap-3">
+                <Loader2 className="animate-spin text-amber-600" size={24} />
+                <span className="text-[9px] font-mono text-stone-500 uppercase tracking-widest">
+                  Fetching post data...
+                </span>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+              <textarea
+                {...register("content")}
+                className="w-full bg-stone-900/50 border border-stone-800 p-4 font-mono text-sm text-stone-200 focus:border-amber-600/50 outline-none resize-none min-h-[120px]"
+              />
 
-            <div className="space-y-3">
-              <label className="text-[9px] font-mono text-stone-500 uppercase flex justify-between">
-                Media Assets <span>{currentMedia.length} / 10</span>
-              </label>
+              <div className="space-y-3">
+                <label className="text-[9px] font-mono text-stone-500 uppercase flex justify-between">
+                  Media Assets <span>{currentMedia.length} / 10</span>
+                </label>
 
-              <div className="grid grid-cols-4 gap-3">
-                {currentMedia.map((m, i) => (
-                  <MediaItem key={i} m={m} index={i} />
-                ))}
+                <div className="grid grid-cols-4 gap-3">
+                  {currentMedia.map((m, i) => (
+                    <MediaItem key={i} m={m} index={i} />
+                  ))}
 
-                <Controller
-                  name="media"
-                  control={control}
-                  render={({ field }) => (
-                    <FileUploader
-                      accept="image/*,video/*"
-                      multiple
-                      showPreview={false}
-                      onFilesChange={(newFiles) =>
-                        field.onChange([...currentMedia, ...newFiles])
-                      }
-                    >
-                      <button
-                        type="button"
-                        className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-stone-800 hover:border-stone-600 hover:bg-stone-900/50 text-stone-600 transition-all"
+                  <Controller
+                    name="media"
+                    control={control}
+                    render={({ field }) => (
+                      <FileUploader
+                        accept="image/*,video/*"
+                        multiple
+                        showPreview={false}
+                        onFilesChange={(newFiles) =>
+                          field.onChange([...currentMedia, ...newFiles])
+                        }
                       >
-                        <ImageIcon size={20} />
-                        <span className="text-[8px] uppercase">Add Media</span>
-                      </button>
-                    </FileUploader>
-                  )}
-                />
+                        <button
+                          type="button"
+                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-stone-800 hover:border-stone-600 hover:bg-stone-900/50 text-stone-600 transition-all"
+                        >
+                          <ImageIcon size={20} />
+                          <span className="text-[8px] uppercase">
+                            Add Media
+                          </span>
+                        </button>
+                      </FileUploader>
+                    )}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between pt-6 border-t border-stone-800">
-              <div className="flex items-center gap-2 text-stone-600 text-[9px] font-mono uppercase">
-                <AlertCircle size={14} />{" "}
-                <span>Buffer modification active</span>
+              <div className="flex items-center justify-between pt-6 border-t border-stone-800">
+                <div className="flex items-center gap-2 text-stone-600 text-[9px] font-mono uppercase">
+                  <AlertCircle size={14} />{" "}
+                  <span>Buffer modification active</span>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="text-[10px] font-mono uppercase text-stone-500 hover:text-stone-300"
+                  >
+                    Abort
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex items-center gap-2 px-6 py-2 bg-amber-600 text-stone-950 text-[10px] font-bold uppercase hover:bg-amber-500 disabled:opacity-50 transition-all"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="animate-spin" size={14} />
+                    ) : (
+                      <Save size={14} />
+                    )}
+                    Execute Update
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="text-[10px] font-mono uppercase text-stone-500 hover:text-stone-300"
-                >
-                  Abort
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2 px-6 py-2 bg-amber-600 text-stone-950 text-[10px] font-bold uppercase hover:bg-amber-500 disabled:opacity-50 transition-all"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="animate-spin" size={14} />
-                  ) : (
-                    <Save size={14} />
-                  )}
-                  Execute Update
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          )}
         </motion.div>
       </div>
     </AnimatePresence>

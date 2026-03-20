@@ -1,21 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { EditPostModal } from "./EditPostModal";
 
 interface PostContentProps {
   post: any;
-  isEditing: boolean;
-  onSave: (data: any) => Promise<void>;
-  onCancel: () => void;
 }
 
-export function PostContent({
-  post,
-  isEditing,
-  onSave,
-  onCancel,
-}: PostContentProps) {
+export function PostContent({ post }: PostContentProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -24,7 +15,6 @@ export function PostContent({
     const el = textRef.current;
     if (!el) return;
 
-    // თუ line-clamp იჭრის ტექსტს
     setIsOverflowing(el.scrollHeight > el.clientHeight);
   }, [post.content]);
 
@@ -49,13 +39,6 @@ export function PostContent({
           </button>
         )}
       </div>
-
-      <EditPostModal
-        post={post}
-        isOpen={isEditing}
-        onClose={onCancel}
-        onSave={onSave}
-      />
     </>
   );
 }

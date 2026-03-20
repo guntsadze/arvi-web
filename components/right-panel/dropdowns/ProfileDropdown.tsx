@@ -1,4 +1,4 @@
-import { UserCircle, Settings, LogOut } from "lucide-react";
+import { UserCircle, Settings, LogOut, PersonStanding } from "lucide-react";
 
 interface ProfileDropdownProps {
   user: any;
@@ -24,7 +24,12 @@ export const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
           label="Your Profile"
         />
         <ProfileLink
-          href="/settings"
+          href={`/settings/${user.username}/profile`}
+          icon={<PersonStanding size={16} />}
+          label="Profile"
+        />
+        <ProfileLink
+          href={`/settings/${user.username}/account`}
           icon={<Settings size={16} />}
           label="Settings"
         />

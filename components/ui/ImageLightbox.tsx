@@ -40,6 +40,7 @@ export const ImageLightbox = ({
   type,
   context,
 }: ImageLightboxProps) => {
+  console.log("🚀 ~ ImageLightbox ~ src:", src);
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -171,20 +172,22 @@ export const ImageLightbox = ({
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: "spring", damping: 20 }}
-                  className="relative p-1 bg-stone-900 border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+                  className={`relative p-1 bg-stone-900 border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] 
+                  ${
+                    type === "avatar"
+                      ? "w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
+                      : "w-[90vw] h-[50vh] md:h-[70vh] max-w-5xl"
+                  }`}
                 >
                   <Image
                     src={src}
                     alt={alt}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className={`object-contain ${
-                      type === "avatar"
-                        ? "max-h-[60vh] md:max-h-[70vh] aspect-square rounded-none"
-                        : "max-h-[70vh] w-full"
-                    }`}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 80vw"
+                    className="object-contain"
                   />
-                  {/* Image Metadata Overlay */}
+
                   <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[8px] text-stone-600 uppercase">
                     <span>Type: {type || "unknown"}</span>
                     <span>Source: Encrypted_Node</span>
