@@ -69,6 +69,23 @@ class AuthService {
   redirectToApple() {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/apple`;
   }
+
+  async requestRestore(data: {
+    identifier?: string;
+    password?: string;
+    userId?: string;
+  }): Promise<{ restoreToken: string }> {
+    return apiClient.post<{ restoreToken: string }>(
+      "/auth/restore/request",
+      data,
+    );
+  }
+
+  async restoreAccount(data: {
+    restoreToken: string;
+  }): Promise<{ accessToken: string; refreshToken: string }> {
+    return apiClient.post("/auth/restore/confirm", data);
+  }
 }
 
 export const authService = new AuthService();

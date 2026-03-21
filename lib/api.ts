@@ -85,10 +85,15 @@ export class ApiClient {
           }
         }
 
-        // ✅ error ფორმატირება
+        // ✅ error ფორმატირება — data შევინახოთ
         const status = error.response?.status;
-        const message = error.response?.data?.message || error.message;
-        return Promise.reject(new Error(`${status}: ${message}`));
+        const data = error.response?.data;
+        const message = data?.message || error.message;
+
+        const formattedError = new Error(`${status}: ${message}`) as any;
+        formattedError.data = data; // ✅ მთლიანი response data
+        formattedError.status = status; // ✅ status code
+        return Promise.reject(formattedError);
       },
     );
   }

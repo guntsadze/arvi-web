@@ -1,30 +1,51 @@
 "use client";
 import { useState } from "react";
-import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import { apiClient } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { authService } from "@/services/auth/auth.services";
+import { selectCurrentUser } from "@/store/slices/userSlice";
 
 export function DangerZone() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const user = useAppSelector(selectCurrentUser);
+  const isGoogleUser = user?.avatar?.provider === "GOOGLE";
+
   const handleDelete = async () => {
+    if (isGoogleUser && confirmEmail !== user?.email) {
+      alert("Email does not match!");
+      return;
+    }
+
     setLoading(true);
+
+    const payload = isGoogleUser
+      ? { confirmEmail: confirmEmail }
+      : { password: password };
+
     try {
-      await apiClient.delete("/users/me", { password });
+      await apiClient.delete("/users/me", payload);
+
       authService.logout();
       router.push("/");
-    } catch (err) {
-      alert("Failed to delete account. Check your password.");
+    } catch (err: any) {
+      alert(err.data?.message || "Failed to delete account.");
     } finally {
       setLoading(false);
     }
   };
+
+  const isFormValid = isGoogleUser
+    ? confirmEmail === user?.email
+    : password.length > 0;
 
   return (
     <div className="mt-12 pt-8 border-t border-red-900/30">
@@ -54,19 +75,39 @@ export function DangerZone() {
               <p className="text-[10px] text-red-400 font-bold uppercase">
                 Confirm identity to proceed:
               </p>
-              <input
-                type="password"
-                placeholder="ENTER_PASSWORD"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-stone-950 border border-red-900/50 p-2 text-xs font-mono text-red-500 outline-none focus:border-red-500"
-              />
+
+              {isGoogleUser ? (
+                <div className="space-y-2">
+                  <p className="text-[10px] text-stone-400 font-mono uppercase">
+                    To confirm, please type your email:{" "}
+                    <span className="text-white selection:bg-red-500">
+                      {user?.email}
+                    </span>
+                  </p>
+                  <input
+                    type="email"
+                    placeholder="TYPE_YOUR_EMAIL_HERE"
+                    value={confirmEmail}
+                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    className="w-full bg-stone-950 border border-red-900/50 p-2 text-xs font-mono text-red-500 outline-none focus:border-red-500 placeholder:text-red-900/30"
+                  />
+                </div>
+              ) : (
+                <input
+                  type="password"
+                  placeholder="ENTER_PASSWORD"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-stone-950 border border-red-900/50 p-2 text-xs font-mono text-red-500 outline-none focus:border-red-500"
+                />
+              )}
+
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleDelete}
-                  disabled={loading}
-                  className="flex-1 bg-red-600 text-white py-2 text-[10px] font-black uppercase tracking-widest hover:bg-red-500 disabled:opacity-50"
+                  disabled={loading || !isFormValid}
+                  className="flex-1 bg-red-600 text-white py-2 text-[10px] font-black uppercase tracking-widest hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? (
                     <Loader2 className="animate-spin mx-auto" size={14} />
@@ -76,7 +117,11 @@ export function DangerZone() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowConfirm(false)}
+                  onClick={() => {
+                    setShowConfirm(false);
+                    setConfirmEmail("");
+                    setPassword("");
+                  }}
                   className="flex-1 border border-stone-800 text-stone-500 py-2 text-[10px] font-black uppercase tracking-widest hover:text-white"
                 >
                   ABORT

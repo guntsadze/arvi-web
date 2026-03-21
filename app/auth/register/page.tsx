@@ -9,7 +9,7 @@ import * as z from "zod";
 import { registerSchema } from "@/lib/validations/auth";
 import { authService } from "@/services/auth/auth.services";
 import { AuthInput } from "@/components/ui/AuthInput";
-import { AuthForm } from "@/components/ui/auth/AuthForm";
+import { AuthForm } from "@/components/auth/AuthForm";
 import Input from "@/components/ui/Input";
 
 type RegisterForm = z.infer<typeof registerSchema>;
