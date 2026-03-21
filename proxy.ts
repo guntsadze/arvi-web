@@ -10,6 +10,11 @@ export default function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const seoRoutes = ["/robots.txt", "/sitemap.xml", "/favicon.ico"];
+  if (seoRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
   const publicRoutes = [
     "/auth/login",
     "/auth/register",
