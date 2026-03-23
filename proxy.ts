@@ -1,22 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { SEO_ROUTES, isPublicRoute } from "@/constants/routes";
+import { AUTH_ROUTES, SEO_ROUTES, isPublicRoute } from "@/constants/routes";
 
 export default function proxy(request: NextRequest) {
-  const token = request.cookies.get("access_token")?.value;
   const { pathname } = request.nextUrl;
+  const token = request.cookies.get("access_token")?.value;
 
-  if (SEO_ROUTES.includes(pathname) || pathname.startsWith("/api")) {
+  if (
+    pathname.includes(".") ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api")
+  ) {
     return NextResponse.next();
   }
 
-  const publicPage = isPublicRoute(pathname);
+  const isPublic = isPublicRoute(pathname);
 
-  if (token && (pathname === "/login" || pathname === "/register")) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (publicPage) {
+  if (isPublic) {
+    if (token && AUTH_ROUTES.includes(pathname)) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
     return NextResponse.next();
   }
 
@@ -28,7 +31,3 @@ export default function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/((?!_next/static|_next/image|logo.svg|.*\\..*).*)"],
-};
