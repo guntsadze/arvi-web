@@ -1,4 +1,5 @@
 "use client";
+import { AuthModal } from "@/components/auth/AuthModal";
 import dynamic from "next/dynamic";
 
 const ReduxProvider = dynamic(
@@ -15,6 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider>
       <AuthProvider>{children}</AuthProvider>
+      <AuthModal />
     </ReduxProvider>
   );
 }

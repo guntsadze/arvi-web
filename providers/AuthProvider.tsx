@@ -9,16 +9,16 @@ import {
 } from "@/store/slices/userSlice";
 import { authService } from "@/services/auth/auth.services";
 import { usePathname } from "next/navigation";
+import { AUTH_ROUTES } from "@/constants/routes";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const isAuthPage = pathname?.startsWith("/auth");
 
   useEffect(() => {
-    if (isAuthPage) return;
-
+    if (AUTH_ROUTES.includes(pathname) || pathname === "/") return;
+    if (isAuthenticated) return;
     const initAuth = async () => {
       try {
         const user = await authService.getMe();
@@ -27,12 +27,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch(clearUser());
       }
     };
-
     initAuth();
-  }, [dispatch, isAuthPage]);
+  }, [dispatch, isAuthenticated, pathname]);
 
   useEffect(() => {
-    if (!isAuthenticated || isAuthPage) return;
+    if (!isAuthenticated) return;
 
     const interval = setInterval(
       async () => {
@@ -41,14 +40,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log("🔄 Token refreshed");
         } catch {
           dispatch(clearUser());
-          window.location.href = "/auth/login";
         }
       },
       40 * 60 * 1000,
     );
 
     return () => clearInterval(interval);
-  }, [isAuthenticated, isAuthPage, dispatch]);
+  }, [isAuthenticated, dispatch]);
 
   return <>{children}</>;
 }

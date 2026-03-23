@@ -1,37 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { SEO_ROUTES, isPublicRoute } from "@/constants/routes";
 
 export default function proxy(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
-
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/auth/callback")) {
+  if (SEO_ROUTES.includes(pathname) || pathname.startsWith("/api")) {
     return NextResponse.next();
   }
 
-  const seoRoutes = ["/robots.txt", "/sitemap.xml", "/favicon.ico"];
-  if (seoRoutes.includes(pathname)) {
-    return NextResponse.next();
-  }
+  const publicPage = isPublicRoute(pathname);
 
-  const publicRoutes = [
-    "/auth/login",
-    "/auth/register",
-    "/forgot-password",
-    "/auth/callback",
-  ];
-
-  const isPublicRoute = publicRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
-
-  if (isPublicRoute && token) {
+  if (token && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (!isPublicRoute && !token) {
-    const loginUrl = new URL("/auth/login", request.url);
+  if (publicPage) {
+    return NextResponse.next();
+  }
+
+  if (!token) {
+    const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -40,5 +30,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|logo.svg|.*\\..*|api/auth).*)"],
+  matcher: ["/((?!_next/static|_next/image|logo.svg|.*\\..*).*)"],
 };

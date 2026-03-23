@@ -22,32 +22,34 @@ export class ApiClient {
   }
 
   private setupInterceptors() {
-    // ✅ Request interceptor — token არ გვჭირდება, Cookie ავტომატურია
-    this.client.interceptors.request.use(
-      (config) => config,
-      (error) => Promise.reject(error),
-    );
-
-    // ✅ Response interceptor — 401-ზე refresh, შემდეგ retry
     this.client.interceptors.response.use(
       (response) => response.data,
       async (error) => {
         const originalRequest = error.config;
 
-        // refresh endpoint-ზე 401 — სესია ამოიწურა, login-ზე გადა
+        // ფუნქცია, რომელიც გამოიძახებს მოდალს
+        const triggerAuthModal = () => {
+          if (typeof window !== "undefined") {
+            const currentPath = window.location.pathname;
+            window.dispatchEvent(
+              new CustomEvent("AUTH_REQUIRED", {
+                detail: { returnTo: currentPath },
+              }),
+            );
+          }
+        };
+
+        // 1. თუ refresh-ზე მოვიდა 401 — სესია მკვდარია
         if (
           error.response?.status === 401 &&
           originalRequest.url?.includes("/auth/refresh")
         ) {
-          if (typeof window !== "undefined") {
-            window.location.href = "/login";
-          }
+          triggerAuthModal(); // ლოგინის ნაცვლად ვაღებთ მოდალს
           return Promise.reject(error);
         }
 
-        // სხვა endpoint-ზე 401 — refresh სცადე
+        // 2. სხვა endpoint-ზე 401
         if (error.response?.status === 401 && !originalRequest._retry) {
-          // თუ უკვე refresh მიმდინარეობს, დაელოდე
           if (this.isRefreshing) {
             return new Promise((resolve, reject) => {
               this.failedQueue.push({
@@ -64,35 +66,31 @@ export class ApiClient {
           try {
             await this.client.post("/auth/refresh");
 
-            // ✅ რიგში მდგომი request-ები გაგზავნე
             this.failedQueue.forEach(({ resolve, config }) => {
               resolve(this.client(config));
             });
             this.failedQueue = [];
+            this.isRefreshing = false; // არ დაგავიწყდეს flag-ის ჩამოყრა
 
             return this.client(originalRequest);
-          } catch {
-            // refresh-იც ჩაიშალა — ყველა request უარყავი
-            this.failedQueue.forEach(({ reject }) => reject(error));
+          } catch (refreshError) {
+            this.failedQueue.forEach(({ reject }) => reject(refreshError));
             this.failedQueue = [];
-
-            if (typeof window !== "undefined") {
-              window.location.href = "/login";
-            }
-            return Promise.reject(error);
-          } finally {
             this.isRefreshing = false;
+
+            triggerAuthModal(); // აქაც მოდალი
+            return Promise.reject(refreshError);
           }
         }
 
-        // ✅ error ფორმატირება — data შევინახოთ
+        // შეცდომის ფორმატირება (როგორც გქონდა)
         const status = error.response?.status;
         const data = error.response?.data;
         const message = data?.message || error.message;
 
         const formattedError = new Error(`${status}: ${message}`) as any;
-        formattedError.data = data; // ✅ მთლიანი response data
-        formattedError.status = status; // ✅ status code
+        formattedError.data = data;
+        formattedError.status = status;
         return Promise.reject(formattedError);
       },
     );

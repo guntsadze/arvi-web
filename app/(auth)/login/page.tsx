@@ -14,6 +14,8 @@ import Input from "@/components/ui/Input";
 import { AuthDivider } from "@/components/auth/AuthDivider";
 import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { RestoreAccountModal } from "@/components/auth/RestoreAccountModal";
+import { setUser } from "@/store/slices/userSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 type LoginForm = z.infer<typeof loginSchema>;
 
@@ -33,6 +35,7 @@ export default function LoginPage() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -55,13 +58,14 @@ export default function LoginPage() {
       setError("identifier", { message: "Google ავტორიზაცია ვერ მოხერხდა" });
     }
 
-    if (error) window.history.replaceState({}, "", "/auth/login");
+    if (error) window.history.replaceState({}, "", "/login");
   }, [searchParams, setError]);
 
   const onLogin = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await authService.login(data);
+      const response = await authService.login(data);
+      dispatch(setUser({ user: response.user }));
       router.push("/feed");
       router.refresh();
     } catch (err: any) {
@@ -98,7 +102,7 @@ export default function LoginPage() {
       });
       await authService.restoreAccount({ restoreToken });
       setDeletedAccount(null);
-      router.push("/feed");
+      // router.push("/feed");
     } catch (err: any) {
       const message =
         err.response?.data?.message ||
@@ -138,12 +142,7 @@ export default function LoginPage() {
 
         <AuthDivider />
 
-        <GoogleLoginButton
-          onClick={(e) => {
-            e.preventDefault();
-            window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-          }}
-        />
+        <GoogleLoginButton onClick={authService.redirectToGoogle} />
       </AuthForm>
 
       {deletedAccount && (

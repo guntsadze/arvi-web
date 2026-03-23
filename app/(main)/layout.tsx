@@ -1,18 +1,30 @@
+"use client";
+
 import { Sidebar } from "@/components/layout/Sidebar";
 import { RightPanel } from "@/components/layout/RightPanel";
 import { FloatingChatsContainer } from "@/components/messaging/FloatingChatsContainer";
+import { useAppSelector } from "@/store/hooks";
+import { selectIsAuthenticated } from "@/store/slices/userSlice";
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
   return (
     <div className="flex min-h-screen bg-[#0a0a0a]">
       <Sidebar />
-      <main className="flex-1">{children}</main>
-      <RightPanel />
-      <FloatingChatsContainer />
+
+      <main className="flex-1 border-x border-gray-800">{children}</main>
+
+      {isAuthenticated && (
+        <>
+          <RightPanel />
+          <FloatingChatsContainer />
+        </>
+      )}
     </div>
   );
 }

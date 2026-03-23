@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSocket } from "./useSocket";
 import { useAppSelector } from "@/store/hooks";
-import { selectCurrentUser } from "@/store/slices/userSlice";
+import {
+  selectCurrentUser,
+  selectIsAuthenticated,
+} from "@/store/slices/userSlice";
 
 export const useNotifications = () => {
   const router = useRouter();
@@ -14,6 +17,7 @@ export const useNotifications = () => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   // ─── 1. HTTP fetch ────────────────────────────────────────────
   const fetchNotifications = useCallback(async (page = 1, limit = 20) => {
@@ -42,6 +46,7 @@ export const useNotifications = () => {
 
   // ─── 3. პირველი load ──────────────────────────────────────────
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchNotifications();
   }, []);
 

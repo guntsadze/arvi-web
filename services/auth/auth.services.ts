@@ -28,22 +28,13 @@ class AuthService {
       "/auth/login",
       credentials,
     );
-    const user = response?.user;
-    console.log("🚀 ~ AuthService ~ login ~ user:", user);
 
-    if (user && typeof window !== "undefined") {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
     return response;
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>("/auth/register", data);
-    const user = response?.user;
 
-    if (user && typeof window !== "undefined") {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
     return response;
   }
 
