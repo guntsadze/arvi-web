@@ -6,11 +6,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/settings/", "/messages/", "/_next/"],
+        disallow: ["/api/", "/auth/", "/settings/", "/messages/"],
       },
       {
         userAgent: "Googlebot",
-        allow: "/",
+        allow: ["/", "/_next/static/"],
         disallow: ["/api/", "/auth/", "/settings/", "/messages/"],
       },
     ],
