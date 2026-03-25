@@ -48,7 +48,7 @@ export default function RegisterPage() {
       globalError={globalError}
       submitLabel="რეგისტრაცია"
       linkText="უკვე გაქვს ანგარიში?"
-      linkHref="/auth/login"
+      linkHref="/login"
     >
       <div className="grid grid-cols-1 gap-4">
         <Input label="სახელი" id="firstName" {...register("firstName")} />

@@ -8,6 +8,7 @@ import { authService } from "@/services/auth/auth.services";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/userSlice";
 import Input from "@/components/ui/Input";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 export function AuthModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +71,8 @@ export function AuthModal() {
           >
             {isLoading ? "Verifying..." : "Login"}
           </button>
+
+          <GoogleLoginButton onClick={authService.redirectToGoogle} />
 
           <button
             type="button"

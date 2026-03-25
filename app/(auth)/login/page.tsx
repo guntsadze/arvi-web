@@ -124,7 +124,7 @@ export default function LoginPage() {
         globalError={errors.identifier?.message}
         submitLabel="ავტორიზაცია"
         linkText="არ გაქვს ანგარიში? რეგისტრაცია"
-        linkHref="/auth/register"
+        linkHref="/register"
       >
         <div className="space-y-4">
           <Input
