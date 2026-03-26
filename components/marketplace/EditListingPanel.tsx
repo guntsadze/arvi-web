@@ -65,16 +65,6 @@ export const EditListingPanel = ({
   // მნიშვნელობების სათვალთვალოდ რეალურ დროში (ვიზუალური ეფექტებისთვის)
   const watchedValues = watch();
 
-  // useEffect(() => {
-  //   if (listing && isOpen) {
-  //     reset({
-  //       ...listing,
-  //       // თუ ინსპექცია არსებობს, ამოვიღოთ პირველივე ელემენტი
-  //       inspection: listing.vehicleInspections?.[0] ?? {},
-  //     });
-  //   }
-  // }, [listing, isOpen, reset]);
-
   const onSubmit = async (data: any) => {
     console.log("🚀 ~ onSubmit ~ data:", data);
     setSaving(true);

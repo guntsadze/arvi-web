@@ -5,6 +5,7 @@ export const PUBLIC_ROUTES = [
   "/groups",
   "/cars",
   "/marketplace",
+  "/listings",
   "/profile",
   "/user",
   "/login",
