@@ -50,25 +50,33 @@ export const EditListingPanel = ({
   const {
     register,
     handleSubmit,
-    reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    values: listing
+      ? {
+          ...listing,
+          price: listing.price,
+          inspection: listing.vehicleInspections?.[0] ?? {},
+        }
+      : {},
+  });
 
   // მნიშვნელობების სათვალთვალოდ რეალურ დროში (ვიზუალური ეფექტებისთვის)
   const watchedValues = watch();
 
-  useEffect(() => {
-    if (listing && isOpen) {
-      reset({
-        ...listing,
-        // თუ ინსპექცია არსებობს, ამოვიღოთ პირველივე ელემენტი
-        inspection: listing.vehicleInspections?.[0] ?? {},
-      });
-    }
-  }, [listing, isOpen, reset]);
+  // useEffect(() => {
+  //   if (listing && isOpen) {
+  //     reset({
+  //       ...listing,
+  //       // თუ ინსპექცია არსებობს, ამოვიღოთ პირველივე ელემენტი
+  //       inspection: listing.vehicleInspections?.[0] ?? {},
+  //     });
+  //   }
+  // }, [listing, isOpen, reset]);
 
   const onSubmit = async (data: any) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
     setSaving(true);
     try {
       const payload = {
