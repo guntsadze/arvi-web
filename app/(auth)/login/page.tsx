@@ -66,7 +66,7 @@ export default function LoginPage() {
     try {
       const response = await authService.login(data);
       dispatch(setUser({ user: response.user }));
-      router.push("/feed");
+      router.push("/");
       router.refresh();
     } catch (err: any) {
       const errorData = err.response?.data || err.data;
@@ -102,7 +102,7 @@ export default function LoginPage() {
       });
       await authService.restoreAccount({ restoreToken });
       setDeletedAccount(null);
-      // router.push("/feed");
+      // router.push("/");
     } catch (err: any) {
       const message =
         err.response?.data?.message ||

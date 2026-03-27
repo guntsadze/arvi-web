@@ -33,7 +33,7 @@ export default function RegisterPage() {
     setGlobalError("");
     try {
       await authService.register(data);
-      router.push("/feed");
+      router.push("/");
     } catch (e: any) {
       setGlobalError(e.message || "რეგისტრაცია ვერ მოხერხდა");
     } finally {

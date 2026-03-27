@@ -359,7 +359,7 @@ export function Sidebar() {
       {/* ── TOP: Logo + Nav + Search ── */}
       <div className="p-6 pb-4 shrink-0">
         <div className="flex items-center justify-between mb-6">
-          <Link href="/feed" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
                 <Image

@@ -225,7 +225,7 @@ export default function FeedPage() {
 //         {/* CTA ღილაკი - მთავარი ელემენტი */}
 //         <div className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 items-center">
 //           <a
-//             href="/feed"
+//             href="/"
 //             className="group relative px-8 py-4 bg-amber-600 hover:bg-amber-700 text-stone-950 font-bold text-sm md:text-base uppercase tracking-widest transition-all duration-300 overflow-hidden"
 //           >
 //             {/* ღილაკის ანიმირებული ფონი */}
