@@ -6,6 +6,7 @@ import {
   CreateGroupInput,
   GroupMemberRole,
 } from "@/types/groups.types";
+import { PaginationParams } from "@/types/pagination.types";
 
 class GroupsService extends BaseApiService<Group> {
   protected endpoint = "/groups";
@@ -36,10 +37,8 @@ class GroupsService extends BaseApiService<Group> {
   }
 
   // პოსტები ჯგუფის შიგნით
-  getGroupPosts(groupId: string, page = 1, limit = 20) {
-    return apiClient.get(
-      `${this.endpoint}/${groupId}/posts?page=${page}&limit=${limit}`,
-    );
+  getGroupPosts(groupId: string, params: PaginationParams) {
+    return apiClient.get(`${this.endpoint}/${groupId}/posts`, params);
   }
 
   createGroupPost(

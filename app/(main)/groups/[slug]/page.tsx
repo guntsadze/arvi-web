@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useCallback, useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { groupsService } from "@/services/groups.service";
 import { GroupHeader } from "@/components/groups/GroupHeader";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -25,19 +25,14 @@ export default function GroupPage({
     groupsService.getGroupBySlug(slug).then((res) => setGroup(res.data || res));
   }, [slug]);
 
-  const fetchPosts = useCallback(
-    (page: number) => {
-      if (!group?.id) return Promise.resolve({ data: [], total: 0 });
-      return groupsService.getGroupPosts(group.id, page);
-    },
-    [group?.id],
-  );
-
   const {
     data: posts,
     loading,
     refresh,
-  } = useInfiniteScroll(fetchPosts, [group?.id]);
+  } = useInfiniteScroll(
+    (page) => groupsService.getGroupPosts([group?.id], { page, limit: 10 }),
+    [group?.id],
+  );
 
   if (!group)
     return (
