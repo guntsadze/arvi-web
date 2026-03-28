@@ -2,6 +2,7 @@ import { PostCard } from "@/components/posts/PostCard";
 import { CarAddedCard } from "../cars/CarAddedCard";
 import { AvatarChangedCard } from "../user/AvatarChangedCard";
 import { CoverChangedCard } from "../user/CoverChangedCard";
+import { ListingCard } from "../marketplace/ListingCard";
 
 export function FeedItem({
   activity,
@@ -29,6 +30,13 @@ export function FeedItem({
 
     case "COVER_CHANGED":
       return <CoverChangedCard activity={activity} refresh={refresh} />;
+
+    case "LISTING_CREATED":
+      return <ListingCard activity={activity} refresh={refresh} />;
+
+    case "LISTING_UPDATED":
+      return <ListingCard activity={activity} refresh={refresh} />;
+
     case "MODIFICATION_ADDED":
       return (
         <div className="border border-stone-800 bg-[#201d1b] p-5 rounded">

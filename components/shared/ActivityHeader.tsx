@@ -22,7 +22,8 @@ export type ActivityVariant =
   | "avatar_changed"
   | "cover_changed"
   | "event"
-  | "listing";
+  | "listing_created"
+  | "listing_updated";
 
 const VARIANT_CONFIG: Record<
   ActivityVariant,
@@ -73,10 +74,15 @@ const VARIANT_CONFIG: Record<
     icon: <CalendarDays size={10} />,
     color: "text-rose-400",
   },
-  listing: {
-    label: "listed for sale",
+  listing_created: {
+    label: "created a listing",
     icon: <ShoppingBag size={10} />,
-    color: "text-yellow-400",
+    color: "text-amber-400",
+  },
+  listing_updated: {
+    label: "updated a listing",
+    icon: <Wrench size={10} />,
+    color: "text-amber-400",
   },
 };
 
