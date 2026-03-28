@@ -13,23 +13,37 @@ import { usePresence } from "@/context/PresenceContext";
 import { usePostActions } from "@/hooks/usePostActions";
 import { usePostEdit } from "@/hooks/usePostEdit";
 import { Post } from "@/types/post.types";
+import { ActivityHeader, ActivityVariant } from "../shared/ActivityHeader";
+import { ActivityMenu } from "../shared/ActivityMenu";
+import { ActivityActions } from "../shared/ActivityActions";
+import { useLikeAction } from "@/hooks/useLikeAction";
 
 interface PostCardProps {
-  post: Post;
+  activity: any;
   refresh: () => void;
 }
 
-export function PostCard({ post, refresh }: PostCardProps) {
+export function PostCard({ activity, refresh }: PostCardProps) {
   const currentUser = useAppSelector(selectCurrentUser);
   const { isUserOnline } = usePresence();
-  const online = isUserOnline(post.user.id);
-  const isOwner = currentUser?.id === post.user.id;
+  const online = isUserOnline(activity.post.user.id);
+  const isOwner = currentUser?.id === activity.post.user.id;
 
   // ყველა like/save/comment ლოგიკა
-  const actions = usePostActions(post, refresh);
+  const actions = usePostActions(activity.post, refresh);
+
+  const { isLiked, likesCount, handleLike } = useLikeAction({
+    id: activity.post.id,
+    type: "posts",
+    initialIsLiked: activity.post.isLiked,
+    initialCount: activity.post.likesCount,
+  });
 
   // edit modal — API fetch + form
-  const edit = usePostEdit(post.id, refresh);
+  const edit = usePostEdit(activity.post.id, refresh);
+
+  const variant = activity.type.toLowerCase() as ActivityVariant;
+  console.log("🚀 ~ PostCard ~ variant:", variant);
 
   return (
     <>
@@ -47,24 +61,51 @@ export function PostCard({ post, refresh }: PostCardProps) {
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50" />
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50" />
 
-          <PostHeader
+          {/* <PostHeader
             user={post.user}
             createdAt={post.createdAt}
             onEdit={edit.openModal}
             onDelete={actions.handleDeletePost}
             isOwner={isOwner}
             online={online}
-          />
+          /> */}
 
+          <ActivityHeader
+            user={activity.post.user}
+            createdAt={activity.post.createdAt}
+            variant={variant}
+            online={online}
+            menu={
+              <ActivityMenu
+                isOwner={isOwner}
+                onEdit={edit.openModal}
+                onDelete={actions.handleDeletePost}
+              />
+            }
+          />
           <div className="p-4 bg-[#201d1b]">
-            <PostContent post={post} />
+            <PostContent post={activity.post} />
           </div>
 
-          {post.media?.length > 0 && (
-            <MediaSlider media={post.media} aspectRatio="aspect-[16/9]" />
+          {activity.post.media?.length > 0 && (
+            <MediaSlider
+              media={activity.post.media}
+              aspectRatio="aspect-[16/9]"
+            />
           )}
 
-          <PostActions
+          <ActivityActions
+            variant="post"
+            likesCount={likesCount}
+            isLiked={isLiked || activity.post.likes?.length > 0}
+            commentsCount={activity.post.commentsCount}
+            isSaved={actions.isSaved}
+            onLike={handleLike}
+            onToggleComments={actions.toggleComments}
+            onSave={actions.handleSave}
+          />
+
+          {/* <PostActions
             likesCount={actions.likesCount}
             isLiked={actions.isLiked}
             commentsCount={post.commentsCount}
@@ -72,7 +113,7 @@ export function PostCard({ post, refresh }: PostCardProps) {
             onLike={actions.handleLike}
             onToggleComments={actions.toggleComments}
             onSave={actions.handleSave}
-          />
+          /> */}
 
           {actions.showComments && (
             <div className="bg-[#151413] border-t border-stone-800 p-6">

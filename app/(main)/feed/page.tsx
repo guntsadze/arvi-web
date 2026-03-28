@@ -1,18 +1,19 @@
 "use client";
 
-import { PostCard } from "@/components/posts/PostCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Activity } from "lucide-react";
 import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
+import { activityService } from "@/services/activity.service";
+import { FeedItem } from "@/components/feed/FeedItem";
 
 export default function FeedPage() {
   const {
-    data: posts,
+    data: activities,
     loading,
     refresh,
   } = useInfiniteScroll(
-    (page) => postsService.getFeed({ page, limit: 10 }),
+    (page) => activityService.getFeed({ page, limit: 10 }),
     [],
   );
 
@@ -56,8 +57,8 @@ export default function FeedPage() {
         />
 
         <div className="mt-16 space-y-8">
-          {posts.map((post: any, index: number) => (
-            <PostCard key={post.id} post={post} refresh={refresh} />
+          {activities.map((activity: any) => (
+            <FeedItem key={activity.id} activity={activity} refresh={refresh} />
           ))}
 
           {loading && (
@@ -69,7 +70,7 @@ export default function FeedPage() {
             </div>
           )}
 
-          {!loading && posts.length === 0 && (
+          {!loading && activities.length === 0 && (
             <div className="text-center py-24 border border-stone-800 bg-[#201d1b]">
               <p className="text-stone-600 font-mono text-sm uppercase tracking-wider">
                 // System Log Empty

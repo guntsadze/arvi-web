@@ -61,8 +61,8 @@ class CarsService extends BaseApiService<Car> {
     return apiClient.get(`${this.endpoint}/garage/${userId}`, params);
   }
 
-  toggleLike(id: string) {
-    return apiClient.post(`/cars/${id}/like`, {});
+  like(id: string) {
+    return apiClient.post(`${this.endpoint}/${id}/like`);
   }
 
   getCarDetails(carId: string, options?: { headers?: HeadersInit }) {

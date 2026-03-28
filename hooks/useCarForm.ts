@@ -20,6 +20,7 @@ export const useCarForm = ({
 
   const formMethods = useForm<CarFormData>({
     defaultValues: DEFAULT_FORM_VALUES,
+    values: initialData || undefined,
   });
 
   const { reset, handleSubmit, formState } = formMethods;

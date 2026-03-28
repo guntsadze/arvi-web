@@ -35,7 +35,7 @@ class PostsService extends BaseApiService<Posts> {
   }
 
   // INTERACTIONS
-  likePost(id: string) {
+  like(id: string) {
     return apiClient.post(`${this.endpoint}/${id}/like`);
   }
 

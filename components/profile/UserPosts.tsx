@@ -1,8 +1,8 @@
 "use client";
 
-import { PostCard } from "@/components/posts/PostCard";
-import { postsService } from "@/services/posts/posts.service";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { activityService } from "@/services/activity.service";
+import { FeedItem } from "../feed/FeedItem";
 
 type Props = {
   userId: string;
@@ -10,18 +10,18 @@ type Props = {
 
 export function UserPosts({ userId }: Props) {
   const {
-    data: posts,
+    data: activities,
     loading,
     refresh,
   } = useInfiniteScroll(
-    (page) => postsService.getByUserId(userId, { page, limit: 10 }),
+    (page) => activityService.getByUserId(userId, { page, limit: 10 }),
     [userId],
   );
 
   return (
     <div className="space-y-6">
-      {posts.map((post: any) => (
-        <PostCard key={post.id} post={post} refresh={refresh} />
+      {activities.map((activity: any) => (
+        <FeedItem key={activity.id} activity={activity} refresh={refresh} />
       ))}
       {loading && <p>Loading...</p>}
     </div>

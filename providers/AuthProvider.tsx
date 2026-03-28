@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
-    if (AUTH_ROUTES.includes(pathname) || pathname === "/") return;
+    if (AUTH_ROUTES.includes(pathname)) return;
     if (isAuthenticated) return;
     const initAuth = async () => {
       try {
