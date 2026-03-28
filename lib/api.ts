@@ -40,13 +40,13 @@ export class ApiClient {
         };
 
         // 1. თუ refresh-ზე მოვიდა 401 — სესია მკვდარია
-        if (
-          error.response?.status === 401 &&
-          originalRequest.url?.includes("/auth/refresh")
-        ) {
-          triggerAuthModal(); // ლოგინის ნაცვლად ვაღებთ მოდალს
-          return Promise.reject(error);
-        }
+        // if (
+        //   error.response?.status === 401 &&
+        //   originalRequest.url?.includes("/auth/refresh")
+        // ) {
+        //   triggerAuthModal(); // ლოგინის ნაცვლად ვაღებთ მოდალს
+        //   return Promise.reject(error);
+        // }
 
         // 2. სხვა endpoint-ზე 401
         if (error.response?.status === 401 && !originalRequest._retry) {
@@ -63,24 +63,24 @@ export class ApiClient {
           originalRequest._retry = true;
           this.isRefreshing = true;
 
-          try {
-            await this.client.post("/auth/refresh");
+          // try {
+          //   await this.client.post("/auth/refresh");
 
-            this.failedQueue.forEach(({ resolve, config }) => {
-              resolve(this.client(config));
-            });
-            this.failedQueue = [];
-            this.isRefreshing = false; // არ დაგავიწყდეს flag-ის ჩამოყრა
+          //   this.failedQueue.forEach(({ resolve, config }) => {
+          //     resolve(this.client(config));
+          //   });
+          //   this.failedQueue = [];
+          //   this.isRefreshing = false; // არ დაგავიწყდეს flag-ის ჩამოყრა
 
-            return this.client(originalRequest);
-          } catch (refreshError) {
-            this.failedQueue.forEach(({ reject }) => reject(refreshError));
-            this.failedQueue = [];
-            this.isRefreshing = false;
+          //   return this.client(originalRequest);
+          // } catch (refreshError) {
+          // this.failedQueue.forEach(({ reject }) => reject(refreshError));
+          // this.failedQueue = [];
+          // this.isRefreshing = false;
 
-            triggerAuthModal(); // აქაც მოდალი
-            return Promise.reject(refreshError);
-          }
+          // triggerAuthModal(); // აქაც მოდალი
+          // return Promise.reject(refreshError);
+          // }
         }
 
         // შეცდომის ფორმატირება (როგორც გქონდა)
