@@ -19,22 +19,35 @@ export const useCarForm = ({
   const isEditing = Boolean(initialData?.id);
 
   const formMethods = useForm<CarFormData>({
-    defaultValues: DEFAULT_FORM_VALUES,
-    values: initialData || undefined,
+    defaultValues: initialData
+      ? (() => {
+          const { createdAt, updatedAt, userId, ...rest } = initialData;
+          return rest;
+        })()
+      : DEFAULT_FORM_VALUES,
   });
 
   const { reset, handleSubmit, formState } = formMethods;
 
-  useEffect(() => {
-    if (!initialData) return;
+  // useEffect(() => {
+  //   console.log("initialData:", initialData);
+  //   if (!initialData) return;
 
-    // 1. ამოვიღოთ მხოლოდ ის ფილდები, რომლებიც ფორმაში არ გვჭირდება (მეტამონაცემები)
-    const { createdAt, updatedAt, userId, ...rest } = initialData;
+  //   const { createdAt, updatedAt, userId, ...rest } = initialData;
+  //   console.log("resetting with:", rest);
+  //   reset({ ...rest });
+  // }, [initialData?.id, reset]);
 
-    reset({
-      ...rest,
-    });
-  }, [initialData, reset]);
+  // useEffect(() => {
+  //   if (!initialData) return;
+
+  //   // 1. ამოვიღოთ მხოლოდ ის ფილდები, რომლებიც ფორმაში არ გვჭირდება (მეტამონაცემები)
+  //   const { createdAt, updatedAt, userId, ...rest } = initialData;
+
+  //   reset({
+  //     ...rest,
+  //   });
+  // }, [initialData.id, reset]);
 
   const onSubmit = async (data: CarFormData) => {
     try {

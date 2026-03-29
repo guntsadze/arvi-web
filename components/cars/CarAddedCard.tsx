@@ -71,7 +71,7 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
 
         {/* Photos */}
         {car.photos?.length > 0 && (
-          <MediaSlider media={car.photos} aspectRatio="aspect-[16/9]" />
+          <MediaSlider media={car.photos} aspectRatio="aspect-[7/3]" />
         )}
 
         {/* Car Info */}

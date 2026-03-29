@@ -74,7 +74,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
         />
 
         {photos.length > 0 && (
-          <MediaSlider media={photos} aspectRatio="aspect-[16/9]" />
+          <MediaSlider media={photos} aspectRatio="aspect-[7/3]" />
         )}
 
         <div className="p-5 space-y-6">
@@ -122,7 +122,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
                 </p>
               </div>
             )}
-            {car?.plateNumber && (
+            {car?.licensePlate && (
               <div className="bg-stone-900/40 border border-stone-800 p-2">
                 <div className="flex items-center gap-2 text-stone-500 mb-1">
                   <Hash size={12} />
@@ -131,11 +131,11 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
                   </span>
                 </div>
                 <div className="inline-block px-1.5 py-0.5 border border-stone-600 rounded-sm text-[11px] font-bold text-stone-200 bg-white/5">
-                  {car.plateNumber}
+                  {listing?.car.licensePlate}
                 </div>
               </div>
             )}
-            {listing?.mileage && (
+            {car?.mileage && (
               <div className="bg-stone-900/40 border border-stone-800 p-2">
                 <div className="flex items-center gap-2 text-stone-500 mb-1">
                   <Gauge size={12} />
@@ -144,7 +144,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
                   </span>
                 </div>
                 <p className="text-xs text-stone-300 font-mono font-bold">
-                  {listing.mileage.toLocaleString()} KM
+                  {listing.car.mileage.toLocaleString()} KM
                 </p>
               </div>
             )}
@@ -219,9 +219,11 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
               {listing?.phone && (
                 <a
                   href={`tel:${listing.phone}`}
-                  className="p-2 border border-stone-800 text-stone-400 hover:border-amber-600 hover:text-amber-500 transition-all"
+                  className="p-2 border border-stone-800 text-stone-400 hover:border-amber-600 hover:text-amber-500 transition-all flex items-center gap-2"
                 >
                   <Phone size={14} />
+
+                  {listing.phone}
                 </a>
               )}
               {listing?.allowMessages && (

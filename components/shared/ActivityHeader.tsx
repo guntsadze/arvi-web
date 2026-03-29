@@ -31,7 +31,7 @@ const VARIANT_CONFIG: Record<
 > = {
   post_created: {
     label: "გამოაქვეყნა პოსტი",
-    icon: null,
+    icon: <CalendarDays size={10} />,
     color: "text-stone-500",
   },
   post_updated: {
@@ -60,12 +60,12 @@ const VARIANT_CONFIG: Record<
     color: "text-green-400",
   },
   avatar_changed: {
-    label: "updated photo",
+    label: "განაახლა პროფილის ფოტო",
     icon: <ImageIcon size={10} />,
     color: "text-purple-400",
   },
   cover_changed: {
-    label: "updated cover",
+    label: "განაახლა ქოვერის ფოტო",
     icon: <ImageIcon size={10} />,
     color: "text-purple-400",
   },
@@ -75,12 +75,12 @@ const VARIANT_CONFIG: Record<
     color: "text-rose-400",
   },
   listing_created: {
-    label: "created a listing",
+    label: "დაამატა განცხადება",
     icon: <ShoppingBag size={10} />,
     color: "text-amber-400",
   },
   listing_updated: {
-    label: "updated a listing",
+    label: "განაახლა განცხადების ინფორმაცია",
     icon: <Wrench size={10} />,
     color: "text-amber-400",
   },

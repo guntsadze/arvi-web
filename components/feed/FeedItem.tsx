@@ -71,9 +71,7 @@ export function FeedItem({
           <p className="text-stone-400 text-sm font-mono">
             <span className="text-stone-200">{activity.user.username}</span>{" "}
             started following{" "}
-            <span className="text-stone-200">
-              {activity.targetUser.username}
-            </span>
+            <span className="text-stone-200">{activity.user.username}</span>
           </p>
         </div>
       );

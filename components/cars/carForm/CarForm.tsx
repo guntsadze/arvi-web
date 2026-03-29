@@ -26,12 +26,15 @@ export const CarForm: React.FC<CarFormProps> = ({
     handleDelete,
     formState: { errors },
     isSubmitting,
-    isEditing,
+    // isEditing,
   } = useCarForm({
     initialData,
     onSuccess,
     onClose,
   });
+
+  const isEditing = Boolean(initialData?.id);
+  console.log("useCarForm rendered, initialData:", initialData);
 
   // ბლოკავს ძირითადი გვერდის სქროლს, როცა ფორმა ღიაა
   useEffect(() => {
