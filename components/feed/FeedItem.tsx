@@ -3,6 +3,7 @@ import { CarAddedCard } from "../cars/CarAddedCard";
 import { AvatarChangedCard } from "../user/AvatarChangedCard";
 import { CoverChangedCard } from "../user/CoverChangedCard";
 import { ListingCard } from "../marketplace/ListingCard";
+import { FollowCard } from "../social/FollowCard";
 
 export function FeedItem({
   activity,
@@ -62,19 +63,7 @@ export function FeedItem({
       );
 
     case "FOLLOW":
-      return (
-        <div className="border border-stone-800 bg-[#201d1b] p-4 rounded flex items-center gap-3">
-          <img
-            src={activity.user.avatar?.url}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-          <p className="text-stone-400 text-sm font-mono">
-            <span className="text-stone-200">{activity.user.username}</span>{" "}
-            started following{" "}
-            <span className="text-stone-200">{activity.user.username}</span>
-          </p>
-        </div>
-      );
+      return <FollowCard activity={activity} refresh={refresh} />;
 
     default:
       return null;

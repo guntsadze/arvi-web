@@ -55,7 +55,7 @@ const VARIANT_CONFIG: Record<
     color: "text-blue-400",
   },
   follow: {
-    label: "started following",
+    label: "დაიწყო გამოწერა",
     icon: <UserPlus size={10} />,
     color: "text-green-400",
   },
