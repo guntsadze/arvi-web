@@ -4,6 +4,9 @@ import { DEFAULT_FORM_VALUES } from "@/constants/carOptions";
 import { carsService } from "@/services/cars/cars.service";
 import { CarFormData } from "@/types/carForm.types";
 import { storageService } from "@/services/storage.service";
+import { getErrorMessage } from "@/lib/error-handler";
+import { toast } from "sonner";
+import { error } from "console";
 
 interface UseCarFormProps {
   initialData?: any;
@@ -18,7 +21,9 @@ export const useCarForm = ({
 }: UseCarFormProps) => {
   const isEditing = Boolean(initialData?.id);
 
-  const formMethods = useForm<CarFormData>({
+  const formMethods = useForm({
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: initialData
       ? (() => {
           const { createdAt, updatedAt, userId, ...rest } = initialData;
@@ -28,26 +33,6 @@ export const useCarForm = ({
   });
 
   const { reset, handleSubmit, formState } = formMethods;
-
-  // useEffect(() => {
-  //   console.log("initialData:", initialData);
-  //   if (!initialData) return;
-
-  //   const { createdAt, updatedAt, userId, ...rest } = initialData;
-  //   console.log("resetting with:", rest);
-  //   reset({ ...rest });
-  // }, [initialData?.id, reset]);
-
-  // useEffect(() => {
-  //   if (!initialData) return;
-
-  //   // 1. ამოვიღოთ მხოლოდ ის ფილდები, რომლებიც ფორმაში არ გვჭირდება (მეტამონაცემები)
-  //   const { createdAt, updatedAt, userId, ...rest } = initialData;
-
-  //   reset({
-  //     ...rest,
-  //   });
-  // }, [initialData.id, reset]);
 
   const onSubmit = async (data: CarFormData) => {
     try {
@@ -91,7 +76,7 @@ export const useCarForm = ({
       onSuccess?.();
       onClose();
     } catch (error) {
-      console.error("Submission failed", error);
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -113,5 +98,6 @@ export const useCarForm = ({
     onSubmit: handleSubmit(onSubmit),
     handleDelete,
     isSubmitting: formState.isSubmitting,
+    errors: formState.errors,
   };
 };

@@ -36,10 +36,10 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
         <div className="space-y-1">
           <h3 className="text-2xl font-black text-stone-100 uppercase tracking-tighter flex items-center gap-3">
             <Zap className="text-yellow-500 w-6 h-6 fill-yellow-500/20" />
-            Modifications
+            ავტომობილის მოდიფიკაციები
           </h3>
           <p className="text-stone-500 text-xs uppercase font-bold tracking-widest">
-            Performance & Aesthetic Upgrades
+            ფერფორმანსი & ვიზუალური განახლებები
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
           }
           className="group flex items-center gap-2 px-6 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-black text-xs font-black rounded-sm transition-all shadow-[4px_4px_0px_0px_rgba(113,63,18,1)] active:translate-y-1 active:shadow-none uppercase tracking-widest"
         >
-          <Plus size={16} /> Add Modification
+          <Plus size={16} /> ჩანაწერის დამატება
         </button>
       </div>
 
@@ -67,7 +67,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
             {/* Top Bar for Delete & Label */}
             <div className="flex items-center justify-between bg-stone-950/40 px-6 py-2 border-b border-stone-800/50">
               <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">
-                Upgrade Slot #{index + 1}
+                განახლების ჩანაწერი #{index + 1}
               </span>
               <button
                 type="button"
@@ -75,7 +75,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
                 className="text-stone-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
               >
                 <span className="text-[10px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                  Remove
+                  ჩანაწერის წაშლა
                 </span>
                 <Trash2 size={16} />
               </button>
@@ -85,19 +85,19 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
               {/* Row 1: Core Mod Info */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <RuggedSelect
-                  label="Category"
+                  label="განახლების კატეგორია"
                   name={`modifications.${index}.type`}
                   options={[...MODIFICATIONS_TYPES]}
                   register={register}
                 />
                 <RuggedInput
-                  label="Part Name"
+                  label="განახლების სახელი"
                   name={`modifications.${index}.name`}
                   register={register}
-                  placeholder="e.g. Stage 2 Turbo"
+                  placeholder="მაგ: Stage 2 Turbo"
                 />
                 <RuggedInput
-                  label="Manufacturer / Brand"
+                  label="ბრენდი"
                   name={`modifications.${index}.brand`}
                   register={register}
                   placeholder="Garrett, HKS, etc."
@@ -108,7 +108,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
                 <div className="lg:col-span-3">
                   <RuggedInput
-                    label="Installed By"
+                    label="განახლება გააკეთა"
                     name={`modifications.${index}.installedBy`}
                     register={register}
                     placeholder="Shop or DIY"
@@ -118,28 +118,28 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
                 {/* Stats Group */}
                 <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-4 bg-stone-950/30 p-4 rounded border border-stone-800/50">
                   <RuggedInput
-                    label="HP Gain"
+                    label="ცხენისძალის ნამატი"
                     type="number"
                     icon={<Gauge size={14} className="text-yellow-500" />}
                     name={`modifications.${index}.hpGain`}
                     register={register}
                   />
                   <RuggedInput
-                    label="Weight (kg)"
+                    label="წონის ცვლილება"
                     type="number"
                     icon={<Weight size={14} className="text-blue-500" />}
                     name={`modifications.${index}.weightChange`}
                     register={register}
                   />
                   <RuggedInput
-                    label="Cost ($)"
+                    label="ღირებულება (₾)"
                     type="number"
                     icon={<DollarSign size={14} className="text-green-500" />}
                     name={`modifications.${index}.cost`}
                     register={register}
                   />
                   <RuggedDateInput
-                    label="Install Date"
+                    label="განახლების თარიღი"
                     name={`modifications.${index}.installDate`}
                     control={control}
                   />
@@ -149,8 +149,8 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
               {/* Row 3: Full-width Description */}
               <div className="pt-2">
                 <RuggedTextArea
-                  label="Modification Details & Settings"
-                  name={`modifications.${index}.description`} // გასწორებული ბაგი: აქ ეწერა maintenanceRecords
+                  label="განახლების აღწერა დეტალურად"
+                  name={`modifications.${index}.description`}
                   register={register}
                   placeholder="Describe the upgrade, tuning specs, or part numbers..."
                   rows={2}
@@ -164,10 +164,10 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
           <div className="text-center py-16 border-2 border-dashed border-stone-800 rounded-lg bg-stone-900/10">
             <Zap className="mx-auto h-12 w-12 text-stone-800 mb-4" />
             <p className="text-stone-500 font-bold uppercase tracking-widest text-sm">
-              No modifications listed
+              მოდიფიკაციები არ მოიძებნა
             </p>
             <p className="text-stone-600 text-xs mt-1 font-medium italic">
-              "Stock is boring." - Add your first mod.
+              დაამატე შენი ავტომობილის პირველი განახლება
             </p>
           </div>
         )}

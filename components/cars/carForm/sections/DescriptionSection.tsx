@@ -15,7 +15,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div className="md:col-span-2">
       <RuggedTextArea
-        label="Vehicle Description"
+        label="ავტომობილის აღწერა"
         name="description"
         register={register}
         rows={6}
@@ -23,11 +23,8 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
     </div>
 
     <div>
-      <label className="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-mono mb-2 block">
-        Visual Documentation
-      </label>
       <Controller
-        name="photos"
+        name="ფოტოები"
         control={control}
         render={({ field }) => (
           <ImageUpload

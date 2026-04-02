@@ -23,7 +23,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
       ) : (
         <>
           <Save className="w-5 h-5" />
-          {isEditing ? "Update Records" : "Initialize Entry"}
+          {isEditing ? "ავტომობილის განახლება" : "ავტომობილის დამატება"}
         </>
       )}
     </button>
@@ -32,7 +32,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
       onClick={onCancel}
       className="px-8 py-4 font-bold uppercase tracking-wider text-stone-500 border-2 border-stone-800 hover:border-stone-600 hover:text-stone-300 transition-colors bg-[#1c1917]"
     >
-      Abort
+      გასვლა
     </button>
   </div>
 );

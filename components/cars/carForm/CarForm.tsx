@@ -24,7 +24,7 @@ export const CarForm: React.FC<CarFormProps> = ({
     control,
     onSubmit,
     handleDelete,
-    formState: { errors },
+    errors,
     isSubmitting,
     // isEditing,
   } = useCarForm({
@@ -34,7 +34,6 @@ export const CarForm: React.FC<CarFormProps> = ({
   });
 
   const isEditing = Boolean(initialData?.id);
-  console.log("useCarForm rendered, initialData:", initialData);
 
   // ბლოკავს ძირითადი გვერდის სქროლს, როცა ფორმა ღიაა
   useEffect(() => {
@@ -58,23 +57,23 @@ export const CarForm: React.FC<CarFormProps> = ({
 
           {/* Existing Sections */}
           <div className="space-y-6">
-            <FormSection title="Technical Specifications" />
+            <FormSection title="ტექნიკური ინფორმაცია" />
             <TechnicalSection register={register} />
           </div>
 
           {/* Registration */}
           <div className="space-y-6">
-            <FormSection title="Registration & Details" />
-            <RegistrationSection register={register} />
+            <FormSection title="რეგისტრაცია & დეტალები" />
+            <RegistrationSection register={register} errors={errors} />
           </div>
 
           <div className="space-y-6">
-            <FormSection title="Manifest & Visuals" />
+            <FormSection title="აღწერა & ვიზუალი" />
             <DescriptionSection register={register} control={control} />
           </div>
 
           <div className="space-y-6">
-            <FormSection title="System Classification" />
+            <FormSection title="დამატებითი დეტალები" />
             <ClassificationSection register={register} />
           </div>
 
@@ -104,7 +103,7 @@ export const CarForm: React.FC<CarFormProps> = ({
                       transition-all duration-300
                       disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Delete Vehicle
+              ავტომობილის წაშლა
             </button>
           </div>
         </form>

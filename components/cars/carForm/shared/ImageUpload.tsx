@@ -39,7 +39,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         />
         <Upload className="w-8 h-8 mb-2 text-stone-500" />
         <span className="text-xs uppercase font-mono text-stone-500">
-          Add Photos
+          ფოტოს დამატება
         </span>
       </div>
 

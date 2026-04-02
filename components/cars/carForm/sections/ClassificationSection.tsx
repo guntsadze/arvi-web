@@ -13,14 +13,14 @@ export const ClassificationSection: React.FC<ClassificationSectionProps> = ({
 }) => (
   <div className="flex flex-col sm:flex-row gap-6 p-6 bg-stone-800/20 border border-stone-700">
     <RuggedCheckbox
-      label="Restoration Project (WIP)"
+      label="პროექტის ავტომობილი"
       icon={AlertTriangle}
       register={register}
       name="isProject"
     />
     <div className="h-px sm:h-auto sm:w-px bg-stone-700" />
     <RuggedCheckbox
-      label="Publicly Visible"
+      label="გამოჩნდეს საჯაროდ"
       icon={Sparkles}
       register={register}
       name="isPublic"

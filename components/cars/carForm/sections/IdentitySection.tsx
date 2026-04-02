@@ -4,7 +4,7 @@ import { RuggedInput } from "@/components/ui/RuggedInput";
 import { CarFormData } from "@/types/carForm.types";
 interface IdentitySectionProps {
   register: UseFormRegister<CarFormData>;
-  errors: FieldErrors<CarFormData>;
+  errors: any;
 }
 
 export const IdentitySection: React.FC<IdentitySectionProps> = ({
@@ -13,7 +13,7 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <RuggedInput
-      label="Manufacturer"
+      label="მარკა"
       name="make"
       register={register}
       required
@@ -21,7 +21,7 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
       error={errors.make}
     />
     <RuggedInput
-      label="Model"
+      label="მოდელი"
       name="model"
       register={register}
       required
@@ -29,16 +29,25 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
       error={errors.model}
     />
     <RuggedInput
-      label="Year"
+      label="წელი"
       name="year"
       type="number"
       register={register}
       required
       placeholder="1998"
       error={errors.year}
+      hint={`1900 – ${new Date().getFullYear()}`}
+      rules={{
+        valueAsNumber: true,
+
+        min: {
+          value: 1900,
+          message: "ავტომობილის წელი არ უნდა იყოს 1900-ზე ნაკლები",
+        },
+      }}
     />
     <RuggedInput
-      label="Nickname (Optional)"
+      label="ზედმეტსახელი (სურვილისამებრ)"
       name="nickname"
       register={register}
       placeholder="The Beast"

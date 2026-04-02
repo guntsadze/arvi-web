@@ -15,11 +15,11 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
       <div className="flex items-center gap-2 mb-2">
         <Sparkles className="w-4 h-4 text-amber-600 animate-pulse" />
         <span className="text-xs text-amber-600 font-mono uppercase tracking-wider">
-          System Entry Interface
+          წარმოადგინე შენი ავტომობილი - შენი ხასიათის ანარეკლი.
         </span>
       </div>
-      <h1 className="text-3xl md:text-5xl font-black text-[#dcd8c8] tracking-tight uppercase">
-        {isEditing ? "Edit Configuration" : "New Machine Entry"}
+      <h1 className="text-3xl md:text-3xl font-bold text-[#dcd8c8]">
+        {isEditing ? "ავტომობილის რედაქტირება" : "ავტომობილის დამატება"}
       </h1>
     </div>
     <button

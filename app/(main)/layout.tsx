@@ -5,6 +5,7 @@ import { RightPanel } from "@/components/layout/RightPanel";
 import { FloatingChatsContainer } from "@/components/messaging/FloatingChatsContainer";
 import { useAppSelector } from "@/store/hooks";
 import { selectIsAuthenticated } from "@/store/slices/userSlice";
+import { Toaster } from "sonner";
 
 export default function MainLayout({
   children,
@@ -25,6 +26,7 @@ export default function MainLayout({
           <FloatingChatsContainer />
         </>
       )}
+      <Toaster theme="dark" richColors />
     </div>
   );
 }

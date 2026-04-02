@@ -6,6 +6,7 @@ import {
   FieldError,
   FieldValues,
   Path,
+  RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
 
@@ -19,6 +20,10 @@ interface RuggedInputProps<T extends FieldValues> {
   required?: boolean;
   fullWidth?: boolean;
   icon?: React.ReactNode; // დამატებული აიქონისთვის
+  rules?: RegisterOptions<T>;
+  hint?: string;
+  uppercase?: boolean;
+  autoFormat?: boolean;
 }
 
 export const RuggedInput = <T extends FieldValues>({
@@ -31,6 +36,10 @@ export const RuggedInput = <T extends FieldValues>({
   required = false,
   fullWidth = false,
   icon,
+  rules,
+  hint,
+  uppercase = false,
+  autoFormat = false,
 }: RuggedInputProps<T>) => (
   <div className={`relative group ${fullWidth ? "col-span-full" : ""}`}>
     {/* Label & Error Area */}
@@ -70,7 +79,24 @@ export const RuggedInput = <T extends FieldValues>({
 
         <input
           type={type}
-          {...register(name, { required })}
+          {...register(name, { required, ...rules })}
+          onChange={(e) => {
+            let value = e.target.value;
+
+            if (uppercase) value = value.toUpperCase();
+
+            if (autoFormat) {
+              value = value.toUpperCase().replace(/[^A-ZА-ЯᲐ-Ჿ0-9]/g, "");
+              if (value.length > 2)
+                value = value.slice(0, 2) + "-" + value.slice(2);
+              if (value.length > 6)
+                value = value.slice(0, 6) + "-" + value.slice(6);
+              if (value.length > 9) value = value.slice(0, 9);
+            }
+
+            e.target.value = value;
+            register(name).onChange(e);
+          }}
           placeholder={placeholder}
           className="w-full bg-transparent py-3 font-mono text-[#EBE9E1] text-sm outline-none placeholder:text-stone-700 z-10"
           autoComplete="off"
@@ -80,5 +106,11 @@ export const RuggedInput = <T extends FieldValues>({
       {/* Focus Bottom Line (Active Highlight) */}
       <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-stone-400 group-focus-within:w-full transition-all duration-500" />
     </div>
+
+    {hint && !error && (
+      <p className="mt-1 px-1 text-[9px] text-stone-600 uppercase tracking-wider">
+        {hint}
+      </p>
+    )}
   </div>
 );

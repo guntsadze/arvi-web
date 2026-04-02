@@ -31,10 +31,10 @@ export const MaintenanceSection: React.FC<{
         <div className="space-y-1">
           <h3 className="text-2xl font-black text-stone-100 uppercase tracking-tighter flex items-center gap-3">
             <ClipboardList className="text-blue-500 w-6 h-6 fill-blue-500/10" />
-            Maintenance Log
+            სერვისის ჩანაწერები
           </h3>
           <p className="text-stone-500 text-xs uppercase font-bold tracking-widest">
-            Service history and scheduled maintenance
+            მომსახურების ისტორია და დაგეგმილი ტექნიკური მომსახურება
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export const MaintenanceSection: React.FC<{
             size={16}
             className="group-hover:rotate-90 transition-transform"
           />
-          Add Record
+          ჩანაწერის დამატება
         </button>
       </div>
 
@@ -65,7 +65,7 @@ export const MaintenanceSection: React.FC<{
             {/* Top Bar for Delete & Index */}
             <div className="flex items-center justify-between bg-stone-950/40 px-6 py-2 border-b border-stone-800/50">
               <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">
-                Service Entry #{index + 1}
+                სერვისის ჩანაწერი #{index + 1}
               </span>
               <button
                 type="button"
@@ -73,7 +73,7 @@ export const MaintenanceSection: React.FC<{
                 className="text-stone-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
               >
                 <span className="text-[10px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                  Delete Record
+                  ჩანაწერის წაშლა
                 </span>
                 <Trash2 size={16} />
               </button>
@@ -84,7 +84,7 @@ export const MaintenanceSection: React.FC<{
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                 <div className="md:col-span-4">
                   <RuggedSelect
-                    label="Service Type"
+                    label="სერვისის ტიპი"
                     name={`maintenanceRecords.${index}.type`}
                     options={[...MAINTENANCE_TYPES]}
                     register={register}
@@ -92,19 +92,19 @@ export const MaintenanceSection: React.FC<{
                 </div>
                 <div className="md:col-span-5">
                   <RuggedInput
-                    label="Service Title"
+                    label="სერვისის დასახელება"
                     name={`maintenanceRecords.${index}.title`}
                     register={register}
-                    placeholder="e.g. Engine Oil & Filter Change"
+                    placeholder="მაგ: ზეთის & ფილტრების შეცვლა"
                   />
                 </div>
                 <div className="md:col-span-3">
                   <RuggedInput
-                    label="Location / Workshop"
+                    label="ადგილი"
                     name={`maintenanceRecords.${index}.location`}
                     icon={<Navigation size={14} className="text-stone-500" />}
                     register={register}
-                    placeholder="Authorized Dealer"
+                    placeholder="ჩემი გარაჟი"
                   />
                 </div>
               </div>
@@ -112,27 +112,27 @@ export const MaintenanceSection: React.FC<{
               {/* Row 2: Dates, Costs and Planning */}
               <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-4 bg-stone-950/30 p-4 rounded border border-stone-800/50">
                 <RuggedDateInput
-                  label="Service Date"
+                  label="თარიღი"
                   name={`maintenanceRecords.${index}.serviceDate`}
                   control={control}
                 />
                 <RuggedInput
-                  label="Total Cost ($)"
+                  label="ჯამური ღირებულება (₾)"
                   type="number"
                   icon={<DollarSign size={14} className="text-green-500" />}
                   name={`maintenanceRecords.${index}.cost`}
                   register={register}
                 />
                 <RuggedInput
-                  label="Next Service (km)"
+                  label="შემდეგი შერვისი (კმ)"
                   type="number"
                   icon={<Activity size={14} className="text-blue-500" />}
                   name={`maintenanceRecords.${index}.nextServiceMileage`}
                   register={register}
-                  placeholder="Mileage"
+                  placeholder="კილომეტრი"
                 />
                 <RuggedDateInput
-                  label="Next Service (Date)"
+                  label="შემდეგი სერვისი (თარიღი)"
                   name={`maintenanceRecords.${index}.nextServiceDue`}
                   control={control}
                 />
@@ -141,10 +141,10 @@ export const MaintenanceSection: React.FC<{
               {/* Row 3: Description (Full Width) */}
               <div className="pt-2">
                 <RuggedTextArea
-                  label="Service Notes & Findings"
+                  label="სერვისის დამატებითი ჩანაწერები"
                   name={`maintenanceRecords.${index}.description`}
                   register={register}
-                  placeholder="Mention parts used, oil viscosity, or future recommendations..."
+                  placeholder="ახსენეთ გამოყენებული ნაწილები, ზეთის სიბლანტე ან სამომავლო რეკომენდაციები..."
                   rows={2}
                 />
               </div>
@@ -157,10 +157,10 @@ export const MaintenanceSection: React.FC<{
           <div className="text-center py-16 border-2 border-dashed border-stone-800 rounded-lg bg-stone-900/10">
             <ClipboardList className="mx-auto h-12 w-12 text-stone-800 mb-4" />
             <p className="text-stone-500 font-bold uppercase tracking-widest text-sm">
-              No maintenance records
+              სერვისის ჩანაწერები არ არსებობს
             </p>
             <p className="text-stone-600 text-xs mt-1">
-              Keep your car in top shape by tracking every service.
+              დაამატეთ თქვენი ავტომობილის პირველი სერვისის ჩანაწერი
             </p>
           </div>
         )}

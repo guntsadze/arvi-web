@@ -1,22 +1,29 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&display=swap");
 @import "tw-animate-css";
+@import "tailwindcss";
 
-/* ინარჩუნებს dark mode-ს თუ გჭირდება */
-@custom-variant dark (&:is(.dark *));
+@theme {
+  --font-sans: "Noto Sans Georgian", sans-serif;
+  --font-georgian: "Noto Sans Georgian", sans-serif;
+}
+
+:root {
+  --font-georgian: "Noto Sans Georgian", sans-serif;
+}
+
+html,
+body {
+  font-family: "Noto Sans Georgian", sans-serif !important;
+}
+
+* {
+  font-family: "Noto Sans Georgian", sans-serif;
+}
 
 @layer base {
-  * {
-    @apply border-gray-300 outline-none;
-  }
-
   body {
     @apply bg-white text-gray-900;
   }
-}
-
-/* Optional: dark mode */
-.dark body {
-  @apply bg-gray-900 text-gray-100;
 }
 
 /* სქროლბარის დამალვა */
@@ -26,4 +33,7 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

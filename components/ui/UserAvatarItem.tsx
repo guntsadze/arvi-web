@@ -103,7 +103,7 @@ export const UserAvatarItem = ({
 
         {/* Online Status for Profile */}
         {isOnline && (
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-20" />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-2" />
         )}
       </div>
     );
