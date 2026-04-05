@@ -69,7 +69,7 @@ export const RuggedSelect: React.FC<RuggedSelectProps> = ({
               value={opt.value}
               className="bg-[#1c1917] text-[#EBE9E1]"
             >
-              {opt.label.toUpperCase()}
+              {opt.label}
             </option>
           ))}
         </select>
