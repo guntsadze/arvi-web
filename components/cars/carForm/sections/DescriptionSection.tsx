@@ -24,7 +24,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
 
     <div>
       <Controller
-        name="ფოტოები"
+        name="photos"
         control={control}
         render={({ field }) => (
           <ImageUpload

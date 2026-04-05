@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { DEFAULT_FORM_VALUES } from "@/constants/carOptions";
 import { carsService } from "@/services/cars/cars.service";
@@ -6,7 +5,6 @@ import { CarFormData } from "@/types/carForm.types";
 import { storageService } from "@/services/storage.service";
 import { getErrorMessage } from "@/lib/error-handler";
 import { toast } from "sonner";
-import { error } from "console";
 
 interface UseCarFormProps {
   initialData?: any;
@@ -99,5 +97,8 @@ export const useCarForm = ({
     handleDelete,
     isSubmitting: formState.isSubmitting,
     errors: formState.errors,
+    watch: formMethods.watch,
+    setValue: formMethods.setValue,
+    getValues: formMethods.getValues,
   };
 };

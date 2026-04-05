@@ -3,7 +3,7 @@ import { Upload, X } from "lucide-react";
 import Image from "next/image";
 
 interface ImageUploadProps {
-  images: any[]; // აქ იქნება ან არსებული URL-ები (ბაზიდან), ან ახალი File ობიექტები
+  images: any[];
   onChange: (images: any[]) => void;
 }
 

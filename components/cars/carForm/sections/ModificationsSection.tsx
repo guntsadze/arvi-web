@@ -87,7 +87,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
                 <RuggedSelect
                   label="განახლების კატეგორია"
                   name={`modifications.${index}.type`}
-                  options={[...MODIFICATIONS_TYPES]}
+                  options={MODIFICATIONS_TYPES}
                   register={register}
                 />
                 <RuggedInput

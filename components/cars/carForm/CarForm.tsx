@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { FormHeader } from "./shared/FormHeader";
 import { FormSection } from "./shared/FormSection";
@@ -22,18 +22,16 @@ export const CarForm: React.FC<CarFormProps> = ({
   const {
     register,
     control,
+    setValue,
+    formState: { errors, isSubmitting },
+    isEditing,
     onSubmit,
     handleDelete,
-    errors,
-    isSubmitting,
-    // isEditing,
   } = useCarForm({
     initialData,
     onSuccess,
     onClose,
   });
-
-  const isEditing = Boolean(initialData?.id);
 
   // ბლოკავს ძირითადი გვერდის სქროლს, როცა ფორმა ღიაა
   useEffect(() => {
@@ -53,7 +51,13 @@ export const CarForm: React.FC<CarFormProps> = ({
         <FormHeader isEditing={isEditing} onClose={onClose} />
 
         <form onSubmit={onSubmit} className="space-y-16 pb-24">
-          <IdentitySection register={register} errors={errors} />
+          <IdentitySection
+            register={register}
+            errors={errors}
+            control={control}
+            setValue={setValue}
+            initialData={initialData}
+          />
 
           {/* Existing Sections */}
           <div className="space-y-6">

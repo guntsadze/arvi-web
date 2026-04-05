@@ -5,7 +5,6 @@ import {
   ClipboardList,
   Plus,
   Trash2,
-  Calendar,
   DollarSign,
   Navigation,
   Activity,
@@ -86,7 +85,7 @@ export const MaintenanceSection: React.FC<{
                   <RuggedSelect
                     label="სერვისის ტიპი"
                     name={`maintenanceRecords.${index}.type`}
-                    options={[...MAINTENANCE_TYPES]}
+                    options={MAINTENANCE_TYPES}
                     register={register}
                   />
                 </div>

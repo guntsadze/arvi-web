@@ -44,9 +44,6 @@ export const BRAKE_CONDITION_OPTIONS = [
 export const COOLANT_STATUS_OPTIONS = ["CLEAR", "MIXED_WITH_OIL"] as const;
 
 export type CarFormData = {
-  carId?: string;
-  type: string;
-  title: string;
   make: string;
   model: string;
   year: string | number;
@@ -65,6 +62,7 @@ export type CarFormData = {
   description?: string;
   isProject: boolean;
   isPublic: boolean;
+  photos?: any[];
 
   inspection: {
     // Exterior & Chassis

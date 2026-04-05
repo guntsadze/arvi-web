@@ -20,29 +20,29 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="space-y-6">
       <RuggedInput
-        label="Engine Code/Size"
+        label="ძრავის კოიდი / მოცულობა"
         name="engine"
         register={register}
         placeholder="S50B30 / 3.0L"
       />
       <RuggedSelect
-        label="Fuel Type"
+        label="საწვავის ტიპი"
         name="fuelType"
         register={register}
-        options={[...FUEL_TYPES]}
+        options={FUEL_TYPES}
       />
     </div>
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <RuggedInput
-          label="Horsepower"
+          label="ცხენისძალა"
           name="horsepower"
           type="number"
           register={register}
           placeholder="286"
         />
         <RuggedInput
-          label="Torque (NM)"
+          label="ნიუტონი"
           name="torque"
           type="number"
           register={register}
@@ -50,24 +50,24 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
         />
       </div>
       <RuggedSelect
-        label="Transmission"
+        label="გადაცემათა კოლოფი"
         name="transmission"
         register={register}
-        options={[...TRANSMISSION_TYPES]}
+        options={TRANSMISSION_TYPES}
       />
     </div>
     <div className="space-y-6">
       <RuggedSelect
-        label="Drive Layout"
+        label="წამყვანი თვლები"
         name="driveType"
         register={register}
-        options={[...DRIVE_TYPES]}
+        options={DRIVE_TYPES}
       />
       <RuggedSelect
-        label="Body Style"
+        label="ძარის ტიპი"
         name="bodyType"
         register={register}
-        options={[...BODY_TYPES]}
+        options={BODY_TYPES}
       />
     </div>
   </div>
