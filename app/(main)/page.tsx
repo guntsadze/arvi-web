@@ -71,13 +71,10 @@ export default function FeedPage() {
           ))}
 
           {loading && (
-            // <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-            //   <Loader2 className="animate-spin text-amber-600" size={32} />
-            //   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-300 animate-pulse">
-            //     Synchronizing Data...
-            //   </span>
-            // </div>
-            <GlobalLoader />
+            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
+              <Loader2 className="animate-spin text-amber-600" size={32} />
+            </div>
+            // <GlobalLoader />
           )}
 
           {!loading && activities.length === 0 && (

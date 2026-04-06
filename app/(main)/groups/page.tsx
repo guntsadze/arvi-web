@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Network, Terminal } from "lucide-react";
+import { Plus, Search, Network, Terminal, Loader2 } from "lucide-react";
 import { groupsService } from "@/services/groups.service";
 import { GroupCard } from "@/components/groups/GroupCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -107,7 +107,14 @@ export default function GroupsPage() {
         </div>
 
         {/* LOADING STATE */}
-        {loading && <GlobalLoader />}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <Loader2 className="animate-spin text-amber-700" size={32} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-stone-600 animate-pulse">
+              ...
+            </span>
+          </div>
+        )}
 
         {/* EMPTY STATE */}
         {!loading && groups.length === 0 && (
