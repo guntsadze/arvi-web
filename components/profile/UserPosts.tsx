@@ -3,7 +3,7 @@
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "../feed/FeedItem";
-import { GlobalLoader } from "../ui/GlobalLoader";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   userId: string;
@@ -24,7 +24,11 @@ export function UserPosts({ userId }: Props) {
       {activities.map((activity: any) => (
         <FeedItem key={activity.id} activity={activity} refresh={refresh} />
       ))}
-      {loading && <GlobalLoader />}
+      {loading && (
+        <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
+          <Loader2 className="animate-spin text-amber-600" size={32} />
+        </div>
+      )}
     </div>
   );
 }
