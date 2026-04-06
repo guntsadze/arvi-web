@@ -27,13 +27,13 @@ export function CommentForm({
       onSubmit={handleSubmit(submitHandler)}
       className="flex gap-0 mb-8 border border-stone-700 bg-stone-900"
     >
-      <div className="p-3 text-stone-600 border-r border-stone-700">
+      <div className="p-3 text-[#EBE9E1] border-r border-stone-700">
         <CornerDownRight size={16} />
       </div>
       <input
         {...register("content")}
         placeholder={placeholder}
-        className="flex-1 bg-transparent px-4 py-2 font-mono text-xs text-[#EBE9E1] placeholder:text-stone-600 focus:outline-none"
+        className="flex-1 bg-transparent px-4 py-2 font-mono text-xs text-[#EBE9E1] placeholder:text-[#EBE9E1] focus:outline-none"
         autoFocus={autoFocus}
       />
       <button

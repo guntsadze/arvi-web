@@ -60,7 +60,7 @@ export const CarAvatarItem = ({
       </div>
 
       {showLabel && (
-        <p className="text-[8px] font-mono text-stone-500 text-center mt-1.5 truncate w-full group-hover:text-amber-500 transition-colors uppercase tracking-tighter">
+        <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full group-hover:text-amber-500 transition-colors uppercase tracking-tighter">
           {car.make}
         </p>
       )}

@@ -74,7 +74,7 @@ export function CommentItem({
                     setEditingId(null);
                     editForm.reset();
                   }}
-                  className="text-stone-500 text-xs uppercase"
+                  className="text-stone-300 text-xs uppercase"
                 >
                   Cancel
                 </button>
@@ -90,7 +90,7 @@ export function CommentItem({
           <div className="flex gap-4 opacity-40 group-hover/comment:opacity-100 transition-opacity">
             <button
               onClick={() => setReplyTo(comment.id)}
-              className="text-[9px] uppercase font-bold text-stone-500 hover:text-amber-600"
+              className="text-[9px] uppercase font-bold text-stone-300 hover:text-amber-600"
             >
               Reply
             </button>
@@ -99,13 +99,13 @@ export function CommentItem({
                 editForm.setValue("content", comment.content);
                 setEditingId(comment.id);
               }}
-              className="text-[9px] uppercase font-bold text-stone-500 hover:text-blue-500"
+              className="text-[9px] uppercase font-bold text-stone-300 hover:text-blue-500"
             >
               Edit
             </button>
             <button
               onClick={() => onDelete(comment.id)}
-              className="text-[9px] uppercase font-bold text-stone-500 hover:text-red-500"
+              className="text-[9px] uppercase font-bold text-stone-300 hover:text-red-500"
             >
               Del
             </button>

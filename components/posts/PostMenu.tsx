@@ -33,7 +33,7 @@ export function PostMenu({ onEdit, onDelete, isOwner }: PostMenuProps) {
       >
         <MoreHorizontal
           className={`${
-            isOpen ? "text-amber-500" : "text-stone-600"
+            isOpen ? "text-amber-500" : "text-[#EBE9E1]"
           } hover:text-amber-600`}
           size={20}
         />
@@ -58,14 +58,14 @@ export function PostMenu({ onEdit, onDelete, isOwner }: PostMenuProps) {
                 onDelete();
                 setIsOpen(false);
               }}
-              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-500 hover:bg-red-950/30 hover:text-red-500 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-300 hover:bg-red-950/30 hover:text-red-500 transition-colors"
             >
               <Trash2 size={14} />
               Delete Entry
             </button>
 
             {/* აქ შეგიძლიათ მომავალში დაამატოთ სხვა ღილაკებიც */}
-            <button className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-600 hover:bg-stone-800 transition-colors">
+            <button className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-[#EBE9E1] hover:bg-stone-800 transition-colors">
               <AlertCircle size={14} />
               Report
             </button>

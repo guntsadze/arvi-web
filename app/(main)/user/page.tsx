@@ -51,7 +51,7 @@ export default function Page() {
         {loading && <GlobalLoader />}
 
         {!hasMore && users.length > 0 && (
-          <div className="col-span-full text-center text-stone-600 font-mono py-10">
+          <div className="col-span-full text-center text-[#EBE9E1] font-mono py-10">
             მეტი ინფორმაცი არ არის.
           </div>
         )}

@@ -29,7 +29,7 @@ export default function CarCollectionPage() {
                 {/* <h1 className="text-3xl font-black uppercase tracking-tighter text-[#EBE9E1] drop-shadow-lg">
                   Garage <span className="text-amber-600">Inventory</span>
                 </h1> */}
-                <p className="text-stone-500 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
+                <p className="text-stone-300 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
                   სულ {cars?.length} რეგისტრირებული ავტომობილი
                 </p>
               </div>
@@ -47,10 +47,10 @@ export default function CarCollectionPage() {
         ) : cars?.length === 0 ? (
           <div className="text-center py-20 border-4 border-dashed border-stone-800/30 rounded-3xl">
             <Car className="w-24 h-24 mx-auto text-stone-700 mb-4 opacity-50" />
-            <h3 className="text-2xl font-black text-stone-500 uppercase mb-2">
+            <h3 className="text-2xl font-black text-stone-300 uppercase mb-2">
               Garage Empty
             </h3>
-            <p className="text-stone-600 font-mono mb-8">
+            <p className="text-[#EBE9E1] font-mono mb-8">
               No machinery records found.
             </p>
           </div>

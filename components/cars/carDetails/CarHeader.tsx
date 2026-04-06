@@ -23,7 +23,7 @@ export const CarHeader: React.FC<CarHeaderProps> = ({
     </button>
 
     {viewMode === "full" && (
-      <div className="hidden md:flex items-center gap-2 text-stone-500 font-mono text-xs uppercase">
+      <div className="hidden md:flex items-center gap-2 text-stone-300 font-mono text-xs uppercase">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         Reading from Database...
       </div>

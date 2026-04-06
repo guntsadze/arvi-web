@@ -44,8 +44,8 @@ const DetailItem: React.FC<{
   return (
     <div className="group p-4 rounded-xl bg-stone-900/20 border border-stone-800/50 hover:border-stone-700 transition-all">
       <div className="flex items-center gap-2 mb-1">
-        {icon && <span className="text-stone-500">{icon}</span>}
-        <p className="text-stone-500 text-[10px] font-mono uppercase tracking-widest">
+        {icon && <span className="text-stone-300">{icon}</span>}
+        <p className="text-stone-300 text-[10px] font-mono uppercase tracking-widest">
           {label}
         </p>
       </div>
@@ -268,7 +268,7 @@ const ListingDetailPage: React.FC = () => {
                     <span className="text-amber-500 text-2xl font-bold">
                       {inspection.exteriorVisualRating}/10
                     </span>
-                    <span className="text-[10px] text-stone-500 uppercase mt-1">
+                    <span className="text-[10px] text-stone-300 uppercase mt-1">
                       Exterior
                     </span>
                   </div>
@@ -276,7 +276,7 @@ const ListingDetailPage: React.FC = () => {
                     <span className="text-blue-500 text-2xl font-bold">
                       {inspection.chassisStructuralRating}/10
                     </span>
-                    <span className="text-[10px] text-stone-500 uppercase mt-1">
+                    <span className="text-[10px] text-stone-300 uppercase mt-1">
                       Structural
                     </span>
                   </div>
@@ -284,7 +284,7 @@ const ListingDetailPage: React.FC = () => {
                     <span className="text-green-500 text-2xl font-bold">
                       {inspection.drivetrainPerformanceRating}/10
                     </span>
-                    <span className="text-[10px] text-stone-500 uppercase mt-1">
+                    <span className="text-[10px] text-stone-300 uppercase mt-1">
                       Drivetrain
                     </span>
                   </div>
@@ -292,7 +292,7 @@ const ListingDetailPage: React.FC = () => {
                     <span className="text-purple-500 text-2xl font-bold">
                       {inspection.cabinComfortTechRating}/10
                     </span>
-                    <span className="text-[10px] text-stone-500 uppercase mt-1">
+                    <span className="text-[10px] text-stone-300 uppercase mt-1">
                       Interior
                     </span>
                   </div>
@@ -336,7 +336,7 @@ const ListingDetailPage: React.FC = () => {
                       <button
                         onClick={() => setEditOpen(true)}
                         title="Edit listing"
-                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-stone-500 hover:border-amber-500 hover:text-amber-500 transition-all group"
+                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-stone-300 hover:border-amber-500 hover:text-amber-500 transition-all group"
                       >
                         <Edit3
                           size={10}
@@ -349,7 +349,7 @@ const ListingDetailPage: React.FC = () => {
                       <button
                         onClick={() => setDeleteOpen(true)}
                         title="Delete listing"
-                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-stone-600 hover:border-red-700/60 hover:text-red-500 transition-all"
+                        className="flex items-center gap-1 px-2.5 py-1.5 border border-stone-700 text-[#EBE9E1] hover:border-red-700/60 hover:text-red-500 transition-all"
                       >
                         <Trash2 size={10} />
                         <span className="text-[8px] font-mono uppercase tracking-wider">

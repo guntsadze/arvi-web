@@ -39,11 +39,11 @@ export function PostHeader({
             <p className="font-bold text-[#EBE9E1] uppercase tracking-wide text-xs group-hover/user:text-amber-500 transition-colors">
               {user?.firstName} {user?.lastName}
             </p>
-            <span className="text-[10px] text-stone-600 font-mono">
+            <span className="text-[10px] text-[#EBE9E1] font-mono">
               Username: {user?.username}
             </span>
           </div>
-          <p className="text-[10px] font-mono text-stone-500 uppercase tracking-widest flex items-center gap-2">
+          <p className="text-[10px] font-mono text-stone-300 uppercase tracking-widest flex items-center gap-2">
             {formatDistanceToNow(new Date(createdAt), {
               addSuffix: true,
               locale: ka,

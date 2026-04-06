@@ -186,13 +186,13 @@ export const FloatingChatWindow = ({
         <div className="flex items-center">
           <button
             onClick={() => dispatch(toggleMinimize(chat.id))}
-            className="p-1.5 hover:bg-stone-800 text-stone-500 hover:text-amber-500 transition-colors"
+            className="p-1.5 hover:bg-stone-800 text-stone-300 hover:text-amber-500 transition-colors"
           >
             <Minus size={14} />
           </button>
           <button
             onClick={() => dispatch(closeChat(chat.id))}
-            className="p-1.5 hover:bg-red-900/20 text-stone-500 hover:text-red-500 transition-colors"
+            className="p-1.5 hover:bg-red-900/20 text-stone-300 hover:text-red-500 transition-colors"
           >
             <X size={14} />
           </button>
@@ -218,7 +218,7 @@ export const FloatingChatWindow = ({
               key={msg.id}
               className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}
             >
-              <span className="text-[7px] font-mono text-stone-600 mb-1 uppercase tracking-tighter">
+              <span className="text-[7px] font-mono text-[#EBE9E1] mb-1 uppercase tracking-tighter">
                 {isMine ? "Operator" : chat.user.firstName} //
                 {isPending
                   ? "TRANSMITTING..."
@@ -309,7 +309,7 @@ export const FloatingChatWindow = ({
             onFocus={markAsRead}
             onChange={handleInputChange}
             placeholder="TYPE_SIGNAL..."
-            className="flex-1 bg-transparent py-2 text-[11px] font-mono text-amber-500 focus:outline-none placeholder:text-stone-800 uppercase"
+            className="flex-1 bg-transparent py-2 text-[11px] font-mono text-amber-500 focus:outline-none placeholder:text-stone-400 uppercase"
           />
           <button
             type="submit"

@@ -69,7 +69,7 @@ export function UnifiedPostForm({
           publicId: res.publicId,
           bytes: res.bytes,
           format: res.format,
-          mediaType: data.media[i].type.toUpperCase().includes("VIDEO")
+          mediaType: data.media[i].type.touppercase().includes("VIDEO")
             ? "VIDEO"
             : "IMAGE",
         }));
@@ -135,7 +135,7 @@ export function UnifiedPostForm({
           }}
           rows={1}
           placeholder={placeholder}
-          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-800 px-2 py-1.5 resize-none overflow-hidden max-h-[300px]"
+          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-300 px-2 py-1.5 resize-none overflow-hidden max-h-[300px]"
           disabled={isSubmitting}
         />
 
@@ -189,14 +189,14 @@ export function UnifiedPostForm({
           <button
             type="submit"
             disabled={isSubmitting || !content?.trim()}
-            className="ml-2 h-9 px-5 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-900 disabled:text-stone-800 text-stone-950 font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
+            className="ml-2 h-9 px-5 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-900 disabled:text-stone-300 text-stone-950 font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             {isSubmitting ? (
               <Loader2 size={12} className="animate-spin" />
             ) : (
               <>
-                COMMIT <Send size={12} />
+                <Send size={12} />
               </>
             )}
           </button>

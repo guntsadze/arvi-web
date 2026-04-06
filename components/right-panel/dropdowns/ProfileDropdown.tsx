@@ -42,7 +42,7 @@ export const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
         >
           <LogOut
             size={16}
-            className="text-stone-500 group-hover:text-red-500"
+            className="text-stone-300 group-hover:text-red-500"
           />
           <span className="text-[11px] font-black uppercase text-stone-300 group-hover:text-red-500">
             გასვლა
@@ -66,7 +66,7 @@ const ProfileLink = ({
     href={href}
     className="px-4 py-2.5 flex items-center gap-3 hover:bg-stone-800 transition-all group"
   >
-    <span className="text-stone-500 group-hover:text-amber-500 transition-colors">
+    <span className="text-stone-300 group-hover:text-amber-500 transition-colors">
       {icon}
     </span>
     <span className="text-[11px] font-black uppercase text-stone-300 group-hover:text-amber-500 transition-colors">

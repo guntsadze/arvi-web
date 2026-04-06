@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 
 import { RuggedSelect } from "../ui/RuggedSelect";
 import { RuggedInput } from "../ui/RuggedInput";
-import { RuggedTextArea } from "../ui/RuggedTextArea";
+import { RuggedTextArea } from "../ui/RuggedTexArea";
 
 interface EditListingPanelProps {
   listing: any;
@@ -113,13 +113,13 @@ export const EditListingPanel = ({
                   Edit_Listing
                 </span>
                 <ChevronRight size={12} className="text-stone-700" />
-                <span className="text-[11px] font-mono text-stone-500 uppercase truncate max-w-[150px]">
+                <span className="text-[11px] font-mono text-stone-300 uppercase truncate max-w-[150px]">
                   {listing?.title}
                 </span>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 text-stone-600 hover:text-stone-300 hover:bg-stone-800 transition-all"
+                className="p-1.5 text-[#EBE9E1] hover:text-stone-300 hover:bg-stone-800 transition-all"
               >
                 <X size={16} />
               </button>
@@ -135,7 +135,7 @@ export const EditListingPanel = ({
                     "flex-1 flex items-center justify-center gap-2 py-3 text-[9px] font-mono uppercase tracking-widest transition-all",
                     activeTab === tab.id
                       ? "text-amber-500 border-b-2 border-amber-500 bg-amber-500/5"
-                      : "text-stone-600 hover:text-stone-400 border-b-2 border-transparent",
+                      : "text-[#EBE9E1] hover:text-stone-400 border-b-2 border-transparent",
                   )}
                 >
                   <tab.icon size={12} /> {tab.label}
@@ -371,7 +371,7 @@ export const EditListingPanel = ({
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center gap-2">
     <div className="h-px flex-1 bg-stone-800" />
-    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-stone-600 px-2">
+    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-[#EBE9E1] px-2">
       {children}
     </span>
     <div className="h-px flex-1 bg-stone-800" />
@@ -386,7 +386,7 @@ const Field = ({
   children: React.ReactNode;
 }) => (
   <div className="space-y-1.5">
-    <label className="block text-[9px] font-mono uppercase tracking-[0.2em] text-stone-500">
+    <label className="block text-[9px] font-mono uppercase tracking-[0.2em] text-stone-300">
       {label}
     </label>
     {children}

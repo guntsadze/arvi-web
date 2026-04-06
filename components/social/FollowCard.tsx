@@ -57,7 +57,7 @@ export function FollowCard({ activity, refresh }: FollowCardProps) {
                 <div className="w-6 h-px bg-stone-700" />
                 <div className="w-1.5 h-1.5 rotate-45 border-t border-r border-stone-600" />
               </div>
-              <span className="text-[9px] font-mono text-stone-600 uppercase tracking-widest">
+              <span className="text-[9px] font-mono text-[#EBE9E1] uppercase tracking-widest">
                 follows
               </span>
             </div>
@@ -69,7 +69,7 @@ export function FollowCard({ activity, refresh }: FollowCardProps) {
 
         {/* Stats footer */}
         <div className="px-4 py-3 flex items-center justify-center gap-6">
-          <div className="flex items-center gap-1.5 text-stone-500">
+          <div className="flex items-center gap-1.5 text-stone-300">
             <Users size={12} />
             <span className="text-[10px] font-mono">
               {following.followersCount ?? 0} followers

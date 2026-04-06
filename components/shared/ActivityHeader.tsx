@@ -32,7 +32,7 @@ const VARIANT_CONFIG: Record<
   post_created: {
     label: "გამოაქვეყნა პოსტი",
     icon: <CalendarDays size={10} />,
-    color: "text-stone-500",
+    color: "text-stone-300",
   },
   post_updated: {
     label: "განაახლა პოსტი",
@@ -130,7 +130,7 @@ export function ActivityHeader({
             <p className="font-bold text-[#EBE9E1] uppercase tracking-wide text-xs group-hover/user:text-amber-500 transition-colors">
               {user?.firstName} {user?.lastName}
             </p>
-            <span className="text-[10px] text-stone-600 font-mono">
+            <span className="text-[10px] text-[#EBE9E1] font-mono">
               @{user?.username}
             </span>
           </div>
@@ -141,7 +141,7 @@ export function ActivityHeader({
             <span className="text-[10px] font-mono uppercase tracking-widest">
               {config.label}
             </span>
-            <span className="text-[10px] text-stone-600 font-mono ml-1">
+            <span className="text-[10px] text-[#EBE9E1] font-mono ml-1">
               ·{" "}
               {formatDistanceToNow(new Date(createdAt), {
                 addSuffix: true,

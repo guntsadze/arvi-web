@@ -33,7 +33,7 @@ export const RuggedToggleGroup: React.FC<RuggedToggleGroupProps> = ({
     <div className="relative group">
       {/* Label Area */}
       <div className="flex justify-between items-end mb-2 pl-1">
-        <label className="uppercase tracking-[0.2em] text-[10px] font-black font-mono text-stone-500 group-focus-within:text-amber-500 transition-colors">
+        <label className="uppercase tracking-[0.2em] text-[10px] font-black font-mono text-stone-300 group-focus-within:text-amber-500 transition-colors">
           {label} {required && <span className="text-amber-600">*</span>}
         </label>
       </div>

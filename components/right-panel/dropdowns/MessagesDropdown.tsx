@@ -20,7 +20,7 @@ export const MessagesDropdown = ({
     </div>
     <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
       {conversations.length === 0 ? (
-        <div className="p-6 text-center text-stone-600 text-[10px] font-mono italic">
+        <div className="p-6 text-center text-[#EBE9E1] text-[10px] font-mono italic">
           NO ACTIVE FREQUENCIES
         </div>
       ) : (
@@ -42,7 +42,7 @@ export const MessagesDropdown = ({
                 <h4 className="text-[11px] font-bold text-stone-200 truncate uppercase">
                   {other?.username}
                 </h4>
-                <p className="text-[10px] text-stone-500 truncate italic font-mono">
+                <p className="text-[10px] text-stone-300 truncate italic font-mono">
                   {conv.messages?.[0]?.content || "No messages..."}
                 </p>
               </div>

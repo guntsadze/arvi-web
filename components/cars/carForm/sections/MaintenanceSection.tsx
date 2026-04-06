@@ -12,7 +12,7 @@ import {
 import { RuggedSelect } from "@/components/ui/RuggedSelect";
 import { MAINTENANCE_TYPES } from "@/constants/carOptions";
 import { RuggedDateInput } from "@/components/ui/RuggedDateInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
+import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
 
 export const MaintenanceSection: React.FC<{
   control: Control<any>;
@@ -32,7 +32,7 @@ export const MaintenanceSection: React.FC<{
             <ClipboardList className="text-blue-500 w-6 h-6 fill-blue-500/10" />
             სერვისის ჩანაწერები
           </h3>
-          <p className="text-stone-500 text-xs uppercase font-bold tracking-widest">
+          <p className="text-stone-300 text-xs uppercase font-bold tracking-widest">
             მომსახურების ისტორია და დაგეგმილი ტექნიკური მომსახურება
           </p>
         </div>
@@ -63,13 +63,13 @@ export const MaintenanceSection: React.FC<{
           >
             {/* Top Bar for Delete & Index */}
             <div className="flex items-center justify-between bg-stone-950/40 px-6 py-2 border-b border-stone-800/50">
-              <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">
+              <span className="text-[10px] font-black text-stone-300 uppercase tracking-widest">
                 სერვისის ჩანაწერი #{index + 1}
               </span>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-stone-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
+                className="text-stone-300 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
               >
                 <span className="text-[10px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                   ჩანაწერის წაშლა
@@ -101,7 +101,7 @@ export const MaintenanceSection: React.FC<{
                   <RuggedInput
                     label="ადგილი"
                     name={`maintenanceRecords.${index}.location`}
-                    icon={<Navigation size={14} className="text-stone-500" />}
+                    icon={<Navigation size={14} className="text-stone-300" />}
                     register={register}
                     placeholder="ჩემი გარაჟი"
                   />
@@ -154,11 +154,11 @@ export const MaintenanceSection: React.FC<{
         {/* Empty State */}
         {fields.length === 0 && (
           <div className="text-center py-16 border-2 border-dashed border-stone-800 rounded-lg bg-stone-900/10">
-            <ClipboardList className="mx-auto h-12 w-12 text-stone-800 mb-4" />
-            <p className="text-stone-500 font-bold uppercase tracking-widest text-sm">
+            <ClipboardList className="mx-auto h-12 w-12 text-stone-400 mb-4" />
+            <p className="text-stone-300 font-bold uppercase tracking-widest text-sm">
               სერვისის ჩანაწერები არ არსებობს
             </p>
-            <p className="text-stone-600 text-xs mt-1">
+            <p className="text-[#EBE9E1] text-xs mt-1">
               დაამატეთ თქვენი ავტომობილის პირველი სერვისის ჩანაწერი
             </p>
           </div>

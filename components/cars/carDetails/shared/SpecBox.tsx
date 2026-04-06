@@ -21,7 +21,7 @@ export const SpecBox: React.FC<SpecBoxProps> = ({
         <div className="mb-2 opacity-70 group-hover:opacity-100 transition-opacity text-amber-600/80 group-hover:text-amber-500">
           {icon}
         </div>
-        <span className="text-[10px] text-stone-500 font-mono uppercase tracking-widest mb-1 block">
+        <span className="text-[10px] text-stone-300 font-mono uppercase tracking-widest mb-1 block">
           {label}
         </span>
       </div>
@@ -30,7 +30,7 @@ export const SpecBox: React.FC<SpecBoxProps> = ({
           {value}
         </span>
         {sub && (
-          <span className="text-[9px] text-stone-600 font-mono mt-1 group-hover:text-stone-400 transition-colors block">
+          <span className="text-[9px] text-[#EBE9E1] font-mono mt-1 group-hover:text-stone-400 transition-colors block">
             {sub}
           </span>
         )}

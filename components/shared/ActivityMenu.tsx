@@ -44,7 +44,7 @@ export function ActivityMenu({
         <MoreHorizontal
           size={20}
           className={
-            isOpen ? "text-amber-500" : "text-stone-600 hover:text-amber-600"
+            isOpen ? "text-amber-500" : "text-[#EBE9E1] hover:text-amber-600"
           }
         />
       </button>
@@ -72,7 +72,7 @@ export function ActivityMenu({
                   onDelete();
                   setIsOpen(false);
                 }}
-                className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-500 hover:bg-red-950/30 hover:text-red-500 transition-colors border-b border-stone-800/50"
+                className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-300 hover:bg-red-950/30 hover:text-red-500 transition-colors border-b border-stone-800/50"
               >
                 <Trash2 size={14} />
                 Delete Entry
@@ -85,7 +85,7 @@ export function ActivityMenu({
                 onReport?.();
                 setIsOpen(false);
               }}
-              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-600 hover:bg-stone-800 hover:text-orange-500 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-[#EBE9E1] hover:bg-stone-800 hover:text-orange-500 transition-colors"
             >
               <Flag size={14} />
               Report

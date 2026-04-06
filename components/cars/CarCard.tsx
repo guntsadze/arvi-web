@@ -40,7 +40,7 @@ export const CarCard = ({ car, onClick }) => {
       <div className="p-6 flex-1 flex flex-col">
         {/* სათაური */}
         <div className="mb-4 border-b-2 border-stone-900 pb-2">
-          <h3 className="text-xs font-bold text-stone-500 uppercase tracking-[0.2em]">
+          <h3 className="text-xs font-bold text-stone-300 uppercase tracking-[0.2em]">
             {car.model}
           </h3>
           <p className="text-3xl font-black text-stone-900 uppercase leading-none truncate">
@@ -121,7 +121,7 @@ export const CarCard = ({ car, onClick }) => {
 
       {/* ID & Footer */}
       <div className="bg-stone-300/50 p-2 text-center border-t border-stone-300 flex justify-between px-4 items-center">
-        <span className="font-mono text-[9px] text-stone-500 uppercase tracking-widest">
+        <span className="font-mono text-[9px] text-stone-300 uppercase tracking-widest">
           SN: {car.id.toString().slice(-8).toUpperCase()}
         </span>
         <div className="flex gap-1">

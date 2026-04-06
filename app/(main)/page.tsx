@@ -41,7 +41,7 @@ export default function FeedPage() {
           <div className="h-px flex-1 bg-gradient-to-r from-transparent to-stone-700" />
           <div className="flex flex-col items-center gap-1">
             <Activity className="text-amber-700" size={20} />
-            <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.4em]">
+            <span className="text-[8px] font-mono text-stone-200 uppercase tracking-[0.4em]">
               Live Feed
             </span>
           </div>
@@ -79,7 +79,7 @@ export default function FeedPage() {
 
           {!loading && activities.length === 0 && (
             <div className="text-center py-24 border border-stone-800 bg-[#201d1b]">
-              <p className="text-stone-600 font-mono text-sm uppercase tracking-wider">
+              <p className="text-[#EBE9E1] font-mono text-sm uppercase tracking-wider">
                 // System Log Empty
               </p>
               <p className="text-stone-700 text-xs mt-2">

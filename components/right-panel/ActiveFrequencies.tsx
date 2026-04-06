@@ -29,7 +29,7 @@ export const ActiveFrequencies = ({
         <div className="relative group">
           <Search
             size={12}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-600 group-focus-within:text-amber-500 transition-colors"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#EBE9E1] group-focus-within:text-amber-500 transition-colors"
           />
           <input
             value={query}
@@ -43,7 +43,7 @@ export const ActiveFrequencies = ({
       {/* List Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
         {filtered.length === 0 ? (
-          <p className="text-[9px] text-stone-600 italic text-center py-10 font-mono">
+          <p className="text-[9px] text-[#EBE9E1] italic text-center py-10 font-mono">
             ინფორმაცია არ არის
           </p>
         ) : (
@@ -67,7 +67,7 @@ export const ActiveFrequencies = ({
                     }`}
                   />
                 </div>
-                <p className="text-[9px] font-mono text-stone-600 truncate group-hover:text-stone-300 transition-colors">
+                <p className="text-[9px] font-mono text-[#EBE9E1] truncate group-hover:text-stone-300 transition-colors">
                   {conv.messages?.[0]?.content || "NO SIGNAL..."}
                 </p>
               </button>

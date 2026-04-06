@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { Camera, MapPin, Link as LinkIcon, User } from "lucide-react";
 import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
+import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
 import { SaveRow } from "@/components/settings/SaveRow";
 import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { apiClient } from "@/lib/api";

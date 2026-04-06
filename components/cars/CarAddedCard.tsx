@@ -83,7 +83,7 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
                 {car.year} {car.make} {car.model}
               </h3>
               {car.nickname && (
-                <span className="text-stone-500 text-xs font-mono pb-0.5">
+                <span className="text-stone-300 text-xs font-mono pb-0.5">
                   "{car.nickname}"
                 </span>
               )}

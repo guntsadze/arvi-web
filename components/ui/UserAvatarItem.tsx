@@ -75,7 +75,7 @@ export const UserAvatarItem = ({
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-stone-600 bg-stone-800">
+        <div className="w-full h-full flex items-center justify-center text-[#EBE9E1] bg-stone-800">
           <UserIcon size={variant === "profile" ? 40 : 24} />
         </div>
       )}
@@ -127,7 +127,7 @@ export const UserAvatarItem = ({
         </div>
         <div>
           {fullName && <h4 className="text-white font-bold">{fullName}</h4>}
-          <p className="text-stone-500 text-xs">
+          <p className="text-stone-300 text-xs">
             @{user.username || "anonymous"}
           </p>
         </div>
@@ -154,7 +154,7 @@ export const UserAvatarItem = ({
     //     {user.role === "ADMIN" && <AdminBadge size={size} />}
     //   </div>
     //   {showName && (
-    //     <p className="text-[8px] font-mono text-stone-500 text-center mt-1.5 truncate w-full uppercase">
+    //     <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full uppercase">
     //       {user.username || "Anonymous"}
     //     </p>
     //   )}
@@ -174,7 +174,7 @@ export const UserAvatarItem = ({
         {user.role === "ADMIN" && <AdminBadge size={size} />}
       </div>
       {showName && (
-        <p className="text-[8px] font-mono text-stone-500 text-center mt-1.5 truncate w-full uppercase">
+        <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full uppercase">
           {user.username || "Anonymous"}
         </p>
       )}

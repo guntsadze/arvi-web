@@ -13,7 +13,7 @@ export const MarketplaceFilters: React.FC<FiltersProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-stone-900/40 p-6 rounded-xl border border-stone-800/50 mb-8">
       {/* Search Query */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-stone-500 uppercase font-bold ml-1">
+        <label className="text-xs text-stone-300 uppercase font-bold ml-1">
           Search
         </label>
         <input
@@ -26,7 +26,7 @@ export const MarketplaceFilters: React.FC<FiltersProps> = ({
 
       {/* Price Range */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-stone-500 uppercase font-bold ml-1">
+        <label className="text-xs text-stone-300 uppercase font-bold ml-1">
           Price Range
         </label>
         <div className="flex gap-2">
@@ -51,7 +51,7 @@ export const MarketplaceFilters: React.FC<FiltersProps> = ({
 
       {/* Condition & Sort */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-stone-500 uppercase font-bold ml-1">
+        <label className="text-xs text-stone-300 uppercase font-bold ml-1">
           Condition
         </label>
         <select
@@ -65,7 +65,7 @@ export const MarketplaceFilters: React.FC<FiltersProps> = ({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-stone-500 uppercase font-bold ml-1">
+        <label className="text-xs text-stone-300 uppercase font-bold ml-1">
           Sort By
         </label>
         <select

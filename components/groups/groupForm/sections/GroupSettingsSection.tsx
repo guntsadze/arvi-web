@@ -3,7 +3,7 @@ import { GroupPrivacy } from "@/types/groups.types";
 export const GroupSettingsSection = ({ register }: any) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="md:col-span-2">
-      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-2">
+      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-300 mb-2">
         Access Protocol
       </label>
       <select

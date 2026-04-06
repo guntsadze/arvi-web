@@ -76,7 +76,7 @@ export const NotificationsDropdown = ({
       <div className="bg-[#1c1917] overflow-y-auto scrollbar-hide">
         {notifications.length === 0 ? (
           <div className="p-10 text-center">
-            <p className="text-[10px] font-mono text-stone-600 uppercase italic">
+            <p className="text-[10px] font-mono text-[#EBE9E1] uppercase italic">
               No signals detected
             </p>
           </div>
@@ -95,11 +95,11 @@ export const NotificationsDropdown = ({
               <div className="relative flex-shrink-0">
                 <div className="w-10 h-10 border-2 border-stone-800 overflow-hidden bg-stone-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                   <UserAvatarItem
-                      key={notif.sender}
-                      user={notif.sender}
-                      size="sm"
-                      showName={false}
-                    />
+                    key={notif.sender}
+                    user={notif.sender}
+                    size="sm"
+                    showName={false}
+                  />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#1c1917] border border-stone-800 rounded-full flex items-center justify-center shadow-lg">
                   {getNotifIcon(notif.type)}
@@ -121,14 +121,14 @@ export const NotificationsDropdown = ({
                 </div>
 
                 {notif.message && (
-                  <p className="text-[10px] text-stone-500 line-clamp-1 italic mb-1 font-mono">
+                  <p className="text-[10px] text-stone-300 line-clamp-1 italic mb-1 font-mono">
                     "{notif.message}"
                   </p>
                 )}
 
                 <div className="flex items-center gap-2 mt-1">
-                  <Clock size={10} className="text-stone-600" />
-                  <span className="text-[9px] font-mono text-stone-600">
+                  <Clock size={10} className="text-[#EBE9E1]" />
+                  <span className="text-[9px] font-mono text-[#EBE9E1]">
                     {formatTime(notif.createdAt)}
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export const NotificationsDropdown = ({
                   e.stopPropagation();
                   onRemove(notif.id);
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-stone-600 hover:text-red-500 transition-all z-10"
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-[#EBE9E1] hover:text-red-500 transition-all z-10"
               >
                 <Trash2 size={14} />
               </button>

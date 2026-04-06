@@ -33,7 +33,7 @@ export const CarOverview: React.FC<CarOverviewProps> = ({
         <div className="text-center mt-1 mb-2">
           <span className="text-xl md:text-2xl font-black text-amber-600 italic tracking-widest uppercase relative px-4">
             "{car.nickname}"
-            <span className="absolute -top-1 -right-2 text-[8px] text-stone-500 not-italic">
+            <span className="absolute -top-1 -right-2 text-[8px] text-stone-300 not-italic">
               CODENAME
             </span>
           </span>

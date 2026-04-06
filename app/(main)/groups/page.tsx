@@ -110,7 +110,7 @@ export default function GroupsPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <Loader2 className="animate-spin text-amber-700" size={32} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-stone-600 animate-pulse">
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#EBE9E1] animate-pulse">
               ...
             </span>
           </div>

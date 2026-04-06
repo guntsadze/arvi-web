@@ -32,7 +32,7 @@ export const RuggedTextArea = <T extends FieldValues>({
   <div className={`relative group ${className}`}>
     {/* Label & Error Row */}
     <div className="flex justify-between items-end mb-1 pl-1">
-      <label className="uppercase tracking-[0.2em] text-[10px] font-black font-mono text-stone-500 group-focus-within:text-orange-500 transition-colors">
+      <label className="uppercase tracking-[0.2em] text-[10px] font-black font-mono text-stone-300 group-focus-within:text-orange-500 transition-colors">
         {label} {required && <span className="text-orange-600">*</span>}
       </label>
 

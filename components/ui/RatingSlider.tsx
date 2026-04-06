@@ -45,7 +45,7 @@ export const RatingSlider: React.FC<RatingSliderProps> = ({
         value={currentRating}
         className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-stone-700 accent-orange-500"
       />
-      <div className="flex justify-between text-xs text-stone-500">
+      <div className="flex justify-between text-xs text-stone-300">
         <span>1</span>
         <span>10</span>
       </div>

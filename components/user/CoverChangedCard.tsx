@@ -73,7 +73,7 @@ export function CoverChangedCard({ activity, refresh }: CoverChangedCardProps) {
 
         {/* Info */}
         <div className="p-4 bg-[#201d1b]">
-          <p className="text-stone-500 text-[10px] font-mono uppercase tracking-widest text-center">
+          <p className="text-stone-300 text-[10px] font-mono uppercase tracking-widest text-center">
             Cover photo updated
           </p>
         </div>

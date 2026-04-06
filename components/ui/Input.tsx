@@ -25,7 +25,7 @@ const Input: React.FC<InputProps> = ({
         <label
           className={`
             uppercase tracking-[0.2em] text-[10px] font-black font-mono transition-colors duration-300
-            ${isFocused ? "text-amber-500" : "text-stone-500"}
+            ${isFocused ? "text-amber-500" : "text-stone-300"}
           `}
         >
           {label}
@@ -69,7 +69,7 @@ const Input: React.FC<InputProps> = ({
           {icon && (
             <div
               className={`mr-3 transition-colors duration-300 ${
-                isFocused ? "text-amber-500" : "text-stone-600"
+                isFocused ? "text-amber-500" : "text-[#EBE9E1]"
               }`}
             >
               {/* Icon wrapper to allow proper sizing if needed */}
@@ -87,7 +87,7 @@ const Input: React.FC<InputProps> = ({
               setIsFocused(false);
               props.onBlur?.(e);
             }}
-            className="w-full h-full bg-transparent font-mono text-[#EBE9E1] text-sm outline-none placeholder:text-stone-600"
+            className="w-full h-full bg-transparent font-mono text-[#EBE9E1] text-sm outline-none placeholder:text-[#EBE9E1]"
             autoComplete="off"
           />
         </div>
@@ -181,7 +181,7 @@ export default Input;
 //           {icon && (
 //             <div
 //               className={`mr-4 transition-colors duration-300 ${
-//                 isFocused ? "text-amber-700" : "text-stone-500"
+//                 isFocused ? "text-amber-700" : "text-stone-300"
 //               }`}
 //             >
 //               {icon}

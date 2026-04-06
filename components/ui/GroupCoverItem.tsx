@@ -75,10 +75,10 @@ export const GroupCoverItem = ({
       <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-stone-700 opacity-50" />
       <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-stone-700 opacity-50" />
       <div className="absolute bottom-4 right-4 flex items-center gap-2 opacity-30">
-        <span className="font-mono text-[8px] text-stone-500 uppercase">
+        <span className="font-mono text-[8px] text-stone-300 uppercase">
           Sector_Background_Buffer
         </span>
-        <Activity size={10} className="text-stone-500" />
+        <Activity size={10} className="text-stone-300" />
       </div>
     </div>
   );

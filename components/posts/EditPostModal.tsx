@@ -174,7 +174,7 @@ export function EditPostModal({
             </h2>
             <button
               onClick={onClose}
-              className="text-stone-500 hover:text-white"
+              className="text-stone-300 hover:text-white"
             >
               <X size={20} />
             </button>
@@ -184,7 +184,7 @@ export function EditPostModal({
             <div className="flex items-center justify-center py-20">
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="animate-spin text-amber-600" size={24} />
-                <span className="text-[9px] font-mono text-stone-500 uppercase tracking-widest">
+                <span className="text-[9px] font-mono text-stone-300 uppercase tracking-widest">
                   Fetching post data...
                 </span>
               </div>
@@ -197,7 +197,7 @@ export function EditPostModal({
               />
 
               <div className="space-y-3">
-                <label className="text-[9px] font-mono text-stone-500 uppercase flex justify-between">
+                <label className="text-[9px] font-mono text-stone-300 uppercase flex justify-between">
                   Media Assets <span>{currentMedia.length} / 10</span>
                 </label>
 
@@ -220,7 +220,7 @@ export function EditPostModal({
                       >
                         <button
                           type="button"
-                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-stone-800 hover:border-stone-600 hover:bg-stone-900/50 text-stone-600 transition-all"
+                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-stone-800 hover:border-stone-600 hover:bg-stone-900/50 text-[#EBE9E1] transition-all"
                         >
                           <ImageIcon size={20} />
                           <span className="text-[8px] uppercase">
@@ -234,7 +234,7 @@ export function EditPostModal({
               </div>
 
               <div className="flex items-center justify-between pt-6 border-t border-stone-800">
-                <div className="flex items-center gap-2 text-stone-600 text-[9px] font-mono uppercase">
+                <div className="flex items-center gap-2 text-[#EBE9E1] text-[9px] font-mono uppercase">
                   <AlertCircle size={14} />{" "}
                   <span>Buffer modification active</span>
                 </div>
@@ -242,7 +242,7 @@ export function EditPostModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="text-[10px] font-mono uppercase text-stone-500 hover:text-stone-300"
+                    className="text-[10px] font-mono uppercase text-stone-300 hover:text-stone-300"
                   >
                     Abort
                   </button>

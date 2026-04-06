@@ -49,7 +49,7 @@ export function ReplyItem({
           <span className="text-[9px] font-bold text-amber-700/80 uppercase">
             {reply.user.firstName} {reply.user.lastName}
           </span>
-          <span className="text-[8px] text-stone-600 font-mono">
+          <span className="text-[8px] text-[#EBE9E1] font-mono">
             {formatDistanceToNow(new Date(reply.createdAt), {
               addSuffix: true,
               locale: ka,
@@ -81,7 +81,7 @@ export function ReplyItem({
                 setEditingId(null);
                 editForm.reset();
               }}
-              className="text-stone-500 text-[10px] uppercase"
+              className="text-stone-300 text-[10px] uppercase"
             >
               Cancel
             </button>
@@ -97,13 +97,13 @@ export function ReplyItem({
                   editForm.setValue("content", reply.content);
                   setEditingId(reply.id);
                 }}
-                className="text-[8px] text-stone-600 hover:text-blue-500 uppercase"
+                className="text-[8px] text-[#EBE9E1] hover:text-blue-500 uppercase"
               >
                 [Edit]
               </button>
               <button
                 onClick={() => onDelete(reply.id, true, parentId)}
-                className="text-[8px] text-stone-600 hover:text-red-500 uppercase"
+                className="text-[8px] text-[#EBE9E1] hover:text-red-500 uppercase"
               >
                 [Del]
               </button>

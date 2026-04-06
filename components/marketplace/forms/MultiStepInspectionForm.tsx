@@ -88,7 +88,7 @@ export const MultiStepInspectionForm: React.FC<
           </h1>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-stone-800 text-stone-500 transition-colors rounded-full"
+            className="p-2 hover:bg-stone-800 text-stone-300 transition-colors rounded-full"
           >
             <X size={20} />
           </button>

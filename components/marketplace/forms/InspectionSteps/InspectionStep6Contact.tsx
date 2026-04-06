@@ -3,7 +3,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTextArea";
+import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
 
 export const InspectionStep6Contact: React.FC = () => {
   const { register } = useFormContext();

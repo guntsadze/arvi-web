@@ -20,10 +20,10 @@ export const DataRow: React.FC<DataRowProps> = ({
         {Icon && (
           <Icon
             size={14}
-            className="text-stone-600 group-hover:text-amber-600 transition-colors"
+            className="text-[#EBE9E1] group-hover:text-amber-600 transition-colors"
           />
         )}
-        <span className="text-xs font-mono text-stone-500 uppercase tracking-wider">
+        <span className="text-xs font-mono text-stone-300 uppercase tracking-wider">
           {label}
         </span>
       </div>

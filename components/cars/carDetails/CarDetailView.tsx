@@ -33,7 +33,7 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
       <BackgroundGrid />
 
       {/* Large Brand Text */}
-      <div className="fixed top-20 -left-10 text-[20vw] font-black text-stone-800/20 leading-none select-none pointer-events-none whitespace-nowrap z-0">
+      <div className="fixed top-20 -left-10 text-[20vw] font-black text-stone-400/20 leading-none select-none pointer-events-none whitespace-nowrap z-0">
         {car.make}
       </div>
 

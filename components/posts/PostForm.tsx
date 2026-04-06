@@ -138,7 +138,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     count={
                       field.value.filter((m: any) => m.type === "image").length
                     }
-                    colorClass="text-stone-600 hover:text-amber-500"
+                    colorClass="text-[#EBE9E1] hover:text-amber-500"
                   />
                 </FileUploader>
 
@@ -156,7 +156,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     count={
                       field.value.filter((m: any) => m.type === "video").length
                     }
-                    colorClass="text-stone-600 hover:text-blue-500"
+                    colorClass="text-[#EBE9E1] hover:text-blue-500"
                   />
                 </FileUploader>
               </>
@@ -166,15 +166,14 @@ export function PostForm({ refresh }: { refresh: () => void }) {
           <button
             type="submit"
             disabled={isSubmitting || !content?.trim()}
-            className="ml-2 h-9 px-4 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-800/50 disabled:text-stone-600 text-stone-950 font-black text-[10px] tracking-tight uppercase transition-all flex items-center gap-2"
+            className="ml-2 h-9 px-4 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-800/50 disabled:text-[#EBE9E1] text-stone-950 font-black text-[10px] tracking-tight uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             {isSubmitting ? (
               <Loader2 size={12} className="animate-spin" />
             ) : (
               <>
-                <span className="hidden sm:inline">COMMIT</span>{" "}
-                <Send size={12} />
+                <span className="hidden sm:inline"></span> <Send size={12} />
               </>
             )}
           </button>

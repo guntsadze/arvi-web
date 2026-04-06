@@ -15,7 +15,7 @@ export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
     <SectionHeader icon={Gauge} title="Performance" />
     <div className="grid grid-cols-2 gap-4">
       <div className="bg-stone-800/50 p-3 text-center border border-stone-700">
-        <span className="text-[10px] text-stone-500 uppercase block">
+        <span className="text-[10px] text-stone-300 uppercase block">
           Horsepower
         </span>
         <span className="text-2xl font-black text-amber-500">
@@ -24,7 +24,7 @@ export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
         <span className="text-[10px] text-amber-700 block">HP</span>
       </div>
       <div className="bg-stone-800/50 p-3 text-center border border-stone-700">
-        <span className="text-[10px] text-stone-500 uppercase block">
+        <span className="text-[10px] text-stone-300 uppercase block">
           Torque
         </span>
         <span className="text-2xl font-black text-amber-500">

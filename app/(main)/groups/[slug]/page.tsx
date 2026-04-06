@@ -93,8 +93,8 @@ export default function GroupPage({
 
               {!loading && posts.length === 0 && (
                 <div className="border border-stone-800 bg-[#201d1b] p-20 text-center">
-                  <Terminal className="mx-auto mb-4 text-stone-800" size={30} />
-                  <p className="font-mono text-stone-600 text-sm uppercase tracking-widest">
+                  <Terminal className="mx-auto mb-4 text-stone-400" size={30} />
+                  <p className="font-mono text-[#EBE9E1] text-sm uppercase tracking-widest">
                     // Sector_Manifest_Empty
                   </p>
                 </div>

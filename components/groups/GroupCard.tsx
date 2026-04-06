@@ -36,7 +36,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
           </div>
 
           <div className="text-right space-y-1">
-            <div className="flex items-center justify-end gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-stone-500">
+            <div className="flex items-center justify-end gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-stone-300">
               {group.privacy === "PUBLIC" ? (
                 <Globe size={10} className="text-emerald-700" />
               ) : (
@@ -44,7 +44,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
               )}
               {group.privacy}
             </div>
-            <div className="text-[8px] font-mono text-stone-800 uppercase tracking-widest">
+            <div className="text-[8px] font-mono text-stone-400 uppercase tracking-widest">
               Sector_ID: {group.id.slice(-6)}
             </div>
           </div>
@@ -56,7 +56,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
             {group.name}
             <ArrowUpRight
               size={12}
-              className="opacity-0 group-hover:opacity-100 transition-all text-stone-600"
+              className="opacity-0 group-hover:opacity-100 transition-all text-[#EBE9E1]"
             />
           </h3>
         </div>
@@ -92,7 +92,7 @@ export const GroupCard = ({ group }: { group: Group }) => {
 
       {/* Aesthetic terminal bit */}
       <div className="absolute bottom-1 right-2 opacity-10 pointer-events-none">
-        <span className="font-mono text-[6px] text-stone-500 uppercase">
+        <span className="font-mono text-[6px] text-stone-300 uppercase">
           v1.0.4_comm
         </span>
       </div>

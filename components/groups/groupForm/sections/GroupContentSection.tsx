@@ -1,7 +1,7 @@
 export const GroupContentSection = ({ register }: any) => (
   <div className="space-y-8">
     <div>
-      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-2">
+      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-300 mb-2">
         Node Description
       </label>
       <textarea
@@ -12,7 +12,7 @@ export const GroupContentSection = ({ register }: any) => (
     </div>
 
     <div>
-      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-2">
+      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-300 mb-2">
         Operational Rules
       </label>
       <textarea

@@ -49,7 +49,7 @@ export function FeedItem({
             <span className="text-stone-300 text-sm font-mono">
               {activity.user.username}
             </span>
-            <span className="text-stone-500 text-xs">added a modification</span>
+            <span className="text-stone-300 text-xs">added a modification</span>
           </div>
           <p className="text-amber-500 font-mono">
             🔧 {activity.modification.name}

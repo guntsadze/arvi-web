@@ -108,7 +108,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {car?.vin && (
               <div className="bg-stone-900/40 border border-stone-800 p-2 group/info">
-                <div className="flex items-center gap-2 text-stone-500 mb-1">
+                <div className="flex items-center gap-2 text-stone-300 mb-1">
                   <Fingerprint
                     size={12}
                     className="group-hover/info:text-amber-500 transition-colors"
@@ -124,7 +124,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
             )}
             {car?.licensePlate && (
               <div className="bg-stone-900/40 border border-stone-800 p-2">
-                <div className="flex items-center gap-2 text-stone-500 mb-1">
+                <div className="flex items-center gap-2 text-stone-300 mb-1">
                   <Hash size={12} />
                   <span className="text-[10px] uppercase font-bold tracking-tighter">
                     Plate
@@ -137,7 +137,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
             )}
             {car?.mileage && (
               <div className="bg-stone-900/40 border border-stone-800 p-2">
-                <div className="flex items-center gap-2 text-stone-500 mb-1">
+                <div className="flex items-center gap-2 text-stone-300 mb-1">
                   <Gauge size={12} />
                   <span className="text-[10px] uppercase font-bold tracking-tighter">
                     Mileage
@@ -210,7 +210,7 @@ export function ListingCard({ activity, refresh }: ListingCardProps) {
               </div>
             )}
             {listing?.location && (
-              <div className="flex items-center gap-1 text-stone-500 text-[10px] font-mono">
+              <div className="flex items-center gap-1 text-stone-300 text-[10px] font-mono">
                 <MapPin size={10} /> {listing.location}
               </div>
             )}

@@ -35,7 +35,7 @@ const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
           </div>
         ) : (
           <div className="aspect-video w-full bg-stone-800 flex items-center justify-center">
-            <Tag className="text-stone-600" size={40} />
+            <Tag className="text-[#EBE9E1]" size={40} />
           </div>
         )}
 
@@ -53,12 +53,12 @@ const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
 
             <div className="flex items-center gap-3 text-sm text-stone-400">
               <span className="flex items-center gap-1">
-                <MapPin size={14} className="text-stone-500" />
+                <MapPin size={14} className="text-stone-300" />
                 {listing.location || "N/A"}
               </span>
               {listing.year && (
                 <span className="flex items-center gap-1">
-                  <Calendar size={14} className="text-stone-500" />
+                  <Calendar size={14} className="text-stone-300" />
                   {listing.year}
                 </span>
               )}
@@ -111,7 +111,7 @@ const MarketplacePage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
           <div className="md:col-span-5 relative">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-300"
               size={18}
             />
             <input
@@ -144,7 +144,7 @@ const MarketplacePage: React.FC = () => {
 
           <div className="md:col-span-2 relative">
             <ArrowUpDown
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-300"
               size={16}
             />
             <select
@@ -180,7 +180,7 @@ const MarketplacePage: React.FC = () => {
               <h3 className="text-xl font-medium text-stone-400">
                 No results found
               </h3>
-              <p className="text-stone-600">
+              <p className="text-[#EBE9E1]">
                 Try adjusting your filters to find what you're looking for.
               </p>
             </div>

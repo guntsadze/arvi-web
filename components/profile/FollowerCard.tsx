@@ -32,14 +32,14 @@ export default function FollowerCard({ follower }: Props) {
               {follower.bio}
             </p>
           ) : (
-            <p className="text-xs text-stone-600 italic pt-2">
+            <p className="text-xs text-[#EBE9E1] italic pt-2">
               მძღოლის ინფორმაცია არ არის
             </p>
           )}
         </div>
 
         {/* Followers count */}
-        <p className="text-[10px] font-mono text-stone-500 mb-3">
+        <p className="text-[10px] font-mono text-stone-300 mb-3">
           {follower.followersCount.toLocaleString()}{" "}
           {follower.followersCount === 1 ? "follower" : "followers"}
         </p>

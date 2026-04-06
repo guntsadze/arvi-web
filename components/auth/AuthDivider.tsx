@@ -4,7 +4,7 @@ export const AuthDivider = () => (
       <div className="w-full border-t border-stone-800" />
     </div>
     <div className="relative flex justify-center text-[10px] uppercase font-mono">
-      <span className="bg-[#1a1918] px-4 text-stone-500 tracking-[0.3em]">
+      <span className="bg-[#1a1918] px-4 text-stone-300 tracking-[0.3em]">
         ან
       </span>
     </div>

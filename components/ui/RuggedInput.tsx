@@ -44,7 +44,7 @@ export const RuggedInput = <T extends FieldValues>({
   <div className={`relative group ${fullWidth ? "col-span-full" : ""}`}>
     {/* Label & Error Area */}
     <div className="flex justify-between items-end mb-1.5 px-1">
-      <label className="uppercase tracking-[0.15em] text-[9px] font-black text-stone-500 group-focus-within:text-stone-200 transition-colors">
+      <label className="uppercase tracking-[0.15em] text-[9px] font-black text-stone-300 group-focus-within:text-stone-200 transition-colors">
         {label} {required && <span className="text-orange-600">*</span>}
       </label>
 
@@ -72,7 +72,7 @@ export const RuggedInput = <T extends FieldValues>({
       <div className="relative flex items-center px-4">
         {/* Icon Container */}
         {icon && (
-          <div className="mr-3 text-stone-500 group-focus-within:text-stone-300 transition-colors">
+          <div className="mr-3 text-stone-300 group-focus-within:text-stone-300 transition-colors">
             {icon}
           </div>
         )}
@@ -108,7 +108,7 @@ export const RuggedInput = <T extends FieldValues>({
     </div>
 
     {hint && !error && (
-      <p className="mt-1 px-1 text-[9px] text-stone-600 uppercase tracking-wider">
+      <p className="mt-1 px-1 text-[9px] text-[#EBE9E1] uppercase tracking-wider">
         {hint}
       </p>
     )}

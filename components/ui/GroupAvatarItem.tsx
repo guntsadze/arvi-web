@@ -52,7 +52,7 @@ export const GroupAvatarItem = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-800 text-[10px]">
+          <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-400 text-[10px]">
             NO_IMG
           </div>
         )}
@@ -72,7 +72,7 @@ export const GroupAvatarItem = ({
 
       {/* ჯგუფის სახელი (თუ საჭიროა) */}
       {showName && (
-        <p className="mt-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest truncate w-full text-center">
+        <p className="mt-3 font-mono text-[10px] text-stone-300 uppercase tracking-widest truncate w-full text-center">
           {group.name}
         </p>
       )}

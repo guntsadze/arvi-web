@@ -34,7 +34,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
       <button
         type="button"
         onClick={onCancel}
-        className="px-8 py-4 font-bold uppercase tracking-wider text-stone-500 border-2 border-stone-800 hover:border-stone-600 hover:text-stone-300 transition-colors bg-[#1c1917]"
+        className="px-8 py-4 font-bold uppercase tracking-wider text-stone-300 border-2 border-stone-800 hover:border-stone-600 hover:text-stone-300 transition-colors bg-[#1c1917]"
       >
         გასვლა
       </button>

@@ -57,7 +57,7 @@ export function DangerZone() {
           <h3 className="text-xs font-black uppercase tracking-widest text-red-500">
             Danger Zone / Purge Account
           </h3>
-          <p className="text-[10px] text-stone-500 font-mono mt-1 uppercase leading-relaxed">
+          <p className="text-[10px] text-stone-300 font-mono mt-1 uppercase leading-relaxed">
             Permanently deactivate your operative profile. This action will
             disconnect all tactical data.
           </p>
@@ -122,7 +122,7 @@ export function DangerZone() {
                     setConfirmEmail("");
                     setPassword("");
                   }}
-                  className="flex-1 border border-stone-800 text-stone-500 py-2 text-[10px] font-black uppercase tracking-widest hover:text-white"
+                  className="flex-1 border border-stone-800 text-stone-300 py-2 text-[10px] font-black uppercase tracking-widest hover:text-white"
                 >
                   ABORT
                 </button>

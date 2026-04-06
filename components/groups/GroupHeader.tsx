@@ -28,7 +28,7 @@ export const GroupHeader = ({
               </h1>
               <ShieldCheck size={20} className="text-amber-800 opacity-50" />
             </div>
-            <p className="font-mono text-[10px] text-stone-500 uppercase tracking-widest">
+            <p className="font-mono text-[10px] text-stone-300 uppercase tracking-widest">
               Uptime: {new Date(group.createdAt).toLocaleDateString()} // Nodes:{" "}
               {group._count.members}
             </p>
@@ -44,7 +44,7 @@ export const GroupHeader = ({
             )}
 
             <button className="bg-stone-900 border border-stone-800 p-2 hover:border-stone-700 transition-all">
-              <Settings size={18} className="text-stone-500" />
+              <Settings size={18} className="text-stone-300" />
             </button>
           </div>
         </div>

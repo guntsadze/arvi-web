@@ -95,8 +95,8 @@ export function GlobalSearchBar() {
       {/* Search Input */}
       <div className="relative">
         <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"
-          size={20}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-300"
+          size={14}
         />
         <input
           ref={inputRef}
@@ -104,7 +104,7 @@ export function GlobalSearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="ძებნა..."
-          className="w-full pl-10 pr-10 py-2 bg-stone-800 text-white placeholder:text-stone-500 focus:border-amber-500 focus:outline-none transition-colors font-mono text-sm rounded-md"
+          className="w-full pl-10 pr-10 py-2 bg-stone-800 text-white placeholder:text-stone-300 focus:border-amber-500 focus:outline-none transition-colors font-mono text-xs rounded-md"
         />
 
         {/* Loading / Clear */}
@@ -117,7 +117,7 @@ export function GlobalSearchBar() {
           query && (
             <button
               onClick={handleClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-amber-500 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-amber-500 transition-colors"
             >
               <X size={20} />
             </button>
@@ -171,7 +171,7 @@ export function GlobalSearchBar() {
                           @{user.username}
                         </div>
                       </div>
-                      <div className="text-stone-500 text-xs">
+                      <div className="text-stone-300 text-xs">
                         {user.followersCount} followers
                       </div>
                     </Link>
@@ -203,7 +203,7 @@ export function GlobalSearchBar() {
                             "{car.nickname}"
                           </div>
                         )}
-                        <div className="text-stone-500 text-xs">
+                        <div className="text-stone-300 text-xs">
                           by @{car.user.username}
                         </div>
                       </div>
@@ -232,7 +232,7 @@ export function GlobalSearchBar() {
                         <div className="text-white text-sm line-clamp-2 mb-1">
                           {post.content}
                         </div>
-                        <div className="flex items-center gap-3 text-stone-500 text-xs">
+                        <div className="flex items-center gap-3 text-stone-300 text-xs">
                           <span>by @{post.user.username}</span>
                           <span>❤️ {post._count.likes}</span>
                           <span>💬 {post._count.comments}</span>
@@ -266,7 +266,7 @@ export function GlobalSearchBar() {
                             {group.description}
                           </div>
                         )}
-                        <div className="text-stone-500 text-xs">
+                        <div className="text-stone-300 text-xs">
                           by @{group.owner.username}
                         </div>
                       </div>
@@ -298,7 +298,7 @@ export function GlobalSearchBar() {
                             {event.location}
                           </div>
                         )}
-                        <div className="text-stone-500 text-xs">
+                        <div className="text-stone-300 text-xs">
                           {new Date(event.startDate).toLocaleDateString(
                             "ka-GE",
                           )}
@@ -346,7 +346,7 @@ export function GlobalSearchBar() {
           {/* No results */}
           {!hasResults && results !== null && (
             <div className="p-8 text-center">
-              <Search className="mx-auto mb-3 text-stone-600" size={40} />
+              <Search className="mx-auto mb-3 text-[#EBE9E1]" size={40} />
               <p className="text-stone-400 font-mono">
                 შედეგი ვერ მოიძებნა "{query}"-ზე
               </p>

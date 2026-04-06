@@ -107,7 +107,7 @@ export const GroupForm: React.FC<GroupFormProps> = ({ onClose, onSuccess }) => {
             />
 
             <div className="mt-4 opacity-50">
-              <p className="font-mono text-[8px] text-stone-600 uppercase tracking-[0.2em]">
+              <p className="font-mono text-[8px] text-[#EBE9E1] uppercase tracking-[0.2em]">
                 System_Status: Awaiting_Deployment...
               </p>
             </div>

@@ -37,8 +37,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           ref={fileInputRef}
           onChange={handleFileChange}
         />
-        <Upload className="w-8 h-8 mb-2 text-stone-500" />
-        <span className="text-xs uppercase font-mono text-stone-500">
+        <Upload className="w-8 h-8 mb-2 text-stone-300" />
+        <span className="text-xs uppercase font-mono text-stone-300">
           ფოტოს დამატება
         </span>
       </div>

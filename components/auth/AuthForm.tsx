@@ -44,7 +44,7 @@ export const AuthForm = ({
     <div className="absolute top-0 left-0 w-full h-1 bg-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.5)] animate-scan opacity-20 pointer-events-none" />
 
     {/* Decorative Big Text */}
-    <div className="absolute -bottom-20 -right-20 text-[200px] font-black text-stone-800/20 leading-none select-none pointer-events-none z-0">
+    <div className="absolute -bottom-20 -right-20 text-[200px] font-black text-stone-400/20 leading-none select-none pointer-events-none z-0">
       SYSTEM
     </div>
 
@@ -65,7 +65,7 @@ export const AuthForm = ({
 
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="h-px w-8 bg-stone-700" />
-            <span className="text-[10px] font-mono text-stone-500 uppercase tracking-[0.3em]">
+            <span className="text-[10px] font-mono text-stone-300 uppercase tracking-[0.3em]">
               Secure Access
             </span>
             <div className="h-px w-8 bg-stone-700" />
@@ -74,7 +74,7 @@ export const AuthForm = ({
           <h2 className="text-3xl font-black text-[#EBE9E1] uppercase tracking-tighter">
             {title}
           </h2>
-          <p className="text-stone-500 font-mono text-xs mt-2 uppercase">
+          <p className="text-stone-300 font-mono text-xs mt-2 uppercase">
             {subtitle}
           </p>
         </div>
@@ -116,7 +116,7 @@ export const AuthForm = ({
         </form>
 
         <div className="text-center mt-8 pt-6 border-t border-stone-800">
-          <span className="text-stone-600 text-xs font-mono uppercase mr-2">
+          <span className="text-[#EBE9E1] text-xs font-mono uppercase mr-2">
             {linkText}
           </span>
           <Link
@@ -180,7 +180,7 @@ export const AuthForm = ({
 //               <h2 className="text-xl font-black text-white tracking-widest uppercase">
 //                 {title}
 //               </h2>
-//               <p className="text-[10px] text-stone-500 uppercase tracking-widest italic">
+//               <p className="text-[10px] text-stone-300 uppercase tracking-widest italic">
 //                 {subtitle}
 //               </p>
 //             </div>
@@ -212,7 +212,7 @@ export const AuthForm = ({
 //                 BMW
 //               </span>
 //               <Power
-//                 className="text-stone-500 group-hover:text-amber-500"
+//                 className="text-stone-300 group-hover:text-amber-500"
 //                 size={14}
 //               />
 //             </div>
@@ -287,7 +287,7 @@ export const AuthForm = ({
 //               <span className="text-black font-black text-sm tracking-tighter uppercase">
 //                 {linkText}
 //               </span>
-//               <ArrowRightLeft size={14} className="text-stone-500" />
+//               <ArrowRightLeft size={14} className="text-stone-300" />
 //             </div>
 //           </div>
 //         </Link>

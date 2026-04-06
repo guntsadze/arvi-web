@@ -45,12 +45,12 @@ export default function AccountSettingsPage({ user }: { user: any }) {
         <h1 className="text-base font-medium text-[#EBE9E1]">
           Account settings
         </h1>
-        <p className="text-[11px] text-stone-600 font-mono mt-0.5">
+        <p className="text-[11px] text-[#EBE9E1] font-mono mt-0.5">
           email, phone, password
         </p>
       </div>
 
-      <p className="text-[8px] uppercase tracking-[.14em] text-stone-600 font-mono mb-3">
+      <p className="text-[8px] uppercase tracking-[.14em] text-[#EBE9E1] font-mono mb-3">
         // credentials
       </p>
 
@@ -71,7 +71,7 @@ export default function AccountSettingsPage({ user }: { user: any }) {
       />
 
       <div className="mt-6 mb-3 border-t border-stone-900 pt-5">
-        <p className="text-[8px] uppercase tracking-[.14em] text-stone-600 font-mono mb-3">
+        <p className="text-[8px] uppercase tracking-[.14em] text-[#EBE9E1] font-mono mb-3">
           // change password
         </p>
       </div>

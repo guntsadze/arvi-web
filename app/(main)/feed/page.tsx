@@ -41,7 +41,7 @@ export default function FeedPage() {
           <div className="h-px flex-1 bg-gradient-to-r from-transparent to-stone-700" />
           <div className="flex flex-col items-center gap-1">
             <Activity className="text-amber-700" size={20} />
-            <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.4em]">
+            <span className="text-[8px] font-mono text-[#EBE9E1] uppercase tracking-[0.4em]">
               Live Feed
             </span>
           </div>

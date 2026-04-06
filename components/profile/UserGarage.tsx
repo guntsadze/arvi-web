@@ -103,7 +103,7 @@ export function UserGarage({ userId }: Props) {
           >
             <div className="w-12 h-12 rounded-full border-2 border-stone-800 group-hover:border-amber-500 flex items-center justify-center transition-colors">
               <Plus
-                className="text-stone-600 group-hover:text-amber-500"
+                className="text-[#EBE9E1] group-hover:text-amber-500"
                 size={24}
               />
             </div>
@@ -118,7 +118,7 @@ export function UserGarage({ userId }: Props) {
             <div className="absolute bottom-2 right-2 opacity-20 group-hover:opacity-100 transition-opacity">
               <CarIcon
                 size={40}
-                className="text-stone-800 group-hover:text-amber-900"
+                className="text-stone-400 group-hover:text-amber-900"
               />
             </div>
           </button>

@@ -106,8 +106,8 @@ export default async function CarPage({ params }: { params: { id: string } }) {
             ) : (
               /* No photos fallback */
               <div className="relative aspect-video rounded-xl bg-stone-900 flex items-center justify-center flex-col gap-4">
-                <Car size={80} className="text-stone-600" />
-                <p className="text-stone-500 text-lg">
+                <Car size={80} className="text-[#EBE9E1]" />
+                <p className="text-stone-300 text-lg">
                   ფოტოები არ არის ატვირთული
                 </p>
               </div>
@@ -230,7 +230,7 @@ export default async function CarPage({ params }: { params: { id: string } }) {
             )}
 
             {/* Created Date */}
-            <div className="text-sm text-stone-500 flex items-center gap-2">
+            <div className="text-sm text-stone-300 flex items-center gap-2">
               <Calendar size={16} />
               დამატებულია: {new Date(car.createdAt).toLocaleDateString("ka-GE")}
             </div>

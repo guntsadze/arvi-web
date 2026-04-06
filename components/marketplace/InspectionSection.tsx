@@ -95,7 +95,7 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
               {...register("inspection.hasRust")}
               className="accent-orange-500"
             />
-            <span className="text-[9px] uppercase text-stone-500 font-mono">
+            <span className="text-[9px] uppercase text-stone-300 font-mono">
               Visible Rust
             </span>
           </div>
@@ -105,7 +105,7 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
               {...register("inspection.panelSymmetry")}
               className="accent-orange-500"
             />
-            <span className="text-[9px] uppercase text-stone-500 font-mono">
+            <span className="text-[9px] uppercase text-stone-300 font-mono">
               Symmetric Panels
             </span>
           </div>
@@ -150,7 +150,7 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
               {...register("inspection.acFunctional")}
               className="accent-orange-500"
             />
-            <span className="text-[9px] uppercase text-stone-500 font-mono">
+            <span className="text-[9px] uppercase text-stone-300 font-mono">
               A/C Cold
             </span>
           </div>
@@ -160,7 +160,7 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
               {...register("inspection.isSmokedIn")}
               className="accent-orange-500"
             />
-            <span className="text-[9px] uppercase text-stone-500 font-mono">
+            <span className="text-[9px] uppercase text-stone-300 font-mono">
               Smoker Car
             </span>
           </div>

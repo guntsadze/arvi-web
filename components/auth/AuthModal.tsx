@@ -56,7 +56,7 @@ export function AuthModal() {
           <h2 className="text-amber-600 font-mono text-[14px] uppercase tracking-[0.2em]">
             Session Expired
           </h2>
-          <p className="text-stone-500 font-mono text-[10px] mt-1 uppercase">
+          <p className="text-stone-300 font-mono text-[10px] mt-1 uppercase">
             Please re-authenticate to continue
           </p>
         </div>
@@ -77,7 +77,7 @@ export function AuthModal() {
           <button
             type="button"
             onClick={() => (window.location.href = "/register")}
-            className="w-full border border-stone-800 text-stone-500 hover:text-[#EBE9E1] font-mono text-[10px] py-2 uppercase transition-colors"
+            className="w-full border border-stone-800 text-stone-300 hover:text-[#EBE9E1] font-mono text-[10px] py-2 uppercase transition-colors"
           >
             Create New Account
           </button>
