@@ -126,32 +126,32 @@ export const ImageLightbox = ({
             className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-stone-800 bg-black/40"
           >
             <div className="flex items-center gap-4">
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <Cpu size={12} className="text-amber-500" />
                   <span className="text-[10px] text-amber-500 font-black tracking-[0.3em] uppercase">
                     Visual_Buffer_v2.0
                   </span>
                 </div>
-                <span className="text-[8px] text-stone-600 mt-1 uppercase tracking-tighter">
+                <span className="text-[8px] text-stone-300 mt-1 uppercase tracking-tighter">
                   ID: {id?.slice(0, 12)}... // Status: ESTABLISHED
                 </span>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center gap-3">
               {src && (
                 <button
                   onClick={() => window.open(src, "_blank")}
-                  className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-stone-800 text-stone-500 hover:text-amber-500 hover:border-amber-500/50 transition-all text-[9px] uppercase tracking-widest"
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-stone-800 text-stone-300 hover:text-amber-500 hover:border-amber-500/50 transition-all text-[9px] uppercase tracking-widest"
                 >
                   <Download size={12} />
-                  Download_Raw
+                  სურათის ჩამოტვირთვა
                 </button>
               )}
               <button
                 onClick={onClose}
-                className="w-10 h-10 flex items-center justify-center border border-stone-800 text-stone-500 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/50 transition-all group"
+                className="w-10 h-10 flex items-center justify-center border border-stone-800 text-stone-300 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/50 transition-all group"
               >
                 <X size={20} className="group-rotate-90 transition-transform" />
               </button>
@@ -188,16 +188,16 @@ export const ImageLightbox = ({
                     className="object-contain"
                   />
 
-                  <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[8px] text-stone-600 uppercase">
+                  {/* <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[8px] text-stone-300 uppercase">
                     <span>Type: {type || "unknown"}</span>
                     <span>Source: Encrypted_Node</span>
-                  </div>
+                  </div> */}
                 </motion.div>
               ) : (
-                <div className="w-64 h-64 border-2 border-dashed border-stone-800 flex flex-col items-center justify-center gap-4 text-stone-700">
+                <div className="w-64 h-64 border-2 border-dashed border-stone-800 flex flex-col items-center justify-center gap-4 text-stone-300">
                   <Maximize2 size={40} className="animate-pulse" />
                   <span className="text-[10px] tracking-widest">
-                    NO_DATA_FOUND
+                    ინფორმაცია არ არის
                   </span>
                 </div>
               )}
@@ -240,9 +240,7 @@ export const ImageLightbox = ({
                             />
                           )}
                           <span className="text-[11px] font-black uppercase tracking-[0.2em]">
-                            {uploading
-                              ? "Uploading_Buffer..."
-                              : `Modify_${type}`}
+                            {uploading ? "რედაქტირება..." : `რედაქტირება`}
                           </span>
                         </button>
                       </FileUploader>
@@ -254,7 +252,7 @@ export const ImageLightbox = ({
                         >
                           <Trash2 size={16} />
                           <span className="text-[11px] font-black uppercase tracking-[0.2em]">
-                            Purge
+                            წაშლა
                           </span>
                         </button>
                       )}
@@ -269,15 +267,15 @@ export const ImageLightbox = ({
                       <div className="flex-1 flex items-center gap-3">
                         <div className="w-2 h-2 bg-red-500 animate-ping" />
                         <span className="text-[10px] text-red-500 font-bold uppercase tracking-widest">
-                          Warning: Permanent data deletion requested. Proceed?
+                          ყურადღება: ფოტოსურათი წაიშლება!
                         </span>
                       </div>
                       <div className="flex gap-2 w-full md:w-auto">
                         <button
                           onClick={() => setConfirmDelete(false)}
-                          className="flex-1 md:flex-none px-6 py-2 border border-stone-700 text-stone-500 hover:text-stone-300 transition-all text-[10px] uppercase"
+                          className="flex-1 md:flex-none px-6 py-2 border border-stone-700 text-stone-300 hover:text-stone-300 transition-all text-[10px] uppercase"
                         >
-                          Abort
+                          გაუქმება
                         </button>
                         <button
                           onClick={handleDelete}
@@ -289,7 +287,7 @@ export const ImageLightbox = ({
                           ) : (
                             <Trash2 size={12} />
                           )}
-                          Confirm_Purge
+                          სურათის წაშლა
                         </button>
                       </div>
                     </motion.div>

@@ -3,6 +3,7 @@
 import { RightPanel } from "@/components/layout/RightPanel";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { FloatingChatsContainer } from "@/components/messaging/FloatingChatsContainer";
+import { GlobalLoader } from "@/components/ui/GlobalLoader";
 import { useAppSelector } from "@/store/hooks";
 import { selectIsAuthenticated } from "@/store/slices/userSlice";
 import { useRouter } from "next/navigation";
@@ -18,13 +19,7 @@ export default function ProtectedLayout({
   );
 
   if (!isInitialized) {
-    return (
-      <div className="flex min-h-screen bg-[#0a0a0a] items-center justify-center">
-        <div className="animate-pulse text-stone-500 font-mono text-xs uppercase">
-          Verifying Session...
-        </div>
-      </div>
-    );
+    return <GlobalLoader />;
   }
 
   if (!isAuthenticated) {

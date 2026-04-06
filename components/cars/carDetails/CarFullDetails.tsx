@@ -53,7 +53,7 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
               <div className="flex items-center gap-2 text-amber-600 mb-2">
                 <FileText size={16} />
                 <span className="text-xs font-mono uppercase tracking-widest">
-                  Complete Vehicle Manifest
+                  ავტომობილის სრული ინფორმაცია
                 </span>
               </div>
               <h2 className="text-4xl font-black text-[#EBE9E1] uppercase">
@@ -66,22 +66,21 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
                 <button
                   onClick={() => onEdit(car)}
                   className="flex items-center gap-2 px-6 py-3 bg-stone-800 hover:bg-amber-600
-                             text-stone-400 hover:text-stone-900 font-bold uppercase tracking-wider
+                             text-stone-300 hover:text-stone-900 font-bold uppercase tracking-wider
                              transition-all border border-stone-700"
                 >
                   <Settings className="w-4 h-4" />
-                  <span>Edit Data</span>
+                  <span>ინფორმაციის განახლება</span>
                 </button>
               )}
 
               <button
                 onClick={onClose}
                 className="flex items-center gap-2 px-6 py-3 border border-stone-700
-                           text-stone-400 hover:text-red-400 hover:border-red-500
+                           text-stone-300 hover:text-red-400 hover:border-red-500
                            transition-all uppercase font-bold"
               >
                 <X size={16} />
-                Close
               </button>
             </div>
           </div>
@@ -105,6 +104,6 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

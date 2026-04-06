@@ -16,6 +16,7 @@ import {
   Terminal,
   Tag,
   ExternalLink,
+  Info,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ import Link from "next/link";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import Image from "next/image";
+import { TRANSMISSION_TYPES } from "@/constants/carOptions";
 
 const SellButton = ({ onClick }: any) => (
   <button
@@ -38,8 +40,8 @@ const SellButton = ({ onClick }: any) => (
         size={12}
         className="text-orange-500 group-hover/sell:text-black transition-colors"
       />
-      <span className="text-[10px] font-mono font-black text-orange-500 group-hover/sell:text-black uppercase tracking-tighter">
-        Sell_Vehicle
+      <span className="text-[10px]  font-black text-orange-500 group-hover/sell:text-black tracking-tighter">
+        გასაყიდად გატანა
       </span>
     </div>
   </button>
@@ -58,7 +60,7 @@ const ViewListingButton = ({ listingId }: { listingId: string }) => (
       className="text-emerald-500 group-hover/view:text-black transition-colors"
     />
     <span className="text-[10px] font-mono font-black text-emerald-500 group-hover/view:text-black uppercase tracking-tighter">
-      View_Listing
+      განცხადების ნახვა
     </span>
   </Link>
 );
@@ -134,6 +136,7 @@ export const ProfileCarCard = ({
   const currentUser = useAppSelector(selectCurrentUser);
 
   const isOwner = car.userId === currentUser?.id;
+  console.log("🚀 ~ ProfileCarCard ~ isOwner:", isOwner);
 
   const isListed = !!car.listings.length;
   // listings შეიძლება იყოს object ან array — ორივეს ვამუშავებთ
@@ -146,7 +149,7 @@ export const ProfileCarCard = ({
       <div className="group relative bg-[#201d1b] border border-stone-800 transition-all hover:border-stone-700 flex flex-col h-full overflow-hidden">
         {/* ──── IMAGE SECTION ──── */}
         <div className="relative h-48 bg-black overflow-hidden border-b border-stone-800">
-          {car.photos?.[0] ? (
+          {/* {car.photos?.[0] ? (
             <Image
               src={car.photos[0].url}
               alt={car.model}
@@ -156,31 +159,60 @@ export const ProfileCarCard = ({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-[#1c1917]">
-              <Car className="w-12 h-12 text-stone-800" />
+              <Car className="w-12 h-12 text-stone-300" />
+            </div>
+          )} */}
+
+          {car.photos?.[0] ? (
+            <Image
+              src={car.photos[0].url}
+              alt={car.model}
+              fill
+              className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 grayscale-[0.5] group-hover:grayscale-0"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-stone-900">
+              <Car className="w-12 h-12 text-stone-300" />
             </div>
           )}
+          <div className="absolute top-2 right-2 z-20 flex gap-2">
+            <button
+              onClick={() => onViewFullDetails(car)}
+              className="p-2 bg-black/60 backdrop-blur-md border border-white/10 text-white hover:text-orange-500 transition-colors"
+            >
+              <Info size={14} />
+            </button>
+            {isOwner && (
+              <button
+                onClick={onClick}
+                className="p-2 bg-black/60 backdrop-blur-md border border-white/10 text-white hover:text-orange-500 transition-colors"
+              >
+                <Edit3 size={14} />
+              </button>
+            )}
+          </div>
 
           {/* Carbon texture */}
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
 
           {/* License Plate */}
-          <div className="absolute top-4 left-4 font-mono">
-            <div className="bg-orange-500 text-black text-[9px] font-bold px-2 py-0.5 uppercase tracking-tighter">
-              {car.licensePlate || "NO_DATA"}
+          <div className="absolute bottom-3 left-3 z-20">
+            <div className="bg-white/90 backdrop-blur text-black text-[9px] font-bold px-2 py-0.5 rounded-sm border-l-4 border-blue-600">
+              {car.licensePlate || "NO_PLATE"}
             </div>
           </div>
 
           {/* ── LISTED FOR SALE OVERLAY BADGE ── */}
           {isListed && (
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-2 left-2">
               <div className="flex items-center gap-1.5 bg-emerald-950/90 border border-emerald-500/60 px-2 py-1 backdrop-blur-sm">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
                 </span>
                 <Tag size={9} className="text-emerald-400" />
-                <span className="text-[9px] font-mono font-black text-emerald-400 uppercase tracking-wider">
-                  Listed_For_Sale
+                <span className="text-[8px]  text-emerald-400  tracking-wider">
+                  გასულია გააყიდად
                 </span>
               </div>
             </div>
@@ -192,7 +224,7 @@ export const ProfileCarCard = ({
           )}
 
           {/* Hover Actions */}
-          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {/* <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             {isOwner && (
               <ActionButton
                 icon={Edit3}
@@ -205,11 +237,11 @@ export const ProfileCarCard = ({
               label="View_Telemetry"
               onClick={() => onViewFullDetails(car)}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* ──── INFO SECTION ──── */}
-        <div className="p-5 flex-1 flex flex-col relative">
+        <div className="p-3 flex-1 flex flex-col relative">
           <Terminal
             size={60}
             className="absolute bottom-4 right-4 opacity-[0.03] text-stone-500 pointer-events-none"
@@ -218,38 +250,48 @@ export const ProfileCarCard = ({
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-1 h-1 bg-stone-600" />
-              <span className="text-[9px] font-mono text-stone-500 uppercase tracking-[0.3em]">
-                {car.make} // Source
+              <span className="text-s  text-stone-500 uppercase tracking-[0.3em]">
+                {car.make}
               </span>
+              <h3 className="text-xs  font-bold text-stone-100 uppercase tracking-tight">
+                {car.model}
+              </h3>
             </div>
-            <h3 className="text-xl font-mono font-bold text-stone-100 uppercase tracking-tight">
-              {car.model}
-            </h3>
           </div>
 
           {/* Technical Grid */}
-          <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-2 mb-6">
             <DataField
-              label="Manufactured"
+              label="წელი"
               value={car.year}
-              icon={<Calendar size={12} />}
+              icon={<Calendar size={11} className="text-stone-300" />}
             />
             <DataField
-              label="Displacement"
+              label="ძრავი"
               value={`${car.engine}L`}
-              icon={<Activity size={12} />}
+              icon={<Activity size={11} className="text-stone-300" />}
             />
             <DataField
-              label="Output_Power"
+              label="ცხენისძალა"
               value={`${car.horsepower} HP`}
-              icon={<Gauge size={12} />}
+              icon={<Gauge size={11} className="text-orange-600/50" />}
               isOrange
             />
             <DataField
-              label="Transmission"
-              value={car.transmission}
-              icon={<Settings size={12} />}
+              label="გადაცემათა კოლოფი"
+              value={
+                TRANSMISSION_TYPES.find((t) => t.value === car.transmission)
+                  ?.label || car.transmission
+              }
+              icon={<Settings size={11} className="text-stone-300" />}
             />
+          </div>
+
+          <div className="flex align-center items-center justify-between">
+            <div className="text-[13px] text-stone-300">გარბენი</div>
+            <div className="text-[9px]">
+              {car.mileage?.toLocaleString() || 0}
+            </div>
           </div>
 
           {/* ──── BOTTOM ACTION BAR ──── */}
@@ -261,49 +303,48 @@ export const ProfileCarCard = ({
                   onClick={() => setModalType("mods")}
                   className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-orange-500 transition-colors"
                 >
-                  <Zap size={10} /> [Mods]
+                  <Zap size={10} /> [მოდიფიკაციები]
                 </button>
                 <button
                   onClick={() => setModalType("logs")}
                   className="flex items-center gap-1.5 text-[9px] font-bold uppercase text-stone-500 hover:text-stone-300 transition-colors"
                 >
-                  <Database size={10} /> [Logs]
+                  <Database size={10} /> [სერვისები]
                 </button>
-              </div>
-              <div className="text-[9px] text-stone-600 font-mono italic">
-                {car.mileage?.toLocaleString() || 0} _KM_LOGGED
               </div>
             </div>
 
             {/* Status + Action */}
-            <div className="flex items-center justify-between gap-2 border-t border-stone-800/30 pt-3">
-              {/* Status indicator */}
-              {isListed ? (
-                <div className="flex items-center gap-1.5">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-                  </span>
-                  <span className="text-[8px] text-emerald-600 font-mono uppercase">
-                    On_Market
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
-                  <span className="text-[8px] text-stone-600 font-mono uppercase">
+            {isOwner && (
+              <div className="flex items-center justify-between gap-2 border-t border-stone-800/30 pt-3">
+                {/* Status indicator */}
+                {isListed ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                    </span>
+                    <span className="text-[8px] text-emerald-600 font-mono uppercase">
+                      იყიდება
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
+                    {/* <span className="text-[8px] text-stone-300 font-mono uppercase">
                     System_Active
-                  </span>
-                </div>
-              )}
+                  </span> */}
+                  </div>
+                )}
 
-              {/* Action: Sell ან View Listing */}
-              {isListed && car ? (
-                <ViewListingButton listingId={listingId} />
-              ) : (
-                <SellButton onClick={() => onSell(car)} />
-              )}
-            </div>
+                {/* Action: Sell ან View Listing */}
+                {isListed && car ? (
+                  <ViewListingButton listingId={listingId} />
+                ) : (
+                  isOwner && <SellButton onClick={() => onSell(car)} />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -312,7 +353,7 @@ export const ProfileCarCard = ({
       <AnimatePresence>
         {modalType === "mods" && (
           <InfoPortal
-            title="Modification_Database"
+            title="ავტომობილის მოდიფიკაციები"
             isOpen
             onClose={() => setModalType(null)}
           >
@@ -347,7 +388,7 @@ export const ProfileCarCard = ({
 
         {modalType === "logs" && (
           <InfoPortal
-            title="Service_Manifest_Log"
+            title="სერვისის ჩანაწერები"
             isOpen
             onClose={() => setModalType(null)}
           >
@@ -359,7 +400,7 @@ export const ProfileCarCard = ({
                     className="relative pl-4 border-l border-stone-700"
                   >
                     <div className="absolute top-0 -left-[1px] w-1 h-2 bg-orange-500" />
-                    <div className="text-[8px] text-stone-600 mb-1">
+                    <div className="text-[8px] text-stone-300 mb-1">
                       {new Date(log.serviceDate).toLocaleDateString()} //
                       SYSTEM_LOG
                     </div>
@@ -386,13 +427,13 @@ export const ProfileCarCard = ({
 
 function DataField({ label, value, icon, isOrange }: any) {
   return (
-    <div className="space-y-1">
-      <div className="flex items-center gap-1.5 text-[8px] text-stone-600 uppercase tracking-widest font-mono">
-        {icon} {label}
+    <div className="flex flex-col gap-1 p-2 rounded-sm bg-black/20 border-l border-stone-800 hover:border-stone-600 transition-colors">
+      <div className="flex items-center gap-1.5 text-[9px] text-stone-600 uppercase tracking-tighter font-mono">
+        {icon} <span>{label}</span>
       </div>
       <div
         className={cn(
-          "text-[11px] font-bold font-mono",
+          "text-[9px] font-black font-mono leading-none",
           isOrange ? "text-orange-500" : "text-stone-300",
         )}
       >

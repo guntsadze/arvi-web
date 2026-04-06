@@ -108,12 +108,12 @@ export function UserGarage({ userId }: Props) {
               />
             </div>
             <div className="text-center">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 group-hover:text-amber-500">
-                Register New Car
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-300 group-hover:text-amber-500">
+                ავტმომობილის დამატება გარაჟში
               </p>
-              <p className="text-[9px] font-mono text-stone-700 uppercase mt-1">
+              {/* <p className="text-[9px] font-mono text-stone-300 uppercase mt-1">
                 Add to garage storage
-              </p>
+              </p> */}
             </div>
             <div className="absolute bottom-2 right-2 opacity-20 group-hover:opacity-100 transition-opacity">
               <CarIcon

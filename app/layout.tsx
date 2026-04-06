@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/providers";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -72,6 +73,7 @@ export default function RootLayout({
     <html lang="ka">
       <body className={`${inter.className} antialiased`}>
         <Providers>{children}</Providers>
+        <Toaster theme="dark" richColors />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "../feed/FeedItem";
+import { GlobalLoader } from "../ui/GlobalLoader";
 
 type Props = {
   userId: string;
@@ -23,7 +24,7 @@ export function UserPosts({ userId }: Props) {
       {activities.map((activity: any) => (
         <FeedItem key={activity.id} activity={activity} refresh={refresh} />
       ))}
-      {loading && <p>Loading...</p>}
+      {loading && <GlobalLoader />}
     </div>
   );
 }

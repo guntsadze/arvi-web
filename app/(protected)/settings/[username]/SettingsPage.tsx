@@ -10,6 +10,7 @@ import { SaveRow } from "@/components/settings/SaveRow";
 import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { apiClient } from "@/lib/api";
 import { UserAvatarItem } from "@/components/ui/UserAvatarItem";
+import { toast } from "sonner";
 
 type ProfileForm = {
   firstName: string;
@@ -49,6 +50,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
     try {
       await apiClient.patch("/users/me/profile", data);
       // აქ შეგიძლიათ დაამატოთ წარმატების შეტყობინება (toast)
+      toast.success("პროფილის ინფორმაცია წარმატებით განახლდა!");
     } catch (error) {
       console.error("Update failed", error);
     }
@@ -79,7 +81,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
           className="absolute top-4 right-4 z-10 flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-widest text-white hover:bg-amber-600 hover:border-amber-500 transition-all duration-300 shadow-xl"
         >
           <Camera size={14} />
-          Edit Cover
+          ქოვერის განახლება
         </button>
 
         {/* Shadow Overlay */}
@@ -110,24 +112,24 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
       {/* ── FORM CONTENT ── */}
       <div className="px-8 pt-16 pb-8 space-y-6">
         <div>
-          <h2 className="text-xl font-black italic uppercase tracking-tighter text-[#EBE9E1] mb-1">
-            Profile Intelligence
+          <h2 className="text-xl font-black tracking-tighter text-[#EBE9E1] mb-1">
+            პროფილის ინფორმაცია
           </h2>
-          <p className="text-[10px] font-mono text-stone-500 uppercase tracking-widest">
+          {/* <p className="text-[10px] font-mono text-stone-300 uppercase tracking-widest">
             // update your tactical identity
-          </p>
+          </p> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RuggedInput
-            label="First Name"
+            label="სახელი"
             name="firstName"
             register={register}
             required
             error={errors.firstName}
           />
           <RuggedInput
-            label="Last Name"
+            label="გვარი"
             name="lastName"
             register={register}
             required
@@ -145,18 +147,18 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
 
         <div className="space-y-1">
           <RuggedTextArea
-            label="Bio / Designation"
+            label="Bio"
             name="bio"
             register={register}
             rows={3}
             placeholder="Tell the world who you are..."
           />
           <div className="flex justify-between items-center px-1">
-            <span className="text-[8px] text-stone-600 font-mono uppercase tracking-tighter italic">
+            <span className="text-[8px] text-stone-300 font-mono uppercase tracking-tighter italic">
               Write a short briefing about yourself
             </span>
             <span
-              className={`text-[10px] font-mono ${bioLength > 150 ? "text-amber-600" : "text-stone-700"}`}
+              className={`text-[10px] font-mono ${bioLength > 150 ? "text-amber-600" : "text-stone-300"}`}
             >
               {bioLength} / 160
             </span>
@@ -165,14 +167,14 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RuggedInput
-            label="Location"
+            label="ლოკაცია"
             name="location"
             register={register}
             icon={<MapPin size={14} />}
             placeholder="Tbilisi, GE"
           />
           <RuggedInput
-            label="Website"
+            label="ვებსაიტი"
             name="website"
             register={register}
             icon={<LinkIcon size={14} />}
@@ -184,7 +186,8 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
           <SaveRow
             isDirty={isDirty}
             isSubmitting={isSubmitting}
-            fn="update_profile()"
+            fn="პროფილის განახლება"
+            username={user.username}
           />
         </div>
       </div>

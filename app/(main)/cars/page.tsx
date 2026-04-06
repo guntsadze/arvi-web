@@ -26,11 +26,11 @@ export default function CarCollectionPage() {
                 <Car className="text-stone-900 w-8 h-8" />
               </div>
               <div>
-                <h1 className="text-3xl font-black uppercase tracking-tighter text-[#EBE9E1] drop-shadow-lg">
+                {/* <h1 className="text-3xl font-black uppercase tracking-tighter text-[#EBE9E1] drop-shadow-lg">
                   Garage <span className="text-amber-600">Inventory</span>
-                </h1>
+                </h1> */}
                 <p className="text-stone-500 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
-                  Log Record: {cars?.length} cars registered
+                  სულ {cars?.length} რეგისტრირებული ავტომობილი
                 </p>
               </div>
             </div>

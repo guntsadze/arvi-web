@@ -21,6 +21,7 @@ import { MessagesDropdown } from "../right-panel/dropdowns/MessagesDropdown";
 import { ProfileDropdown } from "../right-panel/dropdowns/ProfileDropdown";
 import { ActiveFrequencies } from "../right-panel/ActiveFrequencies";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { GlobalLoader } from "../ui/GlobalLoader";
 
 export const RightPanel = () => {
   const [activeView, setActiveView] = useState<
@@ -64,12 +65,7 @@ export const RightPanel = () => {
     );
   };
 
-  if (loading)
-    return (
-      <aside className="hidden xl:flex w-80 h-screen sticky top-0 bg-[#151413] border-l-4 border-stone-800 items-center justify-center font-mono text-[10px] text-stone-700">
-        INITIALIZING_MODULES...
-      </aside>
-    );
+  if (loading) return <GlobalLoader />;
 
   return (
     <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-[#151413] border-l-4 border-stone-800">
@@ -79,11 +75,11 @@ export const RightPanel = () => {
           <div
             className={`w-1 h-3 shrink-0 ${activeView === "messages" ? "bg-amber-500 animate-pulse" : "bg-stone-700"}`}
           />
-          <span className="font-mono text-[9px] text-stone-500 uppercase tracking-widest truncate">
+          {/* <span className="font-mono text-[9px] text-stone-300 uppercase tracking-widest truncate">
             {activeView === "messages"
               ? "Frequencies_Active"
               : `${activeView}_Module`}
-          </span>
+          </span> */}
         </div>
 
         <div className="flex gap-2">
@@ -116,7 +112,7 @@ export const RightPanel = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-700">
+              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-300">
                 <UserIcon size={16} />
               </div>
             )} */}
@@ -187,11 +183,11 @@ export const RightPanel = () => {
       <div className="bg-[#1c1917] border-t-4 border-stone-800 p-3 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
           <Activity size={10} className="text-amber-900 animate-pulse" />
-          <span className="font-mono text-[7px] text-stone-700 uppercase tracking-widest">
+          <span className="font-mono text-[7px] text-stone-300 uppercase tracking-widest">
             System_Ready
           </span>
         </div>
-        <span className="font-mono text-[7px] text-stone-800 uppercase tracking-tighter italic">
+        <span className="font-mono text-[7px] text-stone-300 uppercase tracking-tighter italic">
           Sector_041_Comms
         </span>
       </div>
@@ -205,7 +201,7 @@ const HeaderButton = ({ children, active, onClick, badge }: any) => (
     className={`p-2 rounded-sm transition-all relative border-2 ${
       active
         ? "bg-amber-500 text-stone-900 border-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
-        : "bg-stone-900 border-stone-800 text-stone-600 hover:text-amber-500 hover:border-stone-700"
+        : "bg-stone-900 border-stone-800 text-stone-300 hover:text-amber-500 hover:border-stone-700"
     }`}
   >
     {children}

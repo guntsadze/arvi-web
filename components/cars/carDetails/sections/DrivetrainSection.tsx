@@ -14,15 +14,19 @@ export const DrivetrainSection: React.FC<DrivetrainSectionProps> = ({
   <div className="bg-[#201d1b] border border-stone-800 p-6">
     <SectionHeader icon={Cpu} title="Drivetrain" />
     <div className="space-y-1">
-      <DataRow label="Engine Code" value={car.engine} icon={Activity} />
+      <DataRow label="ძრავი" value={car.engine} icon={Activity} />
       <DataRow
         label="Displacement"
         value={car.engineCapacity ? `${car.engineCapacity}L` : undefined}
         icon={Gauge}
       />
-      <DataRow label="Fuel System" value={car.fuelType} icon={Fuel} />
-      <DataRow label="Transmission" value={car.transmission} icon={Settings} />
-      <DataRow label="Drive Layout" value={car.driveType} icon={Move} />
+      <DataRow label="საწვავის ტიპი" value={car.fuelType} icon={Fuel} />
+      <DataRow
+        label="გადაცემათა კოლოფი"
+        value={car.transmission}
+        icon={Settings}
+      />
+      <DataRow label="წამყვანი თვლები" value={car.driveType} icon={Move} />
     </div>
   </div>
 );

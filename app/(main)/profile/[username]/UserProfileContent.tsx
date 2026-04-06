@@ -42,53 +42,94 @@ export default function ProfileContentWrapper({ user, userId, online }: Props) {
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-10 py-10 ">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 ">
           {/* SIDEBAR - SYSTEM STATUS & BIO */}
+          {/* მარცხენა პანელი - სისტემური სტატუსი და ბიო */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-[#201d1b] border border-stone-800 p-6 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-2 opacity-20 text-stone-600 group-hover:text-orange-500 transition-colors">
+              {/* დეკორატიული ელემენტი */}
+              <div className="absolute top-0 right-0 p-2 opacity-10 text-stone-300 group-hover:text-orange-500 transition-colors">
                 <Terminal size={40} strokeWidth={1} />
               </div>
 
-              <h3 className="text-[10px] font-mono font-black text-orange-500 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+              {/* სათაური / ინდიკატორი */}
+              <h3 className="text-[10px] font-mono font-black text-orange-500 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-orange-500 animate-pulse" />
-                Driver_Telemetry
+                პროფილის დეტალები
               </h3>
 
-              <div className="space-y-4 font-mono text-xs">
-                <div className="flex justify-between border-b border-stone-800/50 pb-2">
-                  <span className="text-stone-500 uppercase">Status</span>
-                  <span className="text-green-500">
-                    {online ? "ONLINE" : "OFFLINE"}
-                  </span>
+              <div className="space-y-6 font-mono text-[11px]">
+                {/* სექცია: ძირითადი მონაცემები */}
+                <div className="space-y-3">
+                  <DataLine
+                    label="ფსევდონიმი"
+                    value={user.username}
+                    icon={<Users size={12} />}
+                  />
+                  <DataLine
+                    label="ლოკაცია"
+                    value={user.location}
+                    icon={<Activity size={12} />}
+                  />
+                  <DataLine
+                    label="ვებ-გვერდი"
+                    value={user.website}
+                    isLink
+                    icon={<Zap size={12} />}
+                  />
                 </div>
-                <div className="flex justify-between border-b border-stone-800/50 pb-2">
-                  <span className="text-stone-500 uppercase">Sector</span>
-                  <span className="text-stone-300">
-                    {user.location || "// NO_DATA_STREAM_FOUND"}
-                  </span>
-                </div>
-                <div className="pt-2">
-                  <span className="text-stone-500 uppercase block mb-2 text-[9px]">
-                    Manifesto:
-                  </span>
-                  <p className="text-stone-400 leading-relaxed italic">
-                    "{user.bio || "// NO_DATA_STREAM_FOUND"}"
+
+                {/* სექცია: ქსელური სტატისტიკა */}
+                <div className="space-y-3">
+                  <p className="text-[9px] text-stone-300 uppercase tracking-widest border-b border-stone-800/50 pb-1">
+                    აქტივობა
                   </p>
+                  <DataLine
+                    label="პოსტები"
+                    value={user.postsCount}
+                    color="text-orange-500"
+                  />
+                  <DataLine label="გამომწერები" value={user.followersCount} />
+                  <DataLine label="გამოწერილი" value={user.followingCount} />
+                </div>
+
+                {/* სექცია: სისტემური სტატუსი */}
+                <div className="space-y-3">
+                  <p className="text-[9px] text-stone-300 uppercase tracking-widest border-b border-stone-800/50 pb-1">
+                    რეესტრი
+                  </p>
+                  <div className="flex justify-between items-center py-1">
+                    <span className="text-stone-300 uppercase">
+                      ავტორიზაცია
+                    </span>
+                    <span
+                      className={
+                        user.isVerified ? "text-blue-400" : "text-stone-300"
+                      }
+                    >
+                      {user.isVerified ? "ვერიფიცირებული" : "სტანდარტული"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-1">
+                    <span className="text-stone-300 uppercase">
+                      რეგისტრაცია
+                    </span>
+                    <span className="text-stone-300">
+                      {new Date(user.createdAt).toLocaleDateString("ka-GE")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* ბიოგრაფია */}
+                <div className="pt-4 mt-2 border-t border-orange-500/10">
+                  <span className="text-orange-500/50 uppercase block mb-2 text-[9px] tracking-[0.2em]">
+                    ბიო:
+                  </span>
+                  <div className="bg-black/20 p-3 border-l-2 border-orange-500/30">
+                    <p className="text-stone-300 leading-relaxed italic text-xs">
+                      {user.bio ? `"${user.bio}"` : "// ინფორმაცია არ მოიძებნა"}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* QUICK STATS */}
-            <div className="grid grid-cols-1 gap-2">
-              <QuickStat
-                label="Total_XP"
-                value="1,240"
-                icon={<Trophy size={12} />}
-              />
-              <QuickStat
-                label="Reputation"
-                value="Level_4"
-                icon={<ShieldAlert size={12} />}
-              />
             </div>
           </div>
 
@@ -99,26 +140,26 @@ export default function ProfileContentWrapper({ user, userId, online }: Props) {
               <div className="flex flex-wrap font-mono text-[10px] tracking-widest bg-black/20">
                 <TabButton
                   icon={<Activity size={14} />}
-                  label="Log_Feed"
+                  label="სიახლეები"
                   isActive={activeTab === "posts"}
                   onClick={() => setActiveTab("posts")}
                 />
                 <TabButton
                   icon={<Car size={14} />}
-                  label="Garage_Manifest"
+                  label="გარაჟი"
                   isActive={activeTab === "garage"}
                   onClick={() => setActiveTab("garage")}
                 />
                 <TabButton
                   icon={<Users size={14} />}
-                  label="Followers"
+                  label="გამომწერები"
                   count={user.followersCount}
                   isActive={activeTab === "followers"}
                   onClick={() => setActiveTab("followers")}
                 />
                 <TabButton
                   icon={<UserPlus size={14} />}
-                  label="Following"
+                  label="გამოწერილი"
                   count={user.followingCount}
                   isActive={activeTab === "following"}
                   onClick={() => setActiveTab("following")}
@@ -144,7 +185,7 @@ export default function ProfileContentWrapper({ user, userId, online }: Props) {
 function QuickStat({ label, value, icon }: any) {
   return (
     <div className="bg-[#201d1b] border border-stone-800 px-4 py-2 flex justify-between items-center font-mono">
-      <div className="flex items-center gap-2 text-stone-500 text-[9px] uppercase tracking-widest">
+      <div className="flex items-center gap-2 text-stone-300 text-[9px] uppercase tracking-widest">
         {icon} {label}
       </div>
       <div className="text-stone-200 text-xs font-bold">{value}</div>
@@ -159,13 +200,13 @@ function TabButton({ icon, label, count, isActive, onClick }: any) {
       className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 uppercase transition-all relative border-r last:border-r-0 border-stone-800/50 ${
         isActive
           ? "text-orange-500 bg-orange-500/5"
-          : "text-stone-500 hover:bg-stone-800/30 hover:text-stone-300"
+          : "text-stone-300 hover:bg-stone-800/30 hover:text-stone-300"
       }`}
     >
       {isActive && (
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
       )}
-      <span className={isActive ? "text-orange-500" : "text-stone-600"}>
+      <span className={isActive ? "text-orange-500" : "text-stone-300"}>
         {icon}
       </span>
       <span className="hidden sm:inline">{label}</span>
@@ -173,5 +214,30 @@ function TabButton({ icon, label, count, isActive, onClick }: any) {
         <span className="text-[9px] opacity-50">[{count}]</span>
       )}
     </button>
+  );
+}
+
+{
+  /* დამხმარე კომპონენტი ლოგიკური ხაზებისთვის */
+}
+function DataLine({
+  label,
+  value,
+  icon,
+  isLink,
+  color = "text-stone-300",
+}: any) {
+  return (
+    <div className="flex justify-between items-center py-0.5 group/line">
+      <div className="flex items-center gap-2 text-stone-300">
+        <span className="opacity-50">{icon}</span>
+        <span className="uppercase">{label}</span>
+      </div>
+      <span
+        className={`${color} font-bold ${isLink ? "hover:text-orange-500 cursor-pointer underline decoration-orange-500/30 transition-colors" : ""}`}
+      >
+        {value || "// ცარიელი"}
+      </span>
+    </div>
   );
 }

@@ -21,17 +21,17 @@ export const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
         <ProfileLink
           href={`/profile/${user.username}`}
           icon={<UserCircle size={16} />}
-          label="Your Profile"
+          label="პირადი გვერდი"
         />
         <ProfileLink
           href={`/settings/${user.username}/profile`}
           icon={<PersonStanding size={16} />}
-          label="Profile"
+          label="პროფილის ინფორმაცია"
         />
         <ProfileLink
           href={`/settings/${user.username}/account`}
           icon={<Settings size={16} />}
-          label="Settings"
+          label="პარამეტრები"
         />
 
         <div className="h-[2px] bg-stone-800 my-1" />
@@ -45,7 +45,7 @@ export const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
             className="text-stone-500 group-hover:text-red-500"
           />
           <span className="text-[11px] font-black uppercase text-stone-300 group-hover:text-red-500">
-            Disconnect
+            გასვლა
           </span>
         </button>
       </div>

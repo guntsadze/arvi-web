@@ -18,14 +18,18 @@ interface IdentitySectionProps {
 
 export const IdentitySection: React.FC<IdentitySectionProps> = ({ car }) => (
   <div className="bg-[#201d1b] border border-stone-800 p-6">
-    <SectionHeader icon={ShieldCheck} title="Identity" />
+    <SectionHeader icon={ShieldCheck} title="იდენტიფიცირება" />
     <div className="space-y-1">
-      <DataRow label="VIN / Chassis" value={car.vin} icon={Hash} />
-      <DataRow label="License Plate" value={car.licensePlate} icon={FileText} />
-      <DataRow label="Nickname" value={car.nickname} icon={Sparkles} />
-      <DataRow label="Production Year" value={car.year} icon={Calendar} />
-      <DataRow label="Exterior Color" value={car.color} icon={Palette} />
-      <DataRow label="Body Style" value={car.bodyType} icon={Car} />
+      <DataRow label="VIN - კოდი" value={car.vin} icon={Hash} />
+      <DataRow
+        label="სახელმწიფო ნომერი"
+        value={car.licensePlate}
+        icon={FileText}
+      />
+      <DataRow label="ზედმეტსახელი" value={car.nickname} icon={Sparkles} />
+      <DataRow label="წარმოების თარიღი" value={car.year} icon={Calendar} />
+      <DataRow label="ფერი" value={car.color} icon={Palette} />
+      <DataRow label="ძარის ტიპი" value={car.bodyType} icon={Car} />
     </div>
   </div>
 );

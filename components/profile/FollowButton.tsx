@@ -62,17 +62,19 @@ export default function FollowButton({
       <span>
         {isLoading ? (
           isFollowing ? (
-            "Following"
+            "გამოწერა..."
           ) : (
-            "Follow"
+            "გამოწერა"
           )
         ) : isFollowing ? (
           <span>
-            <span className="group-hover:hidden">Following</span>
-            <span className="hidden group-hover:inline">Unfollow</span>
+            <span className="group-hover:hidden">გამოწერილი</span>
+            <span className="hidden group-hover:inline">
+              გამოწერის გაუქმება
+            </span>
           </span>
         ) : (
-          "Follow"
+          "გამოწერა"
         )}
       </span>
     </button>

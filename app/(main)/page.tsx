@@ -6,6 +6,7 @@ import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
+import { GlobalLoader } from "@/components/ui/GlobalLoader";
 
 export default function FeedPage() {
   const {
@@ -49,7 +50,7 @@ export default function FeedPage() {
 
         <UnifiedPostForm
           storageFolder="posts"
-          placeholder="What's on your mind, Operator?"
+          placeholder="გაგვიზიარე..."
           onSave={async (data) => {
             await postsService.createPost(data);
           }}
@@ -70,12 +71,13 @@ export default function FeedPage() {
           ))}
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-              <Loader2 className="animate-spin text-amber-600" size={32} />
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 animate-pulse">
-                Synchronizing Data...
-              </span>
-            </div>
+            // <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
+            //   <Loader2 className="animate-spin text-amber-600" size={32} />
+            //   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-300 animate-pulse">
+            //     Synchronizing Data...
+            //   </span>
+            // </div>
+            <GlobalLoader />
           )}
 
           {!loading && activities.length === 0 && (
@@ -127,10 +129,10 @@ export default function FeedPage() {
 //       />
 
 //       {/* 2. დეკორატიული ტექსტები (ფონზე) - გაუმჯობესებული */}
-//       <div className="absolute top-10 left-4 md:left-20 text-[120px] md:text-[200px] font-black text-stone-800/40 leading-none select-none z-0 tracking-tighter">
+//       <div className="absolute top-10 left-4 md:left-20 text-[120px] md:text-[200px] font-black text-stone-300/40 leading-none select-none z-0 tracking-tighter">
 //         E34
 //       </div>
-//       <div className="absolute bottom-0 right-0 text-[100px] md:text-[180px] font-black text-stone-800/30 leading-none select-none z-0 tracking-tighter">
+//       <div className="absolute bottom-0 right-0 text-[100px] md:text-[180px] font-black text-stone-300/30 leading-none select-none z-0 tracking-tighter">
 //         M5
 //       </div>
 
@@ -148,7 +150,7 @@ export default function FeedPage() {
 //           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-[#dcd8c8] mb-3 tracking-tight">
 //             BMW E34 M5
 //           </h1>
-//           <p className="text-sm md:text-base text-stone-400 font-mono max-w-2xl mx-auto">
+//           <p className="text-sm md:text-base text-stone-300 font-mono max-w-2xl mx-auto">
 //             The ultimate business sedan that redefined performance.
 //             <span className="text-amber-600"> Hand-built precision.</span>
 //           </p>
@@ -190,14 +192,14 @@ export default function FeedPage() {
 
 //           <div className="absolute bottom-[25%] left-[23%] w-[1px] h-16 bg-stone-500/60 hidden md:block rotate-12 group-hover:bg-stone-400 transition-colors">
 //             <div className="absolute top-0 left-0 w-20 h-[1px] bg-stone-500/60 -translate-x-full group-hover:w-24 transition-all" />
-//             <div className="absolute -top-4 -left-28 text-[10px] font-mono text-stone-400 uppercase text-right opacity-0 group-hover:opacity-100 transition-opacity">
+//             <div className="absolute -top-4 -left-28 text-[10px] font-mono text-stone-300 uppercase text-right opacity-0 group-hover:opacity-100 transition-opacity">
 //               Whl: M-System II "Throwing Stars"
 //             </div>
 //           </div>
 
 //           <div className="absolute top-[35%] right-[15%] w-[1px] h-24 bg-stone-500/60 hidden md:block group-hover:bg-stone-400 transition-colors">
 //             <div className="absolute top-0 right-0 w-24 h-[1px] bg-stone-500/60 group-hover:w-32 transition-all" />
-//             <div className="absolute -top-5 right-0 text-[10px] font-mono text-stone-400 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+//             <div className="absolute -top-5 right-0 text-[10px] font-mono text-stone-300 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
 //               Chassis: Sedan (WBA...)
 //             </div>
 //           </div>
@@ -252,7 +254,7 @@ export default function FeedPage() {
 //           </a>
 
 //           {/* დამატებითი ღილაკი (ოფციონალური) */}
-//           <button className="px-6 py-4 border-2 border-stone-700 hover:border-amber-600 text-stone-400 hover:text-amber-600 font-mono text-xs md:text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+//           <button className="px-6 py-4 border-2 border-stone-700 hover:border-amber-600 text-stone-300 hover:text-amber-600 font-mono text-xs md:text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]">
 //             Technical Specs
 //           </button>
 //         </div>
@@ -287,7 +289,7 @@ export default function FeedPage() {
 //       <div className="mb-2 opacity-70 group-hover:opacity-100 transition-opacity group-hover:scale-110 transform duration-300">
 //         {icon}
 //       </div>
-//       <span className="text-[10px] md:text-xs text-stone-500 font-mono uppercase tracking-widest mb-1">
+//       <span className="text-[10px] md:text-xs text-stone-300 font-mono uppercase tracking-widest mb-1">
 //         {label}
 //       </span>
 //       <span className="text-lg md:text-xl lg:text-2xl font-black text-[#dcd8c8] group-hover:text-amber-600 transition-colors">

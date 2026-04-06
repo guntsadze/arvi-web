@@ -38,7 +38,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
             <Zap className="text-yellow-500 w-6 h-6 fill-yellow-500/20" />
             ავტომობილის მოდიფიკაციები
           </h3>
-          <p className="text-stone-500 text-xs uppercase font-bold tracking-widest">
+          <p className="text-stone-300 text-xs uppercase font-bold tracking-widest">
             ფერფორმანსი & ვიზუალური განახლებები
           </p>
         </div>
@@ -66,13 +66,13 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
           >
             {/* Top Bar for Delete & Label */}
             <div className="flex items-center justify-between bg-stone-950/40 px-6 py-2 border-b border-stone-800/50">
-              <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">
+              <span className="text-[10px] font-black text-stone-300 uppercase tracking-widest">
                 განახლების ჩანაწერი #{index + 1}
               </span>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-stone-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
+                className="text-stone-300 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
               >
                 <span className="text-[10px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                   ჩანაწერის წაშლა
@@ -162,11 +162,11 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
 
         {fields.length === 0 && (
           <div className="text-center py-16 border-2 border-dashed border-stone-800 rounded-lg bg-stone-900/10">
-            <Zap className="mx-auto h-12 w-12 text-stone-800 mb-4" />
-            <p className="text-stone-500 font-bold uppercase tracking-widest text-sm">
+            <Zap className="mx-auto h-12 w-12 text-stone-300 mb-4" />
+            <p className="text-stone-300 font-bold uppercase tracking-widest text-sm">
               მოდიფიკაციები არ მოიძებნა
             </p>
-            <p className="text-stone-600 text-xs mt-1 font-medium italic">
+            <p className="text-stone-300 text-xs mt-1 font-medium italic">
               დაამატე შენი ავტომობილის პირველი განახლება
             </p>
           </div>

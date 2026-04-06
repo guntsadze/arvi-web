@@ -6,6 +6,7 @@ import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
+import { GlobalLoader } from "@/components/ui/GlobalLoader";
 
 export default function FeedPage() {
   const {
@@ -49,7 +50,7 @@ export default function FeedPage() {
 
         <UnifiedPostForm
           storageFolder="posts"
-          placeholder="What's on your mind, Operator?"
+          placeholder="გაგვიზიარე..."
           onSave={async (data) => {
             await postsService.createPost(data);
           }}
@@ -62,20 +63,21 @@ export default function FeedPage() {
           ))}
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-              <Loader2 className="animate-spin text-amber-600" size={32} />
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 animate-pulse">
-                Synchronizing Data...
-              </span>
-            </div>
+            // <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
+            //   <Loader2 className="animate-spin text-amber-600" size={32} />
+            //   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-stone-300 animate-pulse">
+            //     Synchronizing Data...
+            //   </span>
+            // </div>
+            <GlobalLoader />
           )}
 
           {!loading && activities.length === 0 && (
             <div className="text-center py-24 border border-stone-800 bg-[#201d1b]">
-              <p className="text-stone-600 font-mono text-sm uppercase tracking-wider">
+              <p className="text-stone-300 font-mono text-sm uppercase tracking-wider">
                 // System Log Empty
               </p>
-              <p className="text-stone-700 text-xs mt-2">
+              <p className="text-stone-300 text-xs mt-2">
                 No activity recorded in the sector.
               </p>
             </div>

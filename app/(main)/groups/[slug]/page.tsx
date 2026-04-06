@@ -62,7 +62,7 @@ export default function GroupPage({
           <div className="w-full lg:w-[60%] space-y-10">
             <UnifiedPostForm
               storageFolder="group-posts"
-              placeholder="What's on your mind, Operator?"
+              placeholder="გაგვიზიარე..."
               onSave={async (data) => {
                 await groupsService.createGroupPost(group.id, data);
               }}
@@ -85,7 +85,7 @@ export default function GroupPage({
               {loading && (
                 <div className="flex flex-col items-center py-10 gap-3">
                   <Loader2 className="animate-spin text-amber-800" size={30} />
-                  <span className="font-mono text-[10px] text-stone-600 uppercase tracking-widest">
+                  <span className="font-mono text-[10px] text-stone-300 uppercase tracking-widest">
                     Syncing_Node_Data...
                   </span>
                 </div>

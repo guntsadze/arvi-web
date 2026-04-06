@@ -22,10 +22,9 @@ export const ActiveFrequencies = ({
     <div className="flex flex-col h-full overflow-hidden">
       {/* Search Header */}
       <div className="p-4 space-y-3 border-b border-stone-800/50">
-        <h3 className="font-black uppercase text-[10px] tracking-widest text-stone-500 flex items-center gap-2">
-          <Radio size={14} className="text-amber-500 animate-pulse" /> Signal
-          Scanner
-        </h3>
+        {/* <h3 className="font-black uppercase text-[10px] tracking-widest text-stone-300 flex items-center gap-2">
+          <Radio size={14} className="text-amber-500 animate-pulse" />
+        </h3> */}
 
         <div className="relative group">
           <Search
@@ -45,7 +44,7 @@ export const ActiveFrequencies = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
         {filtered.length === 0 ? (
           <p className="text-[9px] text-stone-600 italic text-center py-10 font-mono">
-            NO DATA FOUND
+            ინფორმაცია არ არის
           </p>
         ) : (
           filtered.map((conv: any) => {
@@ -68,7 +67,7 @@ export const ActiveFrequencies = ({
                     }`}
                   />
                 </div>
-                <p className="text-[9px] font-mono text-stone-600 truncate group-hover:text-stone-400 transition-colors">
+                <p className="text-[9px] font-mono text-stone-600 truncate group-hover:text-stone-300 transition-colors">
                   {conv.messages?.[0]?.content || "NO SIGNAL..."}
                 </p>
               </button>

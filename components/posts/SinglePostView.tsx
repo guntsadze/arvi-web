@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { postsService } from "@/services/posts/posts.service";
 import { PostCard } from "./PostCard";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, GlassWater } from "lucide-react";
+import { GlobalLoader } from "../ui/GlobalLoader";
 
 interface SinglePostViewProps {
   postId: string;
@@ -40,14 +41,7 @@ export const SinglePostView = ({ postId }: SinglePostViewProps) => {
   }, [postId, fetchPost]);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center p-20 gap-4">
-        <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
-        <p className="text-stone-500 font-mono text-[10px] uppercase tracking-widest">
-          Decrypting Signal...
-        </p>
-      </div>
-    );
+    return <GlobalLoader />;
   }
 
   if (error || !post) {
@@ -59,7 +53,7 @@ export const SinglePostView = ({ postId }: SinglePostViewProps) => {
           onClick={() => window.history.back()}
           className="mt-4 text-[10px] text-amber-500 underline font-black uppercase"
         >
-          Go Back to Feed
+          Feed - ზე დაბრუნება
         </button>
       </div>
     );

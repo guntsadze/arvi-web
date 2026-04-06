@@ -62,7 +62,7 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Car size={16} className="text-stone-700" />
+              <Car size={16} className="text-stone-300" />
             </div>
           )}
         </div>
@@ -81,7 +81,7 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
                 : "Call"}
             </span>
             {listing.location && (
-              <span className="flex items-center gap-0.5 text-[8px] font-mono text-stone-600 truncate">
+              <span className="flex items-center gap-0.5 text-[8px] font-mono text-stone-300 truncate">
                 <MapPin size={8} />
                 {listing.location}
               </span>
@@ -109,7 +109,7 @@ const MiniGroupRow = ({
         "relative w-full flex items-center px-3 py-2.5 text-xs font-bold transition-all duration-200 group border-l-2",
         isActive
           ? "bg-stone-800/50 text-amber-500 border-amber-500"
-          : "border-transparent text-stone-500 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
+          : "border-transparent text-stone-300 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
       )}
     >
       <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
@@ -153,11 +153,11 @@ const BottomPanel = ({
             "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
             tab === "nodes"
               ? "text-amber-500 border-amber-500 bg-amber-500/5"
-              : "text-stone-600 border-transparent hover:text-stone-400",
+              : "text-stone-300 border-transparent hover:text-stone-300",
           )}
         >
           <Users size={11} />
-          Nodes
+          ჯგუფები
         </button>
         <div className="w-px bg-stone-800" />
         <button
@@ -166,11 +166,11 @@ const BottomPanel = ({
             "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
             tab === "market"
               ? "text-amber-500 border-amber-500 bg-amber-500/5"
-              : "text-stone-600 border-transparent hover:text-stone-400",
+              : "text-stone-300 border-transparent hover:text-stone-300",
           )}
         >
           <Tag size={11} />
-          Market
+          მარკეტი
         </button>
       </div>
 
@@ -179,15 +179,14 @@ const BottomPanel = ({
         {tab === "nodes" && (
           <>
             <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
-              <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.3em]">
-                Active_Nodes
+              <span className="text-[8px] font-mono text-stone-300 uppercase tracking-[0.3em]">
+                აქტიური ჯგუფები
               </span>
 
               <Link
                 href="/groups"
-                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-600 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
               >
-                <span>Explore</span>
                 <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
                   <ChevronRight size={10} />
                 </div>
@@ -212,9 +211,7 @@ const BottomPanel = ({
               </div>
             ) : (
               <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
-                <p className="text-[9px] font-mono text-stone-700 uppercase">
-                  // No_Nodes_Joined
-                </p>
+                <p className="text-[9px] text-stone-300 ">ინფორმაცია არ არის</p>
               </div>
             )}
           </>
@@ -223,8 +220,8 @@ const BottomPanel = ({
         {tab === "market" && (
           <>
             <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
-              <span className="text-[8px] font-mono text-stone-600 uppercase tracking-[0.3em]">
-                Latest_Listings
+              <span className="text-[8px] font-mono text-stone-300 uppercase tracking-[0.3em]">
+                ბოლოს დამატებული
               </span>
               {/* <Link
                 href="/marketplace"
@@ -234,9 +231,8 @@ const BottomPanel = ({
               </Link> */}
               <Link
                 href="/marketplace"
-                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-600 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
               >
-                <span>View All</span>
                 <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
                   <ChevronRight size={10} />
                 </div>
@@ -263,7 +259,7 @@ const BottomPanel = ({
               </div>
             ) : (
               <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
-                <p className="text-[9px] font-mono text-stone-700 uppercase">
+                <p className="text-[9px] font-mono text-stone-300 uppercase">
                   // No_Active_Listings
                 </p>
               </div>
@@ -387,7 +383,7 @@ export function Sidebar() {
                     "p-2 rounded-md transition-all duration-200 relative",
                     isActive
                       ? "bg-amber-500 text-stone-900 shadow-lg"
-                      : "text-stone-500 hover:text-amber-500 hover:bg-stone-800/50",
+                      : "text-stone-300 hover:text-amber-500 hover:bg-stone-800/50",
                   )}
                 >
                   <Icon size={16} strokeWidth={2.5} />
@@ -420,20 +416,6 @@ export function Sidebar() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* View All Minimalist Link */}
-            <Link
-              href={showUsers ? "/user" : "/cars"}
-              className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-600 hover:text-amber-500 transition-colors uppercase tracking-tighter"
-            >
-              <span>View All</span>
-              <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
-                <ChevronRight size={10} />
-              </div>
-            </Link>
-
-            {/* Vertical Divider */}
-            <div className="w-[1px] h-3 bg-stone-800" />
-
             {/* Toggles */}
             <div className="flex gap-1">
               <button
@@ -442,13 +424,13 @@ export function Sidebar() {
                   setCarouselIndex(0);
                 }}
                 className={cn(
-                  "px-2 py-1 text-[9px] font-bold uppercase transition-all border border-transparent",
+                  "px-1.5 py-0.5 text-[8px] font-bold  transition-all border border-transparent",
                   showUsers
                     ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700",
+                    : "bg-stone-800 text-stone-300 hover:text-amber-500 border-stone-700",
                 )}
               >
-                Users
+                ავტომოყვარულები
               </button>
               <button
                 onClick={() => {
@@ -456,15 +438,27 @@ export function Sidebar() {
                   setCarouselIndex(0);
                 }}
                 className={cn(
-                  "px-2 py-1 text-[9px] font-bold uppercase transition-all border border-transparent",
+                  "px-1.5 py-0.5 text-[8px] font-bold  transition-all border border-transparent",
                   !showUsers
                     ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-500 hover:text-amber-500 border-stone-700",
+                    : "bg-stone-800 text-stone-300 hover:text-amber-500 border-stone-700",
                 )}
               >
-                Cars
+                ავტომობილები
               </button>
             </div>
+
+            {/* Vertical Divider */}
+            <div className="w-[1px] h-3 bg-stone-800" />
+
+            <Link
+              href={showUsers ? "/user" : "/cars"}
+              className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+            >
+              <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+                <ChevronRight size={10} />
+              </div>
+            </Link>
           </div>
         </div>
 
@@ -490,14 +484,14 @@ export function Sidebar() {
             <button
               onClick={() => setCarouselIndex((p) => Math.max(p - 1, 0))}
               disabled={carouselIndex === 0}
-              className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 transition-all"
+              className="p-1 bg-stone-800 text-stone-300 hover:text-amber-500 disabled:opacity-30 transition-all"
             >
               <ChevronLeft size={12} />
             </button>
             <button
               onClick={() => setCarouselIndex((p) => Math.min(p + 1, maxIndex))}
               disabled={carouselIndex >= maxIndex}
-              className="p-1 bg-stone-800 text-stone-500 hover:text-amber-500 disabled:opacity-30 transition-all"
+              className="p-1 bg-stone-800 text-stone-300 hover:text-amber-500 disabled:opacity-30 transition-all"
             >
               <ChevronRight size={12} />
             </button>
@@ -507,8 +501,8 @@ export function Sidebar() {
 
       {/* ── FOOTER ── */}
       <div className="p-2 border-t-4 border-stone-800 bg-[#151413] shrink-0">
-        <span className="text-[9px] text-stone-600 font-mono uppercase">
-          VINTAGE MOTORS © 2026
+        <span className="text-[9px] text-stone-300 font-mono uppercase">
+          ARVI powered by guntsadze © 2026
         </span>
       </div>
     </>
@@ -536,7 +530,7 @@ export function Sidebar() {
               "relative p-2.5 rounded-sm border-2 transition-all",
               activeDropdown === "notifications"
                 ? "bg-amber-500 text-stone-900 border-amber-500"
-                : "bg-stone-900 border-stone-800 text-stone-500 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
+                : "bg-stone-900 border-stone-800 text-stone-300 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
             <Bell size={18} strokeWidth={2.5} />
@@ -562,7 +556,7 @@ export function Sidebar() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-500">
+              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-300">
                 <UserIcon size={18} />
               </div>
             )} */}
@@ -624,7 +618,7 @@ export function Sidebar() {
         <div className="absolute top-4 right-4 z-10">
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 text-stone-500 hover:text-amber-500 transition-colors"
+            className="p-2 text-stone-300 hover:text-amber-500 transition-colors"
           >
             <X size={24} />
           </button>

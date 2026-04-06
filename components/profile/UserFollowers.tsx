@@ -24,7 +24,7 @@ export function UserFollowers({ userId }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-neutral-800">
+      {/* <div className="flex items-center justify-between pb-4 border-b border-neutral-800">
         <div className="flex items-center gap-3">
           <div className="w-1 h-6 bg-orange-500" />
           <h2 className="text-sm font-bold text-orange-500 uppercase tracking-[0.2em]">
@@ -35,7 +35,7 @@ export function UserFollowers({ userId }: Props) {
           {followers.followersCount}{" "}
           {followers.followersCount === 1 ? "Follower" : "Followers"}
         </span>
-      </div>
+      </div> */}
 
       {/* Followers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
@@ -56,11 +56,11 @@ export function UserFollowers({ userId }: Props) {
             <Users className="w-10 h-10 text-neutral-600" />
           </div>
           <h3 className="text-xl font-bold text-neutral-400 mb-2">
-            No Followers Yet
+            გამომწერები არ არის ჯერ
           </h3>
           <p className="text-sm text-neutral-600 max-w-md">
-            This driver hasn't collected any fans on the track yet. Be the first
-            to follow and show support!
+            ავტომოყვარულს ჯერ არ ყავს ტრასაზე არცერთი გულშემატკივარი. იყავით
+            პირველი, ვინც გამოიწერს და მხარდაჭერას გამოხატავს!
           </p>
         </div>
       )}

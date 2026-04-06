@@ -23,7 +23,7 @@ type Props = {
 export default function FollowerCard({ follower }: Props) {
   return (
     <Link href={`/profile/${follower.username}`}>
-      <div className="group  border border-stone-700 rounded-xl p-4 hover:border-orange-500/50 transition-all duration-200 cursor-pointer h-full flex flex-col">
+      <div className="group  border border-stone-700 rounded-xl p-3 hover:border-orange-500/50 transition-all duration-200 cursor-pointer h-full flex flex-col">
         <UserAvatarItem user={follower} variant="card" />
         {/* Bio */}
         <div className="flex-1 mb-3">
@@ -32,7 +32,9 @@ export default function FollowerCard({ follower }: Props) {
               {follower.bio}
             </p>
           ) : (
-            <p className="text-xs text-stone-600 italic pt-2">No bio yet.</p>
+            <p className="text-xs text-stone-600 italic pt-2">
+              მძღოლის ინფორმაცია არ არის
+            </p>
           )}
         </div>
 
