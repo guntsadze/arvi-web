@@ -208,10 +208,16 @@ export const FloatingChatWindow = ({
           backgroundSize: "20px 20px",
         }}
       >
-        {messages.map((msg) => {
+        {messages.map((msg, idx) => {
           const isMine = msg.senderId === currentUser?.id;
           const isPending = msg.status === "pending";
           const isSeen = msg.isRead;
+
+          const lastMyMessageIndex = messages
+            .map((m, i) => (m.senderId === currentUser?.id ? i : -1))
+            .reduce((max, i) => Math.max(max, i), -1);
+
+          const isLastMyMessage = idx === lastMyMessageIndex;
 
           return (
             <div
@@ -219,9 +225,9 @@ export const FloatingChatWindow = ({
               className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}
             >
               <span className="text-[7px] font-mono text-[#EBE9E1] mb-1 uppercase tracking-tighter">
-                {isMine ? "Operator" : chat.user.firstName} //
+                {isMine ? "შენ" : chat.user.firstName} -{" "}
                 {isPending
-                  ? "TRANSMITTING..."
+                  ? "..."
                   : new Date(msg.createdAt).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -244,9 +250,9 @@ export const FloatingChatWindow = ({
               </div>
 
               {/* 👁️ SEEN INDICATOR (მხოლოდ ჩემს მესიჯებზე) */}
-              {isMine && !isPending && isSeen && (
+              {isMine && !isPending && isSeen && isLastMyMessage && (
                 <span className="text-[6px] font-mono text-amber-600/60 mt-1 uppercase tracking-widest">
-                  // Seen
+                  წაიკითხა
                 </span>
               )}
             </div>
@@ -308,7 +314,7 @@ export const FloatingChatWindow = ({
             autoFocus
             onFocus={markAsRead}
             onChange={handleInputChange}
-            placeholder="TYPE_SIGNAL..."
+            placeholder="..."
             className="flex-1 bg-transparent py-2 text-[11px] font-mono text-amber-500 focus:outline-none placeholder:text-stone-400 uppercase"
           />
           <button

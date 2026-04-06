@@ -62,15 +62,6 @@ export const GlobalLoader = () => {
           </div>
         </div>
       </div>
-
-      {/* კუთხის დეკორატიული ელემენტები (Industrial Style) */}
-      <div className="absolute bottom-10 left-10 text-stone-300 font-mono text-[8px] uppercase tracking-widest leading-relaxed">
-        Transmission: Active
-        <br />
-        Telemetry: Syncing...
-        <br />
-        Database: Connecting
-      </div>
     </div>
   );
 };

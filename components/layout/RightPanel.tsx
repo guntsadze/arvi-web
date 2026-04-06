@@ -180,7 +180,7 @@ export const RightPanel = () => {
       </div>
 
       {/* FOOTER */}
-      <div className="bg-[#1c1917] border-t-4 border-stone-800 p-3 flex justify-between items-center shrink-0">
+      {/* <div className="bg-[#1c1917] border-t-4 border-stone-800 p-3 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
           <Activity size={10} className="text-amber-900 animate-pulse" />
           <span className="font-mono text-[7px] text-stone-300 uppercase tracking-widest">
@@ -190,7 +190,7 @@ export const RightPanel = () => {
         <span className="font-mono text-[7px] text-stone-300 uppercase tracking-tighter italic">
           Sector_041_Comms
         </span>
-      </div>
+      </div> */}
     </aside>
   );
 };
