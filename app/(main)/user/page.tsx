@@ -3,7 +3,8 @@
 import UserCard from "@/components/user/UserCard";
 import { usersService } from "@/services/user/user.service";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { GlobalLoader } from "@/components/ui/GlobalLoader";
+import { GlobalLoader } from "@/components/loaders/GlobalLoader";
+import CircleLoader from "@/components/loaders/CircleLoader";
 
 export default function Page() {
   const {
@@ -48,7 +49,7 @@ export default function Page() {
           <UserCard key={user.id} user={user} />
         ))}
 
-        {loading && <GlobalLoader />}
+        {loading && <CircleLoader />}
 
         {!hasMore && users.length > 0 && (
           <div className="col-span-full text-center text-[#EBE9E1] font-mono py-10">

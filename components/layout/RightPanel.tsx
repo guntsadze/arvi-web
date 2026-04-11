@@ -21,7 +21,7 @@ import { MessagesDropdown } from "../right-panel/dropdowns/MessagesDropdown";
 import { ProfileDropdown } from "../right-panel/dropdowns/ProfileDropdown";
 import { ActiveFrequencies } from "../right-panel/ActiveFrequencies";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
-import { GlobalLoader } from "../ui/GlobalLoader";
+import { GlobalLoader } from "../loaders/GlobalLoader";
 
 export const RightPanel = () => {
   const [activeView, setActiveView] = useState<
@@ -65,7 +65,7 @@ export const RightPanel = () => {
     );
   };
 
-  if (loading) return <GlobalLoader />;
+  // if (loading) return <GlobalLoader />;
 
   return (
     <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-[#151413] border-l-4 border-stone-800">

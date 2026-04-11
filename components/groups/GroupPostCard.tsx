@@ -103,8 +103,8 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
             <div className="bg-[#151413] border-t border-stone-800 p-6">
               <CommentForm
                 onSubmit={(data) => actions.handleAddComment(data)}
-                placeholder="Append comment to log..."
-                buttonText="Exec"
+                placeholder="..."
+                buttonText="დამატება"
               />
               <div className="space-y-8 mt-8 pl-2">
                 {actions.comments.map((comment) => (

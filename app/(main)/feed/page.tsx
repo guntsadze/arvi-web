@@ -6,7 +6,6 @@ import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
-import { GlobalLoader } from "@/components/ui/GlobalLoader";
 
 export default function FeedPage() {
   const {

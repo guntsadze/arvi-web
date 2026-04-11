@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { postsService } from "@/services/posts/posts.service";
 import { PostCard } from "./PostCard";
 import { Loader2, AlertCircle, GlassWater } from "lucide-react";
-import { GlobalLoader } from "../ui/GlobalLoader";
+import { GlobalLoader } from "../loaders/GlobalLoader";
 
 interface SinglePostViewProps {
   postId: string;
@@ -23,6 +23,7 @@ export const SinglePostView = ({ postId }: SinglePostViewProps) => {
       console.log("Fetching post with ID:", postId);
 
       const response = await postsService.getPost(postId);
+      console.log("🚀 ~ SinglePostView ~ response:", response);
 
       const postData = response.data || response;
       setPost(postData);

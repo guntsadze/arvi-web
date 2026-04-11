@@ -1,8 +1,6 @@
-import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
-import { ka } from "date-fns/locale";
-import Link from "next/link";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { CommentHeader } from "./CommentHeader";
+import { InlineEditForm } from "./InlineEditForm";
 
 interface ReplyItemProps {
   reply: any; // სასურველია მიუთითო შენი Reply ინტერფეისი
@@ -31,61 +29,23 @@ export function ReplyItem({
   const isEditing = editingId === reply.id;
 
   return (
-    <div className="flex gap-3 relative group/reply">
-      {/* დაკავშირების ხაზი */}
+    <div className="flex gap-3 relative group/reply ml-4">
       <div className="absolute -left-6 top-4 w-4 h-px bg-stone-800" />
 
-      <div className="relative h-6 w-6 min-w-6">
-        <UserAvatarItem
-          key={reply.user.id}
-          user={reply.user}
-          size="sm"
-          showName={false}
-        />
-      </div>
+      <UserAvatarItem user={reply.user} size="sm" showName={false} />
 
-      <div className="flex-1 ml-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-[9px] font-bold text-amber-700/80 uppercase">
-            {reply.user.firstName} {reply.user.lastName}
-          </span>
-          <span className="text-[8px] text-[#EBE9E1] font-mono">
-            {formatDistanceToNow(new Date(reply.createdAt), {
-              addSuffix: true,
-              locale: ka,
-            })}
-          </span>
-        </div>
+      <div className="flex-1 ml-2">
+        <CommentHeader user={reply.user} createdAt={reply.createdAt} isReply />
 
         {isEditing ? (
-          <form
-            onSubmit={editForm.handleSubmit((data: { content: string }) =>
-              onEdit(reply.id, data, true, parentId),
-            )}
-            className="mt-2 flex gap-2"
-          >
-            <input
-              {...editForm.register("content")}
-              className="flex-1 bg-stone-800 border border-stone-700 text-[#EBE9E1] text-[11px] px-2 py-1 focus:outline-none rounded"
-              autoFocus
-            />
-            <button
-              type="submit"
-              className="text-amber-600 text-[10px] uppercase font-bold"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEditingId(null);
-                editForm.reset();
-              }}
-              className="text-stone-300 text-[10px] uppercase"
-            >
-              Cancel
-            </button>
-          </form>
+          <InlineEditForm
+            form={editForm}
+            onSubmit={(data) => onEdit(reply.id, data, true, parentId)}
+            onCancel={() => {
+              setEditingId(null);
+              editForm.reset();
+            }}
+          />
         ) : (
           <>
             <p className="text-xs text-stone-400 font-mono leading-relaxed mt-1">
@@ -97,15 +57,15 @@ export function ReplyItem({
                   editForm.setValue("content", reply.content);
                   setEditingId(reply.id);
                 }}
-                className="text-[8px] text-[#EBE9E1] hover:text-blue-500 uppercase"
+                className="text-[8px] text-stone-300 hover:text-blue-500 uppercase font-bold"
               >
-                [Edit]
+                რედაქტირება
               </button>
               <button
                 onClick={() => onDelete(reply.id, true, parentId)}
-                className="text-[8px] text-[#EBE9E1] hover:text-red-500 uppercase"
+                className="text-[8px] text-stone-300 hover:text-red-500 uppercase font-bold"
               >
-                [Del]
+                წაშლა
               </button>
             </div>
           </>

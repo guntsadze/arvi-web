@@ -3,11 +3,8 @@
 import { RightPanel } from "@/components/layout/RightPanel";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { FloatingChatsContainer } from "@/components/messaging/FloatingChatsContainer";
-import { GlobalLoader } from "@/components/ui/GlobalLoader";
+import { GlobalLoader } from "@/components/loaders/GlobalLoader";
 import { useAppSelector } from "@/store/hooks";
-import { selectIsAuthenticated } from "@/store/slices/userSlice";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function ProtectedLayout({
   children,

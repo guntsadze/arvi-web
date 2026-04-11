@@ -6,7 +6,7 @@ import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
-import { GlobalLoader } from "@/components/ui/GlobalLoader";
+import CircleLoader from "@/components/loaders/CircleLoader";
 
 export default function FeedPage() {
   const {
@@ -70,12 +70,7 @@ export default function FeedPage() {
             />
           ))}
 
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-              <Loader2 className="animate-spin text-amber-600" size={32} />
-            </div>
-            // <GlobalLoader />
-          )}
+          {loading && <CircleLoader />}
 
           {!loading && activities.length === 0 && (
             <div className="text-center py-24 border border-stone-800 bg-[#201d1b]">

@@ -6,7 +6,6 @@ import { groupsService } from "@/services/groups.service";
 import { GroupCard } from "@/components/groups/GroupCard";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { GroupForm } from "@/components/groups/groupForm/GroupForm";
-import { GlobalLoader } from "@/components/ui/GlobalLoader";
 
 export default function GroupsPage() {
   const [searchQuery, setSearchQuery] = useState("");
