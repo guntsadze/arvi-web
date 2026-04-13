@@ -62,7 +62,7 @@ export function ActivityMenu({
                 className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-400 hover:bg-stone-800 hover:text-amber-500 transition-colors border-b border-stone-800/50"
               >
                 <Edit2 size={14} />
-                Edit Records
+                რედაქტირება
               </button>
             )}
 
@@ -75,7 +75,7 @@ export function ActivityMenu({
                 className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-300 hover:bg-red-950/30 hover:text-red-500 transition-colors border-b border-stone-800/50"
               >
                 <Trash2 size={14} />
-                Delete Entry
+                წაშლა
               </button>
             )}
 
@@ -88,7 +88,7 @@ export function ActivityMenu({
               className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-[#EBE9E1] hover:bg-stone-800 hover:text-orange-500 transition-colors"
             >
               <Flag size={14} />
-              Report
+              დარეპორტება
             </button>
           </div>
         </div>

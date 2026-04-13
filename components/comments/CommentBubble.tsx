@@ -2,6 +2,8 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { ka } from "date-fns/locale";
 import { ActivityMenu } from "../shared/ActivityMenu";
 import { InlineEditForm } from "./InlineEditForm";
+import { useState } from "react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function CommentBubble({
   comment,
@@ -11,6 +13,8 @@ export function CommentBubble({
   setEditingId,
   editForm,
 }: any) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
   const timeAgo = comment.createdAt
     ? formatDistanceToNowStrict(new Date(comment.createdAt), { locale: ka })
         .replace("წამის", "წმ")
@@ -19,15 +23,22 @@ export function CommentBubble({
         .replace("დღის", "დ")
     : "ახლახან";
 
+  const images = comment.media;
+
   return (
-    <div className="bg-[#2b2826] rounded-2xl rounded-tl-none p-3 relative group/bubble">
+    <div className="bg-[#2b2826] p-2 relative group/bubble">
       <div className="flex justify-between items-start">
         <div className="flex flex-col">
-          <span className="text-[12px] font-bold text-[#EBE9E1] hover:underline cursor-pointer">
-            {comment.user.firstName} {comment.user.lastName}
-          </span>
+          <div className="flex items-center gap-2 flex-wrap hover:underline cursor-pointer">
+            <p className="font-bold text-[#EBE9E1] tracking-wide text-xs">
+              {comment.user?.firstName} {comment.user?.lastName}
+            </p>
+            <span className="text-[10px] text-[#EBE9E1] font-mono">
+              @{comment.user?.username}
+            </span>
+          </div>
           <span className="text-[10px] text-stone-500 font-mono">
-            {comment.user.headline || "Member"}
+            {comment.user.headline}
           </span>
         </div>
 
@@ -62,6 +73,90 @@ export function CommentBubble({
           </p>
         )}
       </div>
+
+      {/* მედია გალერეა */}
+      {images.length > 0 && (
+        <div
+          className={`mt-2 grid gap-1 ${
+            images.length === 1
+              ? "grid-cols-1"
+              : images.length === 2
+                ? "grid-cols-2"
+                : "grid-cols-3"
+          }`}
+        >
+          {images.map((m: any, i: number) => (
+            <div
+              key={m.id ?? i}
+              className="relative aspect-square overflow-hidden rounded cursor-pointer group/img"
+              onClick={() => setLightboxIndex(i)}
+            >
+              <img
+                src={m.url}
+                alt=""
+                className="w-full h-full object-cover transition-transform duration-200 group-hover/img:scale-105"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          onClick={() => setLightboxIndex(null)}
+        >
+          {/* დახურვა */}
+          <button
+            className="absolute top-4 right-4 text-white hover:text-stone-300 transition-colors"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <X size={28} />
+          </button>
+
+          {/* წინა */}
+          {images.length > 1 && lightboxIndex > 0 && (
+            <button
+              className="absolute left-4 text-white hover:text-stone-300 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex(lightboxIndex - 1);
+              }}
+            >
+              <ChevronLeft size={36} />
+            </button>
+          )}
+
+          {/* სურათი */}
+          <img
+            src={images[lightboxIndex].url}
+            alt=""
+            className="max-h-[90vh] max-w-[90vw] object-contain rounded"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* შემდეგი */}
+          {images.length > 1 && lightboxIndex < images.length - 1 && (
+            <button
+              className="absolute right-4 text-white hover:text-stone-300 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex(lightboxIndex + 1);
+              }}
+            >
+              <ChevronRight size={36} />
+            </button>
+          )}
+
+          {/* Counter */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 text-stone-400 text-sm">
+              {lightboxIndex + 1} / {images.length}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

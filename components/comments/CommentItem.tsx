@@ -8,6 +8,7 @@ interface CommentItemProps {
   comment: any;
   replyTo?: string;
   setReplyTo?: any;
+  onLikeClick?: any;
   editingId?: string;
   setEditingId?: any;
   onEdit?: any;
@@ -21,6 +22,7 @@ export function CommentItem({
   comment,
   replyTo,
   setReplyTo,
+  onLikeClick,
   editingId,
   setEditingId,
   onEdit,
@@ -76,6 +78,9 @@ export function CommentItem({
             <CommentFooterActions
               comment={comment}
               onReplyClick={() => setReplyTo(comment.id)}
+              onLikeClick={() =>
+                onLikeClick(comment.id, depth > 0, comment.parentId)
+              }
             />
           )}
 
@@ -101,6 +106,7 @@ export function CommentItem({
                   comment={reply}
                   depth={depth + 1}
                   replyTo={replyTo}
+                  onLikeClick={onLikeClick}
                   setReplyTo={setReplyTo}
                   editingId={editingId}
                   setEditingId={setEditingId}

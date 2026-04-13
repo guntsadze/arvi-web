@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { postsService } from "@/services/posts/posts.service";
 import { Comment, Post } from "@/types/post.types";
+import { storageService } from "@/services/storage.service";
 
 export function usePostActions(post: Post, refresh: () => void) {
   const [isLiked, setIsLiked] = useState(post.isLiked);
@@ -22,6 +23,42 @@ export function usePostActions(post: Post, refresh: () => void) {
       setComments(Array.isArray(res) ? res : res.data || []);
     } catch (err) {
       console.error("Comments fetch error:", err);
+    }
+  };
+
+  const handleLikeComment = async (commentId: string) => {
+    // 1. ვინახავთ ძველ State-ს, თუ API ჩავარდა რომ დავაბრუნოთ
+    const previousComments = [...comments];
+
+    // 2. მომენტალურად ვანახლებთ State-ს (Optimistic Update)
+    const toggleLikeInState = (nodes: any[]): any[] => {
+      return nodes.map((node) => {
+        if (node.id === commentId) {
+          const currentlyLiked = node.isLiked;
+          return {
+            ...node,
+            isLiked: !currentlyLiked,
+            likesCount: currentlyLiked
+              ? node.likesCount - 1
+              : node.likesCount + 1,
+          };
+        }
+        if (node.replies?.length > 0) {
+          return { ...node, replies: toggleLikeInState(node.replies) };
+        }
+        return node;
+      });
+    };
+
+    setComments((prev) => toggleLikeInState(prev));
+
+    try {
+      // 3. ვაგზავნით რეალურ მოთხოვნას ბექენდზე
+      await postsService.likeComment(commentId);
+    } catch (err) {
+      // 4. თუ მოთხოვნა ჩავარდა, ვაბრუნებთ ძველ მდგომარეობას
+      setComments(previousComments);
+      console.error("Like failed, rolling back:", err);
     }
   };
 
@@ -60,29 +97,36 @@ export function usePostActions(post: Post, refresh: () => void) {
     }
   };
 
-  const handleAddComment = async (
-    data: { content: string },
-    parentId?: string,
-  ) => {
-    if (!data.content.trim()) return;
+  const handleAddComment = async (data: any, parentId?: string) => {
+    let uploadedMedia = [];
+
     try {
-      const newComment = await postsService.addComment(
-        post.id,
-        data.content,
-        parentId,
-      );
-      if (parentId) {
-        setComments((prev) =>
-          prev.map((c) =>
-            c.id === parentId
-              ? { ...c, replies: [newComment, ...(c.replies || [])] }
-              : c,
+      if (data.media.length > 0) {
+        const results = await Promise.all(
+          data.media.map((m: any) =>
+            storageService.uploadFile(m.file, "comments"),
           ),
         );
-        setReplyTo(null);
-      } else {
-        setComments((prev) => [newComment, ...prev]);
+
+        uploadedMedia = results.map((res) => ({
+          url: res.url,
+          publicId: res.publicId,
+          format: res.format,
+          bytes: res.bytes,
+          mediaType: res.mediaType, // storageService უკვე აბრუნებს "IMAGE"/"VIDEO"
+        }));
+
+        console.log("uploadedMedia:", uploadedMedia); // ✅ შევსების შემდეგ
       }
+
+      await postsService.addComment(
+        post.id,
+        { ...data, media: uploadedMedia }, // ✅ uploadedMedia გამოიყენე
+        parentId,
+      );
+
+      await fetchComments();
+      setReplyTo(null);
       commentForm.reset();
     } catch (err) {
       console.error(err);
@@ -96,29 +140,9 @@ export function usePostActions(post: Post, refresh: () => void) {
     parentId?: string,
   ) => {
     try {
-      const updated = await postsService.updateComment(commentId, data.content);
-      if (isReply && parentId) {
-        setComments((prev) =>
-          prev.map((c) =>
-            c.id === parentId
-              ? {
-                  ...c,
-                  replies: c.replies?.map((r) =>
-                    r.id === commentId ? { ...r, content: updated.content } : r,
-                  ),
-                }
-              : c,
-          ),
-        );
-        setEditingCommentId(null);
-      } else {
-        setComments((prev) =>
-          prev.map((c) =>
-            c.id === commentId ? { ...c, content: updated.content } : c,
-          ),
-        );
-        setEditingCommentId(null);
-      }
+      await postsService.updateComment(commentId, data.content);
+      await fetchComments();
+      setEditingCommentId(null);
       editCommentForm.reset();
     } catch (err) {
       console.error(err);
@@ -133,17 +157,7 @@ export function usePostActions(post: Post, refresh: () => void) {
     if (!confirm("Delete comment?")) return;
     try {
       await postsService.deleteComment(commentId);
-      if (isReply && parentId) {
-        setComments((prev) =>
-          prev.map((c) =>
-            c.id === parentId
-              ? { ...c, replies: c.replies?.filter((r) => r.id !== commentId) }
-              : c,
-          ),
-        );
-      } else {
-        setComments((prev) => prev.filter((c) => c.id !== commentId));
-      }
+      await fetchComments();
     } catch (err) {
       console.error(err);
     }
@@ -170,5 +184,6 @@ export function usePostActions(post: Post, refresh: () => void) {
     handleAddComment,
     handleEditComment,
     handleDeleteComment,
+    handleLikeComment,
   };
 }

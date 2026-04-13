@@ -27,6 +27,7 @@ export function PostCard({ activity, post, refresh }: PostCardProps) {
   const { isUserOnline } = usePresence();
 
   const content = post || activity?.post;
+  console.log("🚀 ~ PostCard ~ content:", content);
   if (!content) return null;
 
   const online = isUserOnline(content.user.id);

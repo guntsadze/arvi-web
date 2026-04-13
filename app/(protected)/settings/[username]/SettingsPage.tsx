@@ -17,11 +17,13 @@ type ProfileForm = {
   lastName: string;
   username: string;
   bio: string;
+  headline: string;
   location: string;
   website: string;
 };
 
 export default function ProfileSettingsPage({ user }: { user: any }) {
+  console.log("🚀 ~ ProfileSettingsPage ~ user:", user);
   const [lightbox, setLightbox] = useState<{
     src: string | null;
     type: "avatar" | "cover";
@@ -38,6 +40,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
       firstName: user?.firstName ?? "",
       lastName: user?.lastName ?? "",
       username: user?.username ?? "",
+      headline: user?.headline ?? "",
       bio: user?.bio ?? "",
       location: user?.location ?? "",
       website: user?.website ?? "",
@@ -143,6 +146,14 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
           register={register}
           placeholder="@handle"
           error={errors.username}
+        />
+
+        <RuggedInput
+          label="Headline"
+          name="headline"
+          register={register}
+          placeholder="@drifter"
+          error={errors.headline}
         />
 
         <div className="space-y-1">

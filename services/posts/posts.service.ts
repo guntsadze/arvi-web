@@ -50,9 +50,9 @@ class PostsService extends BaseApiService<Posts> {
   }
 
   // COMMENTS
-  addComment(postId: string, content: string, parentId?: string) {
+  addComment(postId: string, data: any, parentId?: string) {
     return apiClient.post(`${this.endpoint}/${postId}/comments`, {
-      content,
+      ...data,
       parentId,
     });
   }
@@ -87,6 +87,10 @@ class PostsService extends BaseApiService<Posts> {
 
   getGroupPost(id: string) {
     return apiClient.get(`${this.endpoint}/group/${id}`);
+  }
+
+  likeComment(commentId: string) {
+    return apiClient.post(`${this.endpoint}/comment/${commentId}/like`);
   }
 }
 

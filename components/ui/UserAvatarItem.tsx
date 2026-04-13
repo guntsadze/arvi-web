@@ -11,6 +11,7 @@ interface UserAvatarItemProps {
     lastName?: string | null;
     avatar?: any;
     role?: string;
+    headline?: string | null;
   } | null;
   isOnline?: boolean;
   size?: "sm" | "md" | "lg" | "xl" | "exsm";
@@ -131,6 +132,13 @@ export const UserAvatarItem = ({
             @{user.username || "anonymous"}
           </p>
         </div>
+
+        {/* HEADLINE ჩამატება */}
+        {user.headline && (
+          <p className="text-stone-400 text-sm italic line-clamp-1 mt-0.5 border-l border-amber-500/30 pl-2">
+            {user.headline}
+          </p>
+        )}
       </Link>
     );
   }
@@ -174,9 +182,17 @@ export const UserAvatarItem = ({
         {user.role === "ADMIN" && <AdminBadge size={size} />}
       </div>
       {showName && (
-        <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full uppercase">
-          {user.username || "Anonymous"}
-        </p>
+        <div className="mt-1.5 text-center w-full">
+          <p className="text-[8px] font-mono text-stone-300 truncate uppercase">
+            {user.username || "Anonymous"}
+          </p>
+          {/* აქაც შეიძლება პატარა headline-ის ჩამატება თუ საჭიროა */}
+          {user.headline && size === "lg" && (
+            <p className="text-[7px] text-stone-500 truncate italic">
+              {user.headline}ასსს
+            </p>
+          )}
+        </div>
       )}
     </Wrapper>
   );

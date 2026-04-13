@@ -34,6 +34,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
   }, [content]);
 
   const onSubmit = async (data: z.infer<typeof postSchema>) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     try {
       let uploadedMedia = [];
@@ -55,7 +56,6 @@ export function PostForm({ refresh }: { refresh: () => void }) {
 
       await postsService.createPost({
         content: data.content,
-        media: uploadedMedia,
       });
       reset();
       refresh();

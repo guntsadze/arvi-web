@@ -19,6 +19,7 @@ export function CommentTree({ comments, actions }: any) {
           onDelete={actions.handleDeleteComment}
           editForm={actions.editCommentForm}
           onAddReply={actions.handleAddComment}
+          onLikeClick={actions.handleLikeComment}
         />
       ))}
     </div>

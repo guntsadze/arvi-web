@@ -53,6 +53,7 @@ export function UnifiedPostForm({
   }, [content]);
 
   const onSubmit = async (data: z.infer<typeof postSchema>) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     try {
       let uploadedMedia: any = [];
@@ -69,7 +70,7 @@ export function UnifiedPostForm({
           publicId: res.publicId,
           bytes: res.bytes,
           format: res.format,
-          mediaType: data.media[i].type.touppercase().includes("VIDEO")
+          mediaType: data.media[i].type.toUpperCase().includes("VIDEO")
             ? "VIDEO"
             : "IMAGE",
         }));
