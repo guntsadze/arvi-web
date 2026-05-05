@@ -15,32 +15,21 @@ export default function CarCollectionPage() {
     refresh,
   } = useInfiniteScroll((page) => carsService.search({ page, limit: 10 }));
 
+  const isInitialLoading = loading && (!cars || cars.length === 0);
+  const isFetchingNextPage = loading && cars && cars.length > 0;
+
   return (
-    <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans selection:bg-amber-500 selection:text-stone-900 pb-20">
-      {/* HEADER */}
+    <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] text-[#EBE9E1] font-sans pb-20">
       <div className="sticky top-0 z-30 border-b-4 border-stone-800 bg-[#1c1917]/95 backdrop-blur-sm shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-600 flex items-center justify-center rounded-sm shadow-[4px_4px_0px_0px_#000]">
-                <Car className="text-stone-900 w-8 h-8" />
-              </div>
-              <div>
-                {/* <h1 className="text-3xl font-black uppercase tracking-tighter text-[#EBE9E1] drop-shadow-lg">
-                  Garage <span className="text-amber-600">Inventory</span>
-                </h1> */}
-                <p className="text-stone-300 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
-                  სულ {cars?.length} რეგისტრირებული ავტომობილი
-                </p>
-              </div>
-            </div>
-          </div>
+          <p className="text-stone-300 font-mono text-xs tracking-[0.3em] uppercase border-t border-stone-700 mt-1 pt-1">
+            სულ {cars?.length || 0} რეგისტრირებული ავტომობილი
+          </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* CARS GRID */}
-        {loading ? (
+        {isInitialLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-16 h-16 border-4 border-stone-600 border-t-amber-500 rounded-full animate-spin" />
           </div>
@@ -50,20 +39,25 @@ export default function CarCollectionPage() {
             <h3 className="text-2xl font-black text-stone-300 uppercase mb-2">
               Garage Empty
             </h3>
-            <p className="text-[#EBE9E1] font-mono mb-8">
-              No machinery records found.
-            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {cars?.map((car) => (
-              <CarCard
-                key={car.id}
-                car={car}
-                onClick={() => router.push(`/profile/${car.user.username}`)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cars?.map((car) => (
+                <CarCard
+                  key={car.id}
+                  car={car}
+                  onClick={() => router.push(`/profile/${car.user.username}`)}
+                />
+              ))}
+            </div>
+
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-10">
+                <div className="w-10 h-10 border-4 border-stone-600 border-t-amber-500 rounded-full animate-spin" />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

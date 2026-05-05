@@ -175,7 +175,7 @@ const BottomPanel = ({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
         {tab === "nodes" && (
           <>
             <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
