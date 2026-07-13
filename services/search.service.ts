@@ -172,7 +172,7 @@ class SearchService extends BaseApiService<any> {
       `${this.endpoint}/users?${queryParams.toString()}`
     );
 
-    return response.data;
+    return response;
   }
 
   /**
@@ -185,7 +185,7 @@ class SearchService extends BaseApiService<any> {
       `${this.endpoint}/hashtags/trending?limit=${limit}` // ✅ hashtags/trending
     );
 
-    return response.data;
+    return response;
   }
 
   /**
@@ -194,7 +194,7 @@ class SearchService extends BaseApiService<any> {
    */
   async getPopularMakes(): Promise<PopularMake[]> {
     const response = await apiClient.get(`${this.endpoint}/cars/makes`); // ✅ cars/makes
-    return response.data;
+    return response;
   }
 
   /**

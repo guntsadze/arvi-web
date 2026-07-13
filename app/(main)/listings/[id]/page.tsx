@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { marketplaceService } from "@/services/marketplace.service";
-import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import {
@@ -196,10 +195,6 @@ const ListingDetailPage: React.FC = () => {
 
   return (
     <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto selection:bg-amber-500/30">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <BackgroundGrid />
-      </div>
-
       <div className="relative z-10 max-w-6xl mx-auto py-10 px-4">
         <PageHeader
           title={listing.title || `${car?.year} ${car?.make} ${car?.model}`}

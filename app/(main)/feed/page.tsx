@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Loader2, Activity } from "lucide-react";
 import { postsService } from "@/services/posts/posts.service";
@@ -8,6 +11,10 @@ import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
 
 export default function FeedPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const {
     data: activities,
     loading,
@@ -16,6 +23,13 @@ export default function FeedPage() {
     (page) => activityService.getFeed({ page, limit: 10 }),
     [],
   );
+
+  useEffect(() => {
+    if (searchParams.get("restored") === "true") {
+      toast.success("კეთილი იყოს დაბრუნება! თქვენი ანგარიში აღდგენილია");
+      router.replace(pathname);
+    }
+  }, [searchParams, router, pathname]);
 
   return (
     <div className="min-h-screen bg-[#1c1917] relative">

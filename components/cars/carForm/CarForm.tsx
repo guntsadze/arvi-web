@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { FormHeader } from "./shared/FormHeader";
 import { FormSection } from "./shared/FormSection";
 import { FormActions } from "./shared/FormActions";
@@ -43,10 +42,6 @@ export const CarForm: React.FC<CarFormProps> = ({
 
   return (
     <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <BackgroundGrid />
-      </div>
-
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <FormHeader isEditing={isEditing} onClose={onClose} />
 

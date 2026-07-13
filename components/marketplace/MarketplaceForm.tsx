@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { marketplaceService } from "@/services/marketplace.service";
 import { FormHeader } from "../cars/carForm/shared/FormHeader";
 import { FormSection } from "../cars/carForm/shared/FormSection";
@@ -46,10 +45,6 @@ export const MarketplaceForm = ({ car, onClose, onSuccess }: any) => {
 
   return (
     <div className="fixed inset-0 bg-[#1c1917] z-[110] overflow-y-auto">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <BackgroundGrid />
-      </div>
-
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         {/* აქ გამოვიყენოთ შენი FormHeader */}
         <FormHeader title={`SELL_PROPOSAL: ${car.model}`} onClose={onClose} />

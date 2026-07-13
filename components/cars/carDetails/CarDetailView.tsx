@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { BackgroundGrid } from "../../ui/BackgroundGrid";
 import { CarOverview } from "./CarOverview";
 import { CarFullDetails } from "./CarFullDetails";
 import { Car, ViewMode } from "../../../types/car.types";
@@ -29,9 +28,6 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
 
   return (
     <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-[#1c1917] z-50 flex flex-col">
-      {/* Background */}
-      <BackgroundGrid />
-
       {/* Large Brand Text */}
       <div className="fixed top-20 -left-10 text-[20vw] font-black text-stone-400/20 leading-none select-none pointer-events-none whitespace-nowrap z-0">
         {car.make}

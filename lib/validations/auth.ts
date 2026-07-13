@@ -1,20 +1,17 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  password: z.string().min(6, "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო"),
-  identifier: z
+/** E.164 phone format, matches the backend's RequestOtpDto/VerifyOtpDto validator. */
+export const E164_REGEX = /^\+[1-9]\d{1,14}$/;
+
+export const phoneSchema = z.object({
+  phone: z
     .string()
-    .min(1, "შეიყვანეთ ელ. ფოსტა, მომხმარებლის სახელი ან ტელეფონი"),
+    .regex(E164_REGEX, "ტელეფონის ნომერი არასწორი ფორმატშია"),
 });
 
-export const registerSchema = z.object({
-  firstName: z.string().min(2, "სახელი უნდა იყოს მინიმუმ 2 სიმბოლო"),
-  lastName: z.string().min(2, "გვარი უნდა იყოს მინიმუმ 2 სიმბოლო"),
-  username: z.string().min(3, "UserName უნდა იყოს მინიმუმ 3 სიმბოლო"),
-  email: z.string().email("არასწორი ელ. ფოსტის ფორმატი"),
-  phone: z.string().optional(),
-  password: z.string().min(6, "პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო"),
+export const otpSchema = z.object({
+  code: z.string().regex(/^\d{6}$/, "კოდი უნდა შედგებოდეს 6 ციფრისგან"),
 });
 
-export type LoginFormData = z.infer<typeof loginSchema>;
-export type RegisterFormData = z.infer<typeof registerSchema>;
+export type PhoneFormData = z.infer<typeof phoneSchema>;
+export type OtpFormData = z.infer<typeof otpSchema>;

@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Conversation } from "@/types/messaging.types";
 import { ChatHeader } from "./ChatHeader";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { TypingIndicator } from "./TypingIndicator";
 import { useMessages } from "@/hooks/useMessages";
-import { useTyping } from "@/hooks/useTyping";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
@@ -18,76 +17,43 @@ interface ChatWindowProps {
 export const ChatWindow = ({ conversation, socket }: ChatWindowProps) => {
   const currentUser = useAppSelector(selectCurrentUser);
   const partner = conversation.participants[0];
+  const [loading, setLoading] = useState(true);
 
   const {
     messages,
-    loading,
+    typingUsers,
     loadMessages,
     sendMessage,
-    addMessage,
     markAsRead,
+    sendTyping,
+    sendStopTyping,
   } = useMessages(conversation.id);
 
-  const {
-    typingUsers,
-    handleTypingStart,
-    handleTypingStop,
-    addTypingUser,
-    removeTypingUser,
-  } = useTyping(socket, conversation.id);
-
   // მესიჯების ჩატვირთვა
+  // (useMessages already owns its own socket subscription for newMessage /
+  // typing events internally, so this component just consumes its state.)
   useEffect(() => {
-    loadMessages();
+    let active = true;
+    setLoading(true);
+
+    Promise.resolve(loadMessages()).finally(() => {
+      if (active) setLoading(false);
+    });
     markAsRead();
-  }, [conversation.id, loadMessages, markAsRead]);
-
-  // Socket listeners
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleNewMessage = (msg: any) => {
-      if (msg?.conversationId === conversation.id) {
-        addMessage(msg);
-        markAsRead();
-      }
-    };
-
-    const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
-      if (data.userId === partner?.userId) {
-        if (data.isTyping) {
-          addTypingUser(data.userId);
-        } else {
-          removeTypingUser(data.userId);
-        }
-      }
-    };
-
-    socket.on("newMessage", handleNewMessage);
-    socket.on("userTyping", handleUserTyping);
-    socket.emit("joinConversation", conversation.id);
 
     return () => {
-      socket.off("newMessage", handleNewMessage);
-      socket.off("userTyping", handleUserTyping);
-      socket.emit("leaveConversation", conversation.id);
+      active = false;
     };
-  }, [
-    socket,
-    conversation.id,
-    partner?.userId,
-    addMessage,
-    markAsRead,
-    addTypingUser,
-    removeTypingUser,
-  ]);
+  }, [conversation.id, loadMessages, markAsRead]);
 
   const handleSend = async (content: string) => {
     await sendMessage(content);
-    handleTypingStop();
+    sendStopTyping();
   };
 
-  const isPartnerTyping = typingUsers.has(partner?.userId || "");
+  const isPartnerTyping = Boolean(
+    partner?.userId && typingUsers[partner.userId],
+  );
 
   if (!currentUser) {
     return (
@@ -107,10 +73,14 @@ export const ChatWindow = ({ conversation, socket }: ChatWindowProps) => {
       />
       {isPartnerTyping && (
         <TypingIndicator
-          userName={partner?.user?.firstName || "მომხმარებელი"}
+          userName={
+            (partner?.userId && typingUsers[partner.userId]) ||
+            partner?.user?.firstName ||
+            "მომხმარებელი"
+          }
         />
       )}
-      <MessageInput onSend={handleSend} onTyping={handleTypingStart} />
+      <MessageInput onSend={handleSend} onTyping={sendTyping} />
     </div>
   );
 };

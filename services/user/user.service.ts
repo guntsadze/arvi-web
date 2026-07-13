@@ -18,16 +18,20 @@ class UsersService extends BaseApiService<User> {
     return apiClient.get(this.endpoint, params);
   }
 
+  // Always targets the authenticated caller's own avatar/cover — the
+  // backend derives the user from the auth token, not a URL param, so
+  // this can only ever affect your own account. `_userId` is kept in the
+  // signature for call-site compatibility with the shared upload widgets.
   async uploadMedia(
-    userId: string,
+    _userId: string,
     type: "avatar" | "cover",
     data: { file: string },
   ) {
-    return apiClient.post(`${this.endpoint}/${userId}/${type}`, data);
+    return apiClient.post(`${this.endpoint}/me/${type}`, data);
   }
 
-  async deleteUserMedia(userId: string, type: "avatar" | "cover") {
-    return apiClient.delete(`${this.endpoint}/${userId}/${type}`);
+  async deleteUserMedia(_userId: string, type: "avatar" | "cover") {
+    return apiClient.delete(`${this.endpoint}/me/${type}`);
   }
 }
 

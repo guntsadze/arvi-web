@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { groupsService } from "@/services/groups.service";
 import { useRouter } from "next/navigation";
 import { GroupPrivacy } from "@/types/groups.types";
@@ -68,10 +67,6 @@ export const GroupForm: React.FC<GroupFormProps> = ({ onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <BackgroundGrid />
-      </div>
-
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <FormHeader
           isEditing={false}

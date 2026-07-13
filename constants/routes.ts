@@ -10,10 +10,9 @@ export const PUBLIC_ROUTES = [
   "/user",
   "/login",
   "/register",
-  "/forgot-password",
 ];
 
-export const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
+export const AUTH_ROUTES = ["/login", "/register"];
 
 export const SEO_ROUTES = [
   "/robots.txt",

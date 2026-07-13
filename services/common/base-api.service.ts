@@ -13,8 +13,7 @@ export abstract class BaseApiService<T> {
    * Create a new record
    */
   async create(data: Partial<T>, config?: AxiosRequestConfig): Promise<T> {
-    const response = await apiClient.post<T>(`${this.endpoint}`, data, config);
-    return response.data;
+    return apiClient.post<T>(`${this.endpoint}`, data, config);
   }
 
   /**
@@ -24,22 +23,17 @@ export abstract class BaseApiService<T> {
     params?: QueryParams & PaginationParams,
     config?: AxiosRequestConfig,
   ): Promise<T[] | PaginatedResult<T>> {
-    const response = await apiClient.get<T[] | PaginatedResult<T>>(
-      `${this.endpoint}`,
-      {
-        params,
-        ...config,
-      },
-    );
-    return response.data;
+    return apiClient.get<T[] | PaginatedResult<T>>(`${this.endpoint}`, {
+      params,
+      ...config,
+    });
   }
 
   /**
    * Find one record by ID
    */
   async findOne(id: string | number, config?: AxiosRequestConfig): Promise<T> {
-    const response = await apiClient.get<T>(`${this.endpoint}/${id}`, config);
-    return response.data;
+    return apiClient.get<T>(`${this.endpoint}/${id}`, config);
   }
 
   /**
@@ -49,11 +43,10 @@ export abstract class BaseApiService<T> {
     params: QueryParams,
     config?: AxiosRequestConfig,
   ): Promise<T | null> {
-    const response = await apiClient.get<T | null>(`${this.endpoint}/find`, {
+    return apiClient.get<T | null>(`${this.endpoint}/find`, {
       params,
       ...config,
     });
-    return response.data;
   }
 
   /**
@@ -64,12 +57,7 @@ export abstract class BaseApiService<T> {
     data: Partial<T>,
     config?: AxiosRequestConfig,
   ): Promise<T> {
-    const response = await apiClient.put<T>(
-      `${this.endpoint}/${id}`,
-      data,
-      config,
-    );
-    return response.data;
+    return apiClient.put<T>(`${this.endpoint}/${id}`, data, config);
   }
 
   /**
@@ -80,23 +68,18 @@ export abstract class BaseApiService<T> {
     data: Partial<T>,
     config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
-    const response = await apiClient.patch<{ count: number }>(
+    return apiClient.patch<{ count: number }>(
       `${this.endpoint}/bulk`,
       { where, data },
       config,
     );
-    return response.data;
   }
 
   /**
    * Delete a record (soft delete if backend supports)
    */
   async remove(id: string | number, config?: AxiosRequestConfig): Promise<T> {
-    const response = await apiClient.delete<T>(
-      `${this.endpoint}/${id}`,
-      config,
-    );
-    return response.data;
+    return apiClient.delete<T>(`${this.endpoint}/${id}`, config);
   }
 
   /**
@@ -106,11 +89,7 @@ export abstract class BaseApiService<T> {
     id: string | number,
     config?: AxiosRequestConfig,
   ): Promise<T> {
-    const response = await apiClient.delete<T>(
-      `${this.endpoint}/${id}/hard`,
-      config,
-    );
-    return response.data;
+    return apiClient.delete<T>(`${this.endpoint}/${id}/hard`, config);
   }
 
   /**
@@ -120,14 +99,10 @@ export abstract class BaseApiService<T> {
     where: QueryParams,
     config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
-    const response = await apiClient.delete<{ count: number }>(
-      `${this.endpoint}/bulk`,
-      {
-        data: { where },
-        ...config,
-      },
-    );
-    return response.data;
+    return apiClient.delete<{ count: number }>(`${this.endpoint}/bulk`, {
+      data: { where },
+      ...config,
+    });
   }
 
   /**
@@ -144,7 +119,7 @@ export abstract class BaseApiService<T> {
         ...config,
       },
     );
-    return response.data.exists;
+    return response.exists;
   }
 
   /**
@@ -161,7 +136,7 @@ export abstract class BaseApiService<T> {
         ...config,
       },
     );
-    return response.data.count;
+    return response.count;
   }
 
   /**
@@ -172,12 +147,11 @@ export abstract class BaseApiService<T> {
     skipDuplicates = false,
     config?: AxiosRequestConfig,
   ): Promise<{ count: number }> {
-    const response = await apiClient.post<{ count: number }>(
+    return apiClient.post<{ count: number }>(
       `${this.endpoint}/bulk`,
       { data, skipDuplicates },
       config,
     );
-    return response.data;
   }
 
   /**
@@ -193,113 +167,23 @@ export abstract class BaseApiService<T> {
 
     switch (method) {
       case "GET":
-        const getResponse = await apiClient.get<R>(url, {
+        return apiClient.get<R>(url, {
           ...config,
           params: data,
         });
-        return getResponse.data;
       case "POST":
-        const postResponse = await apiClient.post<R>(url, data, config);
-        return postResponse.data;
+        return apiClient.post<R>(url, data, config);
       case "PUT":
-        const putResponse = await apiClient.put<R>(url, data, config);
-        return putResponse.data;
+        return apiClient.put<R>(url, data, config);
       case "PATCH":
-        const patchResponse = await apiClient.patch<R>(url, data, config);
-        return patchResponse.data;
+        return apiClient.patch<R>(url, data, config);
       case "DELETE":
-        const deleteResponse = await apiClient.delete<R>(url, {
+        return apiClient.delete<R>(url, {
           data,
           ...config,
         });
-        return deleteResponse.data;
       default:
         throw new Error(`Unsupported method: ${method}`);
     }
   }
 }
-
-// ============================================
-// Example: Product Service
-// ============================================
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  categoryId: string;
-  images: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-class ProductService extends BaseApiService<Product> {
-  protected endpoint = "/products";
-
-  // Custom method: Get products by category
-  async getByCategory(
-    categoryId: string,
-    pagination?: PaginationParams,
-  ): Promise<PaginatedResult<Product>> {
-    return this.findAll({ categoryId, ...pagination }) as Promise<
-      PaginatedResult<Product>
-    >;
-  }
-
-  // Custom method: Update stock
-  async updateStock(id: string, quantity: number): Promise<Product> {
-    return this.custom<Product>(`/${id}/stock`, "PATCH", { quantity });
-  }
-
-  // Custom method: Get featured products
-  async getFeatured(): Promise<Product[]> {
-    return this.custom<Product[]>("/featured", "GET");
-  }
-}
-
-export const productService = new ProductService();
-
-// ============================================
-// Example: Order Service
-// ============================================
-
-export interface Order {
-  id: string;
-  userId: string;
-  items: OrderItem[];
-  total: number;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface OrderItem {
-  productId: string;
-  quantity: number;
-  price: number;
-}
-
-class OrderService extends BaseApiService<Order> {
-  protected endpoint = "/orders";
-
-  // Custom method: Get user orders
-  async getMyOrders(
-    pagination?: PaginationParams,
-  ): Promise<PaginatedResult<Order>> {
-    return this.custom<PaginatedResult<Order>>("/my-orders", "GET", pagination);
-  }
-
-  // Custom method: Update order status
-  async updateStatus(id: string, status: Order["status"]): Promise<Order> {
-    return this.custom<Order>(`/${id}/status`, "PATCH", { status });
-  }
-
-  // Custom method: Cancel order
-  async cancel(id: string, reason?: string): Promise<Order> {
-    return this.custom<Order>(`/${id}/cancel`, "POST", { reason });
-  }
-}
-
-export const orderService = new OrderService();

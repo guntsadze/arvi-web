@@ -4,7 +4,6 @@ import React, { useState, useCallback } from "react";
 import { marketplaceService } from "@/services/marketplace.service";
 import { Listing } from "@/services/search.service";
 import Link from "next/link";
-import { BackgroundGrid } from "@/components/ui/BackgroundGrid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -103,8 +102,6 @@ const MarketplacePage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-[#1c1917] text-stone-100">
-      <BackgroundGrid />
-
       <div className="relative z-10 max-w-7xl mx-auto py-10 px-4">
         <PageHeader title="Marketplace" />
 

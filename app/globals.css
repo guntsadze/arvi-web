@@ -5,6 +5,27 @@
 @theme {
   --font-sans: "Noto Sans Georgian", sans-serif;
   --font-georgian: "Noto Sans Georgian", sans-serif;
+
+  /* Design tokens — dark-only palette (near-black warm charcoal, not pure black) */
+  --color-background: #141517;
+  --color-surface-1: #1c1e21;
+  --color-surface-2: #242628;
+  --color-border: #2e3033;
+  --color-text-primary: #f1f2f4;
+  --color-text-secondary: #a9adb4;
+  --color-text-muted: #75797f;
+  --color-accent: #e8871e;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+
+  /* Radius scale — overrides Tailwind v4's default --radius-* theme vars, so
+     every existing rounded-sm/md/lg/xl utility class picks these up automatically */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 }
 
 :root {
@@ -22,7 +43,7 @@ body {
 
 @layer base {
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-background text-text-primary;
   }
 }
 
