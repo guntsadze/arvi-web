@@ -10,6 +10,7 @@ import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
 import { EmptyGarageCard } from "@/components/feed/EmptyGarageCard";
+import { ProfileCompletenessWidget } from "@/components/profile/ProfileCompletenessWidget";
 
 export default function FeedPage() {
   const searchParams = useSearchParams();
@@ -61,6 +62,8 @@ export default function FeedPage() {
           </div>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border" />
         </div>
+
+        <ProfileCompletenessWidget />
 
         <EmptyGarageCard />
 

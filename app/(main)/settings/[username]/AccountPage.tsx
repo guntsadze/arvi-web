@@ -1,112 +1,148 @@
 "use client";
+
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAppSelector } from "@/store/hooks";
-import { selectCurrentUser } from "@/store/slices/userSlice";
+import { Mail, Pencil, Phone, X } from "lucide-react";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/Input";
-import { SaveRow } from "@/components/settings/SaveRow";
+import { Button } from "@/components/ui/Button";
 import { apiClient } from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import type { User } from "@/types/user";
 import { DangerZone } from "../DangerZone";
 
-type AccountForm = {
+type ContactForm = {
   email: string;
   phone: string;
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
 };
 
-export default function AccountSettingsPage({ user }: { user: any }) {
+// Password auth doesn't exist anywhere in this system (Google + Phone OTP
+// only) — the backend's UpdateAccountDto only ever accepted email/phone,
+// so the password-change form this page used to render was always dead UI
+// wired to fields the API silently ignored.
+export default function AccountSettingsPage({ user }: { user: User }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [contact, setContact] = useState<{ email: string; phone: string }>({
+    email: user.email ?? "",
+    phone: user.phone ?? "",
+  });
+
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
     formState: { errors, isDirty, isSubmitting },
-  } = useForm<AccountForm>({
-    defaultValues: {
-      email: user?.email ?? "",
-      phone: user?.phone ?? "",
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
+  } = useForm<ContactForm>({
+    values: { email: contact.email, phone: contact.phone },
   });
 
-  const onSubmit = async (data: AccountForm) => {
-    if (data.newPassword && data.newPassword !== data.confirmPassword) return;
-    await apiClient.patch("/users/me/account", data);
+  const startEditing = () => setIsEditing(true);
+
+  const cancelEditing = () => {
+    reset({ email: contact.email, phone: contact.phone });
+    setIsEditing(false);
+  };
+
+  const onSubmit = async (data: ContactForm) => {
+    try {
+      const updated = await apiClient.patch<User>("/Users/me/account", data);
+      setContact({ email: updated.email ?? "", phone: updated.phone ?? "" });
+      toast.success("საკონტაქტო ინფორმაცია განახლდა!");
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "განახლება ვერ მოხერხდა"));
+    }
   };
 
   return (
-    <form className="max-w-2xl mx-auto pt-10" onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-5 pb-3 border-b border-border">
-        <p className="text-[8px] uppercase tracking-widest text-accent font-mono mb-1">
-          // account
-        </p>
-        <h1 className="text-base font-medium text-text-primary">
-          Account settings
+    <div className="mx-auto max-w-2xl space-y-6 py-10">
+      <div>
+        <h1 className="text-lg font-semibold text-text-primary">
+          ანგარიშის პარამეტრები
         </h1>
-        <p className="text-[11px] text-text-primary font-mono mt-0.5">
-          email, phone, password
+        <p className="mt-1 text-sm text-text-secondary">
+          მართე შენი საკონტაქტო ინფორმაცია
         </p>
       </div>
 
-      <p className="text-[8px] uppercase tracking-[.14em] text-text-primary font-mono mb-3">
-        // credentials
-      </p>
+      <form onSubmit={handleSubmit(onSubmit)} className="glass-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-text-primary">
+            საკონტაქტო ინფორმაცია
+          </h2>
+          {!isEditing ? (
+            <button
+              type="button"
+              onClick={startEditing}
+              aria-label="რედაქტირება"
+              className="text-text-muted transition-colors hover:text-primary"
+            >
+              <Pencil size={16} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={cancelEditing}
+              aria-label="გაუქმება"
+              className="text-text-muted transition-colors hover:text-error"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
 
-      <Input
-        label="Email address"
-        required
-        placeholder="you@example.com"
-        error={errors.email?.message}
-        {...register("email")}
-      />
-      <Input
-        label="Phone number"
-        placeholder="+995 5xx xxx xxx"
-        error={errors.phone?.message}
-        {...register("phone")}
-      />
+        {isEditing ? (
+          <div className="space-y-4">
+            <Input
+              label="იმეილი"
+              required
+              placeholder="you@example.com"
+              error={errors.email?.message}
+              {...register("email")}
+            />
+            <Input
+              label="ტელეფონის ნომერი"
+              placeholder="+995 5xx xxx xxx"
+              error={errors.phone?.message}
+              {...register("phone")}
+            />
 
-      <div className="mt-6 mb-3 border-t border-border pt-5">
-        <p className="text-[8px] uppercase tracking-[.14em] text-text-primary font-mono mb-3">
-          // change password
-        </p>
-      </div>
-
-      <Input
-        label="Current password"
-        type="password"
-        placeholder="••••••••"
-        error={errors.currentPassword?.message}
-        {...register("currentPassword")}
-      />
-
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="New password"
-          type="password"
-          placeholder="••••••••"
-          error={errors.newPassword?.message}
-          {...register("newPassword")}
-        />
-        <Input
-          label="Confirm password"
-          type="password"
-          placeholder="••••••••"
-          error={errors.confirmPassword?.message}
-          {...register("confirmPassword")}
-        />
-      </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={cancelEditing}
+                disabled={isSubmitting}
+              >
+                გაუქმება
+              </Button>
+              <Button
+                type="submit"
+                variant="secondary"
+                isLoading={isSubmitting}
+                disabled={!isDirty}
+              >
+                შენახვა
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 text-sm">
+              <Mail size={14} className="shrink-0 text-text-muted" />
+              <span className="text-text-primary">{contact.email || "—"}</span>
+            </div>
+            <div className="flex items-center gap-3 text-sm">
+              <Phone size={14} className="shrink-0 text-text-muted" />
+              <span className="text-text-primary">
+                {contact.phone || "დამატებული არ არის"}
+              </span>
+            </div>
+          </div>
+        )}
+      </form>
 
       <DangerZone />
-
-      <SaveRow
-        isDirty={isDirty}
-        isSubmitting={isSubmitting}
-        fn="save_account()"
-        hint="// changes may require re-login"
-      />
-    </form>
+    </div>
   );
 }

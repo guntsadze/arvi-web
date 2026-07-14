@@ -18,6 +18,16 @@ class UsersService extends BaseApiService<User> {
     return apiClient.get(this.endpoint, params);
   }
 
+  // GET /Users/profile — always the authenticated caller's own data (the
+  // backend derives the user from the JWT, not a URL param) and, unlike
+  // every other user-fetching endpoint, includes `completeness` for the
+  // profile-completeness widget. Path is hardcoded (not this.endpoint)
+  // to match the backend's actual `/Users/profile` route, mirroring
+  // usersServerService.getByUsername's `/Users/by-username/...`.
+  getMyProfile(): Promise<User> {
+    return apiClient.get<User>("/Users/profile");
+  }
+
   // Always targets the authenticated caller's own avatar/cover — the
   // backend derives the user from the auth token, not a URL param, so
   // this can only ever affect your own account. `_userId` is kept in the
