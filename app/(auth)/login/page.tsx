@@ -17,9 +17,5 @@ export default function LoginPage() {
     if (error) window.history.replaceState({}, "", "/login");
   }, [searchParams]);
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <AuthCard initialError={initialError} />
-    </div>
-  );
+  return <AuthCard initialError={initialError} />;
 }

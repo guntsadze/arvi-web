@@ -15,19 +15,19 @@ export const DataRow: React.FC<DataRowProps> = ({
   if (!value) return null;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-stone-800/50 hover:bg-stone-800/20 px-2 transition-colors group">
+    <div className="flex items-center justify-between py-3 border-b border-border/50 hover:bg-surface-1-hover/20 px-2 transition-colors group">
       <div className="flex items-center gap-3">
         {Icon && (
           <Icon
             size={14}
-            className="text-[#EBE9E1] group-hover:text-amber-600 transition-colors"
+            className="text-text-primary group-hover:text-accent transition-colors"
           />
         )}
-        <span className="text-xs font-mono text-stone-300 uppercase tracking-wider">
+        <span className="text-xs font-mono text-text-secondary uppercase tracking-wider">
           {label}
         </span>
       </div>
-      <span className="text-sm font-bold text-[#EBE9E1] font-mono text-right">
+      <span className="text-sm font-bold text-text-primary font-mono text-right">
         {value}
       </span>
     </div>

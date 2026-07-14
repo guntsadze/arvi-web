@@ -1,6 +1,6 @@
 import React from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
+import { Input } from "@/components/ui/Input";
 import { CarFormData } from "@/types/carForm.types";
 
 interface RegistrationSectionProps {
@@ -12,43 +12,44 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({
   register,
   errors,
 }) => {
+  const licensePlateField = register("licensePlate", {
+    pattern: {
+      value: /^[A-Za-zა-ჰ]{2}-\d{3}-[A-Za-zა-ჰ]{2}$/,
+      message: "სანომრე ნიშანი უნდა იყოს ფორმატში: XX-000-XX",
+    },
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <RuggedInput
-        label="VIN კოდი"
-        name="vin"
-        register={register}
-        placeholder="WBS..."
-      />
-      <RuggedInput
+      <Input label="VIN კოდი" placeholder="WBS..." {...register("vin")} />
+      <Input
         label="სახელმწიფო ნომერი"
-        name="licensePlate"
-        register={register}
         placeholder="GA-000-GE"
-        error={errors.licensePlate}
-        hint="ფორმატი: XX-000-XX"
-        uppercase
-        autoFormat
-        rules={{
-          pattern: {
-            value: /^[A-Za-zა-ჰ]{2}-\d{3}-[A-Za-zა-ჰ]{2}$/,
-            message: "სანომრე ნიშანი უნდა იყოს ფორმატში: XX-000-XX",
-          },
+        error={errors.licensePlate?.message}
+        helperText="ფორმატი: XX-000-XX"
+        {...licensePlateField}
+        onChange={(e) => {
+          let value = e.target.value
+            .toUpperCase()
+            .replace(/[^A-ZА-ЯᲐ-Ჿ0-9]/g, "");
+          if (value.length > 2) value = value.slice(0, 2) + "-" + value.slice(2);
+          if (value.length > 6) value = value.slice(0, 6) + "-" + value.slice(6);
+          if (value.length > 9) value = value.slice(0, 9);
+          e.target.value = value;
+          licensePlateField.onChange(e);
         }}
       />
       <div className="grid grid-cols-2 gap-4">
-        <RuggedInput
+        <Input
           label="ფერი"
-          name="color"
-          register={register}
           placeholder="Techno Violet"
+          {...register("color")}
         />
-        <RuggedInput
+        <Input
           label="გარბენი (კმ)"
-          name="mileage"
           type="number"
-          register={register}
           placeholder="150000"
+          {...register("mileage")}
         />
       </div>
     </div>

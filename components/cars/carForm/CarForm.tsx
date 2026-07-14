@@ -41,7 +41,7 @@ export const CarForm: React.FC<CarFormProps> = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto">
+    <div className="fixed inset-0 bg-background z-[60] overflow-y-auto">
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <FormHeader isEditing={isEditing} onClose={onClose} />
 
@@ -77,16 +77,16 @@ export const CarForm: React.FC<CarFormProps> = ({
           </div>
 
           {/* --- NEW: Modifications --- */}
-          <div className="py-8 border-t border-stone-800/50">
+          <div className="py-8 border-t border-border/50">
             <ModificationsSection control={control} register={register} />
           </div>
 
           {/* --- NEW: Maintenance --- */}
-          <div className="py-8 border-t border-stone-800/50">
+          <div className="py-8 border-t border-border/50">
             <MaintenanceSection control={control} register={register} />
           </div>
 
-          <div className="pt-10 border-t border-stone-800">
+          <div className="pt-10 border-t border-border">
             <FormActions
               isSubmitting={isSubmitting}
               isEditing={isEditing}
@@ -96,8 +96,8 @@ export const CarForm: React.FC<CarFormProps> = ({
             <button
               type="button"
               onClick={handleDelete}
-              className="px-6 py-3 bg-stone-900/50 hover:bg-red-950/30 text-red-400 
-                      border border-stone-800 hover:border-red-900/50 
+              className="px-6 py-3 bg-surface-1/50 hover:bg-error/10/30 text-error 
+                      border border-border hover:border-error/50 
                       font-mono text-xs uppercase tracking-wider
                       transition-all duration-300
                       disabled:opacity-50 disabled:cursor-not-allowed"

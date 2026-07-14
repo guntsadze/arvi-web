@@ -23,14 +23,14 @@ export const ChatSidebar = ({
           <div
             key={conv.id}
             onClick={() => onSelect(conv)}
-            className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition ${
-              activeId === conv.id ? "bg-blue-50" : ""
+            className={`p-4 flex items-center gap-3 cursor-pointer hover:bg-surface-1-hover transition ${
+              activeId === conv.id ? "bg-info/10" : ""
             }`}
           >
             <div className="relative">
               <UserAvatarItem key={otherUser?.id} user={otherUser} />
               {conv.unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-error text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">
                   {conv.unreadCount}
                 </span>
               )}
@@ -40,13 +40,13 @@ export const ChatSidebar = ({
                 <h4 className="font-semibold truncate">
                   {otherUser?.firstName} {otherUser?.lastName}
                 </h4>
-                <span className="text-[10px] text-gray-500">
+                <span className="text-[10px] text-text-muted">
                   {formatDistanceToNow(new Date(conv.lastMessageAt), {
                     locale: ka,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 truncate">
+              <p className="text-sm text-text-muted truncate">
                 {lastMsg?.content || "სურათი/ფაილი"}
               </p>
             </div>

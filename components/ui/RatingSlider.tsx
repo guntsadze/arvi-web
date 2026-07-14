@@ -31,8 +31,8 @@ export const RatingSlider: React.FC<RatingSliderProps> = ({
   };
 
   return (
-    <div className="space-y-2 p-4 border border-stone-800 bg-stone-900/20">
-      <label className="block text-[10px] uppercase tracking-widest text-stone-400 font-mono">
+    <div className="space-y-2 p-4 border border-border bg-surface-1/20">
+      <label className="block text-[10px] uppercase tracking-widest text-text-secondary font-mono">
         {label}
       </label>
       <input
@@ -43,13 +43,13 @@ export const RatingSlider: React.FC<RatingSliderProps> = ({
         {...rest}
         onChange={handleSliderChange}
         value={currentRating}
-        className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-stone-700 accent-orange-500"
+        className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-surface-2 accent-accent"
       />
-      <div className="flex justify-between text-xs text-stone-300">
+      <div className="flex justify-between text-xs text-text-secondary">
         <span>1</span>
         <span>10</span>
       </div>
-      <p className="text-sm text-orange-400">
+      <p className="text-sm text-accent">
         <span className="font-semibold">Rating: {currentRating}/10</span> -{" "}
         {getRatingDescription(currentRating)}
       </p>

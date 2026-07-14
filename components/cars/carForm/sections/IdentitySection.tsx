@@ -1,23 +1,24 @@
 "use client";
 import React, { useEffect } from "react";
 import {
+  FieldErrors,
   UseFormRegister,
   useWatch,
   Control,
   UseFormSetValue,
 } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { CarFormData } from "@/types/carForm.types";
 import { useCarBrands } from "@/hooks/useCarBrands";
 import { useCarModels } from "@/hooks/useCarModels";
 
 interface IdentitySectionProps {
   register: UseFormRegister<CarFormData>;
-  errors: any;
+  errors: FieldErrors<CarFormData>;
   control: Control<CarFormData>;
   setValue: UseFormSetValue<CarFormData>;
-  initialData?: any;
+  initialData?: Partial<CarFormData>;
 }
 
 export const IdentitySection: React.FC<IdentitySectionProps> = ({
@@ -44,51 +45,47 @@ export const IdentitySection: React.FC<IdentitySectionProps> = ({
       setValue("model", initialData.model);
     }
   }, [models]);
+  const yearField = register("year", {
+    valueAsNumber: true,
+    min: {
+      value: 1900,
+      message: "ავტომობილის წელი არ უნდა იყოს 1900-ზე ნაკლები",
+    },
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <RuggedSelect
+      <Select
         label="მარკა"
-        name="make"
-        register={register}
         options={brands}
-        error={errors.make}
+        error={errors.make?.message}
+        {...register("make")}
       />
 
-      <RuggedSelect
+      <Select
         label="მოდელი"
-        name="model"
-        register={register}
         required
         options={models}
         disabled={!selectedMake || models.length === 0}
         placeholder={!selectedMake ? "ჯერ აირჩიეთ მარკა" : "აირჩიეთ მოდელი"}
-        error={errors.model}
+        error={errors.model?.message}
+        {...register("model")}
       />
 
-      <RuggedInput
+      <Input
         label="წელი"
-        name="year"
         type="number"
-        register={register}
         required
         placeholder="1998"
-        error={errors.year}
-        hint={`1900 – ${new Date().getFullYear()}`}
-        rules={{
-          valueAsNumber: true,
-
-          min: {
-            value: 1900,
-            message: "ავტომობილის წელი არ უნდა იყოს 1900-ზე ნაკლები",
-          },
-        }}
+        error={errors.year?.message}
+        helperText={`1900 – ${new Date().getFullYear()}`}
+        {...yearField}
       />
 
-      <RuggedInput
+      <Input
         label="ზედმეტსახელი (სურვილისამებრ)"
-        name="nickname"
-        register={register}
         placeholder="The Beast"
+        {...register("nickname")}
       />
     </div>
   );

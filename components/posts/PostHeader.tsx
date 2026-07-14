@@ -22,7 +22,7 @@ export function PostHeader({
   online,
 }: PostHeaderProps) {
   return (
-    <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-[#1c1917]">
+    <div className="flex items-center justify-between p-4 border-b border-border bg-surface-1">
       <Link
         href={`/profile/${user?.username}`}
         className="flex items-center gap-3 group/user"
@@ -36,14 +36,14 @@ export function PostHeader({
         />
         <div>
           <div className="flex items-center gap-2">
-            <p className="font-bold text-[#EBE9E1] uppercase tracking-wide text-xs group-hover/user:text-amber-500 transition-colors">
+            <p className="font-bold text-text-primary uppercase tracking-wide text-xs group-hover/user:text-accent transition-colors">
               {user?.firstName} {user?.lastName}
             </p>
-            <span className="text-[10px] text-[#EBE9E1] font-mono">
+            <span className="text-[10px] text-text-primary font-mono">
               Username: {user?.username}
             </span>
           </div>
-          <p className="text-[10px] font-mono text-stone-300 uppercase tracking-widest flex items-center gap-2">
+          <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest flex items-center gap-2">
             {formatDistanceToNow(new Date(createdAt), {
               addSuffix: true,
               locale: ka,

@@ -24,7 +24,7 @@ export default function ProfilePage({ user }: { user: any }) {
   } | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-orange-500/30 scrollbar-hide">
+    <div className="min-h-screen bg-background text-white selection:bg-accent/30 scrollbar-hide">
       {/* Carbon Fiber Background */}
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
 
@@ -47,7 +47,7 @@ export default function ProfilePage({ user }: { user: any }) {
               priority
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-b from-neutral-800 to-[#0a0a0a]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-surface-2 to-background" />
           )}
 
           {/* Hover hint — owner */}
@@ -62,7 +62,7 @@ export default function ProfilePage({ user }: { user: any }) {
         </button>
 
         {/* Shadow Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none" />
 
         {/* ── IDENTITY ── */}
         <div className="absolute bottom-0 left-0 w-full px-4 md:px-10 pb-10 pointer-events-none">
@@ -70,7 +70,7 @@ export default function ProfilePage({ user }: { user: any }) {
             {/* AVATAR — კლიკზე lightbox */}
             <div className="relative group pointer-events-auto">
               <div className="w-32 h-32 md:w-44 md:h-44 relative">
-                <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
+                <div className="absolute inset-0 bg-accent rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
 
                 <UserAvatarItem
                   user={user}
@@ -94,17 +94,17 @@ export default function ProfilePage({ user }: { user: any }) {
                   {user.firstName} {user.lastName}
                 </h1>
                 {user.isVerified && (
-                  <ShieldCheck className="text-blue-500 w-6 h-6 md:w-8 md:h-8" />
+                  <ShieldCheck className="text-info w-6 h-6 md:w-8 md:h-8" />
                 )}
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-neutral-400 font-mono text-sm">
-                <span className="text-orange-500 font-bold">
+              <div className="flex flex-wrap items-center gap-4 text-text-secondary font-mono text-sm">
+                <span className="text-accent font-bold">
                   @{user.username}
                 </span>
                 <span className="flex items-center gap-1">
                   <MapPin size={14} /> {user.location || "Earth"}
                 </span>
-                <span className="bg-neutral-800 px-2 py-0.5 rounded text-[10px] border border-neutral-700 uppercase tracking-widest text-white">
+                <span className="bg-surface-2 px-2 py-0.5 rounded text-[10px] border border-border uppercase tracking-widest text-white">
                   {user.role}
                 </span>
               </div>

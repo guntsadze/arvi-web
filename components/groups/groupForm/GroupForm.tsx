@@ -66,7 +66,7 @@ export const GroupForm: React.FC<GroupFormProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#1c1917] z-[60] overflow-y-auto">
+    <div className="fixed inset-0 bg-background z-[60] overflow-y-auto">
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         <FormHeader
           isEditing={false}
@@ -94,7 +94,7 @@ export const GroupForm: React.FC<GroupFormProps> = ({ onClose, onSuccess }) => {
           </div>
 
           {/* Actions */}
-          <div className="pt-10 border-t border-stone-800">
+          <div className="pt-10 border-t border-border">
             <FormActions
               isSubmitting={isSubmitting}
               isEditing={false}
@@ -102,7 +102,7 @@ export const GroupForm: React.FC<GroupFormProps> = ({ onClose, onSuccess }) => {
             />
 
             <div className="mt-4 opacity-50">
-              <p className="font-mono text-[8px] text-[#EBE9E1] uppercase tracking-[0.2em]">
+              <p className="font-mono text-[8px] text-text-primary uppercase tracking-[0.2em]">
                 System_Status: Awaiting_Deployment...
               </p>
             </div>

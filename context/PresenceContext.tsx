@@ -10,7 +10,11 @@ import React, {
 } from "react";
 import { io } from "socket.io-client";
 import { useAppSelector } from "@/store/hooks";
-import { selectCurrentUser } from "@/store/slices/userSlice";
+import {
+  selectCurrentUser,
+  selectIsAuthenticated,
+  selectIsInitialized,
+} from "@/store/slices/userSlice";
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -30,9 +34,16 @@ export const PresenceProvider = ({
 }) => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const currentUser = useAppSelector(selectCurrentUser);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const isInitialized = useAppSelector(selectIsInitialized);
 
   useEffect(() => {
-    if (!currentUser?.id) {
+    // Only open the socket once the session has been verified against the
+    // backend (isInitialized) AND that verification succeeded
+    // (isAuthenticated). This closes the window where a stale/optimistic
+    // currentUser.id could trigger a connect attempt before the real
+    // session is confirmed.
+    if (!isInitialized || !isAuthenticated || !currentUser?.id) {
       setOnlineUsers([]);
       return;
     }
@@ -53,7 +64,7 @@ export const PresenceProvider = ({
     return () => {
       socket.disconnect();
     };
-  }, [currentUser?.id]);
+  }, [currentUser?.id, isAuthenticated, isInitialized]);
 
   const isUserOnline = useCallback(
     (userId: string) => onlineUsers.includes(userId),

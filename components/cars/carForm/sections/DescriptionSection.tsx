@@ -1,7 +1,7 @@
 import { Control, Controller, UseFormRegister } from "react-hook-form";
 import { CarFormData } from "@/types/carForm.types";
 import { ImageUpload } from "../shared/ImageUpload";
-import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
+import { Textarea } from "@/components/ui/Textarea";
 
 interface DescriptionSectionProps {
   register: UseFormRegister<CarFormData>;
@@ -14,11 +14,10 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div className="md:col-span-2">
-      <RuggedTextArea
+      <Textarea
         label="ავტომობილის აღწერა"
-        name="description"
-        register={register}
         rows={6}
+        {...register("description")}
       />
     </div>
 

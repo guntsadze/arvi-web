@@ -9,7 +9,7 @@ export default async function Page({ params }: PageProps) {
   const id = resolvedParams.id;
 
   return (
-    <main className="min-h-screen bg-[#151413] p-4">
+    <main className="min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto">
         <SinglePostView postId={id} />
       </div>

@@ -49,9 +49,9 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
 
   return (
     <Link href={`/listings/${listing.id}`}>
-      <div className="group flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-amber-500 hover:bg-stone-800/30 transition-all cursor-pointer">
+      <div className="group flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-accent hover:bg-surface-1-hover/30 transition-all cursor-pointer">
         {/* Thumbnail - დავამატეთ relative, h-10 და aspect-square */}
-        <div className="relative w-10 h-10 aspect-square shrink-0 bg-stone-900 border border-stone-800 overflow-hidden group-hover:border-stone-600 transition-colors">
+        <div className="relative w-10 h-10 aspect-square shrink-0 bg-surface-1 border border-border overflow-hidden group-hover:border-border transition-colors">
           {photo ? (
             <Image
               src={photo}
@@ -62,7 +62,7 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Car size={16} className="text-stone-300" />
+              <Car size={16} className="text-text-secondary" />
             </div>
           )}
         </div>
@@ -70,18 +70,18 @@ const MiniListingCard = ({ listing }: { listing: any }) => {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1">
-            <p className="text-[10px] font-mono font-bold text-stone-300 truncate uppercase tracking-wide group-hover:text-amber-500 transition-colors">
+            <p className="text-[10px] font-mono font-bold text-text-secondary truncate uppercase tracking-wide group-hover:text-accent transition-colors">
               {car?.year} {car?.make} {car?.model}
             </p>
           </div>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[9px] font-mono font-black text-amber-500">
+            <span className="text-[9px] font-mono font-black text-accent">
               {listing.price > 0
                 ? `${listing.price.toLocaleString()} ${listing.currency}`
                 : "Call"}
             </span>
             {listing.location && (
-              <span className="flex items-center gap-0.5 text-[8px] font-mono text-stone-300 truncate">
+              <span className="flex items-center gap-0.5 text-[8px] font-mono text-text-secondary truncate">
                 <MapPin size={8} />
                 {listing.location}
               </span>
@@ -108,18 +108,18 @@ const MiniGroupRow = ({
       className={cn(
         "relative w-full flex items-center px-3 py-2.5 text-xs font-bold transition-all duration-200 group border-l-2",
         isActive
-          ? "bg-stone-800/50 text-amber-500 border-amber-500"
-          : "border-transparent text-stone-300 hover:text-stone-300 hover:bg-stone-800/30 hover:border-stone-700",
+          ? "bg-surface-2/50 text-accent border-accent"
+          : "border-transparent text-text-secondary hover:text-text-secondary hover:bg-surface-1-hover/30 hover:border-border",
       )}
     >
-      <div className="w-6 h-6 bg-stone-900 border border-stone-800 flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-stone-600">
+      <div className="w-6 h-6 bg-surface-1 border border-border flex items-center justify-center mr-3 overflow-hidden transition-colors group-hover:border-border">
         <GroupAvatarItem group={group} size="sm" />
       </div>
       <span className="font-mono truncate uppercase tracking-wider">
         {group.name}
       </span>
       {isActive && (
-        <div className="ml-auto w-1 h-1 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,1)]" />
+        <div className="ml-auto w-1 h-1 rounded-full bg-accent shadow-[0_0_8px_rgba(245,158,11,1)]" />
       )}
     </button>
   </Link>
@@ -144,29 +144,29 @@ const BottomPanel = ({
   const [tab, setTab] = useState<"nodes" | "market">("nodes");
 
   return (
-    <div className="flex flex-col border-t-4 border-stone-800 bg-[#151413] flex-1 min-h-0">
+    <div className="flex flex-col border-t-4 border-border bg-surface-1 flex-1 min-h-0">
       {/* Tab bar */}
-      <div className="flex border-b border-stone-800 shrink-0">
+      <div className="flex border-b border-border shrink-0">
         <button
           onClick={() => setTab("nodes")}
           className={cn(
             "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
             tab === "nodes"
-              ? "text-amber-500 border-amber-500 bg-amber-500/5"
-              : "text-stone-300 border-transparent hover:text-stone-300",
+              ? "text-accent border-accent bg-accent/5"
+              : "text-text-secondary border-transparent hover:text-text-secondary",
           )}
         >
           <Users size={11} />
           ჯგუფები
         </button>
-        <div className="w-px bg-stone-800" />
+        <div className="w-px bg-surface-2" />
         <button
           onClick={() => setTab("market")}
           className={cn(
             "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[9px] font-mono font-black uppercase tracking-widest transition-all border-b-2",
             tab === "market"
-              ? "text-amber-500 border-amber-500 bg-amber-500/5"
-              : "text-stone-300 border-transparent hover:text-stone-300",
+              ? "text-accent border-accent bg-accent/5"
+              : "text-text-secondary border-transparent hover:text-text-secondary",
           )}
         >
           <Tag size={11} />
@@ -178,16 +178,16 @@ const BottomPanel = ({
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         {tab === "nodes" && (
           <>
-            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
-              <span className="text-[8px] font-mono text-stone-300 uppercase tracking-[0.3em]">
+            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-surface-1 z-10 border-b border-border/40">
+              <span className="text-[8px] font-mono text-text-secondary uppercase tracking-[0.3em]">
                 აქტიური ჯგუფები
               </span>
 
               <Link
                 href="/groups"
-                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-text-secondary hover:text-accent transition-colors uppercase tracking-tighter"
               >
-                <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+                <div className="w-3 h-3 border border-border flex items-center justify-center group-hover/link:border-accent group-hover/link:bg-accent group-hover/link:text-background transition-all">
                   <ChevronRight size={10} />
                 </div>
               </Link>
@@ -195,9 +195,9 @@ const BottomPanel = ({
 
             {groupsLoading ? (
               <div className="animate-pulse space-y-3 p-4">
-                <div className="h-4 bg-stone-800 rounded w-3/4" />
-                <div className="h-4 bg-stone-800 rounded w-1/2" />
-                <div className="h-4 bg-stone-800 rounded w-2/3" />
+                <div className="h-4 bg-surface-2 rounded w-3/4" />
+                <div className="h-4 bg-surface-2 rounded w-1/2" />
+                <div className="h-4 bg-surface-2 rounded w-2/3" />
               </div>
             ) : myGroups.length > 0 ? (
               <div className="py-1">
@@ -210,8 +210,8 @@ const BottomPanel = ({
                 ))}
               </div>
             ) : (
-              <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
-                <p className="text-[9px] text-stone-300 ">ინფორმაცია არ არის</p>
+              <div className="p-4 m-3 border border-dashed border-border text-center">
+                <p className="text-[9px] text-text-secondary ">ინფორმაცია არ არის</p>
               </div>
             )}
           </>
@@ -219,21 +219,21 @@ const BottomPanel = ({
 
         {tab === "market" && (
           <>
-            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-[#151413] z-10 border-b border-stone-800/40">
-              <span className="text-[8px] font-mono text-stone-300 uppercase tracking-[0.3em]">
+            <div className="px-4 py-2 flex items-center justify-between sticky top-0 bg-surface-1 z-10 border-b border-border/40">
+              <span className="text-[8px] font-mono text-text-secondary uppercase tracking-[0.3em]">
                 ბოლოს დამატებული
               </span>
               {/* <Link
                 href="/marketplace"
-                className="text-[8px] font-mono text-amber-700 hover:text-amber-500 transition-colors"
+                className="text-[8px] font-mono text-accent hover:text-accent transition-colors"
               >
                 View All →
               </Link> */}
               <Link
                 href="/marketplace"
-                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+                className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-text-secondary hover:text-accent transition-colors uppercase tracking-tighter"
               >
-                <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+                <div className="w-3 h-3 border border-border flex items-center justify-center group-hover/link:border-accent group-hover/link:bg-accent group-hover/link:text-background transition-all">
                   <ChevronRight size={10} />
                 </div>
               </Link>
@@ -243,10 +243,10 @@ const BottomPanel = ({
               <div className="animate-pulse space-y-3 p-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex gap-3">
-                    <div className="w-10 h-10 bg-stone-800 shrink-0" />
+                    <div className="w-10 h-10 bg-surface-2 shrink-0" />
                     <div className="flex-1 space-y-1.5">
-                      <div className="h-3 bg-stone-800 rounded w-3/4" />
-                      <div className="h-2.5 bg-stone-800 rounded w-1/2" />
+                      <div className="h-3 bg-surface-2 rounded w-3/4" />
+                      <div className="h-2.5 bg-surface-2 rounded w-1/2" />
                     </div>
                   </div>
                 ))}
@@ -258,8 +258,8 @@ const BottomPanel = ({
                 ))}
               </div>
             ) : (
-              <div className="p-4 m-3 border border-dashed border-stone-800 text-center">
-                <p className="text-[9px] font-mono text-stone-300 uppercase">
+              <div className="p-4 m-3 border border-dashed border-border text-center">
+                <p className="text-[9px] font-mono text-text-secondary uppercase">
                   // No_Active_Listings
                 </p>
               </div>
@@ -357,7 +357,7 @@ export function Sidebar() {
         <div className="flex items-center justify-between mb-6">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-8 h-8 bg-amber-500 rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
+              <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-300">
                 <Image
                   src="/logo.webp"
                   alt="Logo"
@@ -366,7 +366,7 @@ export function Sidebar() {
                 />
               </div>
 
-              <div className="absolute inset-0 bg-amber-500/20 blur-lg -z-10" />
+              <div className="absolute inset-0 bg-accent/20 blur-lg -z-10" />
             </div>
           </Link>
 
@@ -382,13 +382,13 @@ export function Sidebar() {
                   className={cn(
                     "p-2 rounded-md transition-all duration-200 relative",
                     isActive
-                      ? "bg-amber-500 text-stone-900 shadow-lg"
-                      : "text-stone-300 hover:text-amber-500 hover:bg-stone-800/50",
+                      ? "bg-accent text-background shadow-lg"
+                      : "text-text-secondary hover:text-accent hover:bg-surface-1-hover/50",
                   )}
                 >
                   <Icon size={16} strokeWidth={2.5} />
                   {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,1)]" />
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent shadow-[0_0_6px_rgba(245,158,11,1)]" />
                   )}
                 </Link>
               );
@@ -409,10 +409,10 @@ export function Sidebar() {
       />
 
       {/* ── MIDDLE: Featured carousel ── */}
-      <div className="px-4 py-4 border-y border-stone-800 bg-[#151413] shrink-0">
+      <div className="px-4 py-4 border-y border-border bg-surface-1 shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <TrendingUp size={14} className="text-amber-500" />
+            <TrendingUp size={14} className="text-accent" />
           </div>
 
           <div className="flex items-center gap-3">
@@ -426,8 +426,8 @@ export function Sidebar() {
                 className={cn(
                   "px-1.5 py-0.5 text-[8px] font-bold  transition-all border border-transparent",
                   showUsers
-                    ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-300 hover:text-amber-500 border-stone-700",
+                    ? "bg-accent text-background shadow-[2px_2px_0px_0px_#78350f]"
+                    : "bg-surface-2 text-text-secondary hover:text-accent border-border",
                 )}
               >
                 ავტომოყვარულები
@@ -440,8 +440,8 @@ export function Sidebar() {
                 className={cn(
                   "px-1.5 py-0.5 text-[8px] font-bold  transition-all border border-transparent",
                   !showUsers
-                    ? "bg-amber-500 text-stone-900 shadow-[2px_2px_0px_0px_#78350f]"
-                    : "bg-stone-800 text-stone-300 hover:text-amber-500 border-stone-700",
+                    ? "bg-accent text-background shadow-[2px_2px_0px_0px_#78350f]"
+                    : "bg-surface-2 text-text-secondary hover:text-accent border-border",
                 )}
               >
                 ავტომობილები
@@ -449,13 +449,13 @@ export function Sidebar() {
             </div>
 
             {/* Vertical Divider */}
-            <div className="w-[1px] h-3 bg-stone-800" />
+            <div className="w-[1px] h-3 bg-surface-2" />
 
             <Link
               href={showUsers ? "/user" : "/cars"}
-              className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-stone-300 hover:text-amber-500 transition-colors uppercase tracking-tighter"
+              className="group/link flex items-center gap-1 text-[9px] font-mono font-bold text-text-secondary hover:text-accent transition-colors uppercase tracking-tighter"
             >
-              <div className="w-3 h-3 border border-stone-800 flex items-center justify-center group-hover/link:border-amber-500 group-hover/link:bg-amber-500 group-hover/link:text-stone-900 transition-all">
+              <div className="w-3 h-3 border border-border flex items-center justify-center group-hover/link:border-accent group-hover/link:bg-accent group-hover/link:text-background transition-all">
                 <ChevronRight size={10} />
               </div>
             </Link>
@@ -484,14 +484,14 @@ export function Sidebar() {
             <button
               onClick={() => setCarouselIndex((p) => Math.max(p - 1, 0))}
               disabled={carouselIndex === 0}
-              className="p-1 bg-stone-800 text-stone-300 hover:text-amber-500 disabled:opacity-30 transition-all"
+              className="p-1 bg-surface-2 text-text-secondary hover:text-accent disabled:opacity-30 transition-all"
             >
               <ChevronLeft size={12} />
             </button>
             <button
               onClick={() => setCarouselIndex((p) => Math.min(p + 1, maxIndex))}
               disabled={carouselIndex >= maxIndex}
-              className="p-1 bg-stone-800 text-stone-300 hover:text-amber-500 disabled:opacity-30 transition-all"
+              className="p-1 bg-surface-2 text-text-secondary hover:text-accent disabled:opacity-30 transition-all"
             >
               <ChevronRight size={12} />
             </button>
@@ -500,8 +500,8 @@ export function Sidebar() {
       </div>
 
       {/* ── FOOTER ── */}
-      <div className="p-2 border-t-4 border-stone-800 bg-[#151413] shrink-0">
-        <span className="text-[9px] text-stone-300 font-mono uppercase">
+      <div className="p-2 border-t-4 border-border bg-surface-1 shrink-0">
+        <span className="text-[9px] text-text-secondary font-mono uppercase">
           ARVI powered by guntsadze © 2026
         </span>
       </div>
@@ -511,15 +511,15 @@ export function Sidebar() {
   return (
     <>
       {/* MOBILE HEADER */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#1a1918]/80 backdrop-blur-md border-b-2 border-stone-800 z-50 flex items-center justify-between px-4">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-surface-1/80 backdrop-blur-md border-b-2 border-border z-50 flex items-center justify-between px-4">
         <button
           onClick={() => setIsOpen(true)}
-          className="p-2 bg-stone-900 border border-stone-700 text-amber-500 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)] active:translate-y-0.5 active:shadow-none transition-all"
+          className="p-2 bg-surface-1 border border-border text-accent shadow-[2px_2px_0_0_rgba(0,0,0,0.5)] active:translate-y-0.5 active:shadow-none transition-all"
         >
           <Menu size={20} />
         </button>
 
-        <span className="text-amber-500 font-black italic tracking-tighter text-lg">
+        <span className="text-accent font-black italic tracking-tighter text-lg">
           ARVI
         </span>
 
@@ -529,13 +529,13 @@ export function Sidebar() {
             className={cn(
               "relative p-2.5 rounded-sm border-2 transition-all",
               activeDropdown === "notifications"
-                ? "bg-amber-500 text-stone-900 border-amber-500"
-                : "bg-stone-900 border-stone-800 text-stone-300 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
+                ? "bg-accent text-background border-accent"
+                : "bg-surface-1 border-border text-text-secondary shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
             <Bell size={18} strokeWidth={2.5} />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-[#1a1918]">
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-error text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-surface-1">
                 {unreadCount}
               </span>
             )}
@@ -546,8 +546,8 @@ export function Sidebar() {
             className={cn(
               "w-10 h-10 rounded-sm border-2 overflow-hidden transition-all",
               activeDropdown === "profile"
-                ? "border-amber-500 scale-95"
-                : "border-stone-800 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
+                ? "border-accent scale-95"
+                : "border-border shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]",
             )}
           >
             {/* {currentUser?.avatar?.url ? (
@@ -556,7 +556,7 @@ export function Sidebar() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-300">
+              <div className="w-full h-full bg-surface-2 flex items-center justify-center text-text-secondary">
                 <UserIcon size={18} />
               </div>
             )} */}
@@ -611,14 +611,14 @@ export function Sidebar() {
       {/* Mobile Drawer (Sidebar) */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 w-72 bg-[#1a1918] border-r-4 border-stone-800 z-[70] lg:hidden flex flex-col transition-transform duration-300 ease-in-out shadow-2xl",
+          "fixed inset-y-0 left-0 w-72 bg-surface-1 border-r-4 border-border z-[70] lg:hidden flex flex-col transition-transform duration-300 ease-in-out shadow-2xl",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="absolute top-4 right-4 z-10">
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 text-stone-300 hover:text-amber-500 transition-colors"
+            className="p-2 text-text-secondary hover:text-accent transition-colors"
           >
             <X size={24} />
           </button>
@@ -629,7 +629,7 @@ export function Sidebar() {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 border-r-4 border-stone-800 bg-[#1a1918] sticky top-0 h-screen">
+      <aside className="hidden lg:flex flex-col w-72 border-r-4 border-border bg-surface-1 sticky top-0 h-screen">
         <SidebarContent />
       </aside>
     </>

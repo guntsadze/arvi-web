@@ -2,26 +2,16 @@
 
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
-import { ReactNode, useEffect } from "react";
-import { setUser } from "@/store/slices/userSlice";
+import { ReactNode } from "react";
 import { PresenceProvider } from "@/context/PresenceContext";
 
+/**
+ * Redux is no longer hydrated from localStorage. AuthProvider's getMe()
+ * call is the single source of truth for auth state (see PART A of the
+ * session-unification RFC) — it verifies against the backend and sets
+ * isAuthenticated/currentUser/isInitialized accordingly.
+ */
 export function ReduxProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const userStr = localStorage.getItem("user");
-
-      if (userStr) {
-        try {
-          const user = JSON.parse(userStr);
-          store.dispatch(setUser({ user }));
-        } catch (error) {
-          localStorage.removeItem("user");
-        }
-      }
-    }
-  }, []);
-
   return (
     <Provider store={store}>
       <PresenceProvider>{children}</PresenceProvider>

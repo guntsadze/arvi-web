@@ -73,9 +73,9 @@ export default function MessagingPage({ initialActiveId }: MessagingPageProps) {
   }, [activeId, conversations, addOrUpdateConversation]);
 
   return (
-    <div className="flex h-screen bg-neutral-950">
+    <div className="flex h-screen bg-background">
       {/* SIDEBAR */}
-      <div className="w-80 border-r border-neutral-800 bg-neutral-900">
+      <div className="w-80 border-r border-border bg-surface-1">
         <ConversationList
           conversations={conversations}
           activeId={activeId}

@@ -17,7 +17,7 @@ interface IdentitySectionProps {
 }
 
 export const IdentitySection: React.FC<IdentitySectionProps> = ({ car }) => (
-  <div className="bg-[#201d1b] border border-stone-800 p-6">
+  <div className="bg-surface-1 border border-border p-6">
     <SectionHeader icon={ShieldCheck} title="იდენტიფიცირება" />
     <div className="space-y-1">
       <DataRow label="VIN - კოდი" value={car.vin} icon={Hash} />

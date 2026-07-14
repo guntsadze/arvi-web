@@ -53,7 +53,7 @@
 
 //       <form
 //         onSubmit={handleSubmit}
-//         className="flex-1 flex flex-col border border-stone-700  bg-transparent focus-within:border-stone-500 transition-all overflow-hidden"
+//         className="flex-1 flex flex-col border border-border  bg-transparent focus-within:border-border transition-all overflow-hidden"
 //       >
 //         {/* ტექსტის შესაყვანი ველი */}
 //         <textarea
@@ -64,21 +64,21 @@
 //           placeholder={placeholder}
 //           autoFocus={autoFocus}
 //           disabled={isSubmitting}
-//           className="w-full bg-transparent px-4 py-3 text-[14px] text-[#EBE9E1] placeholder:text-stone-500 focus:outline-none resize-none min-h-[45px] max-h-[200px]"
+//           className="w-full bg-transparent px-4 py-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none resize-none min-h-[45px] max-h-[200px]"
 //         />
 
 //         {/* ქვედა პანელი: იკონები და ღილაკი */}
 //         <div className="flex items-center justify-between px-3 pb-2">
-//           <div className="flex items-center gap-3 text-stone-400">
+//           <div className="flex items-center gap-3 text-text-secondary">
 //             <button
 //               type="button"
-//               className="hover:bg-stone-800 p-1.5 rounded-full transition-colors"
+//               className="hover:bg-surface-1-hover p-1.5 rounded-full transition-colors"
 //             >
 //               <Smile size={20} />
 //             </button>
 //             <button
 //               type="button"
-//               className="hover:bg-stone-800 p-1.5 rounded-full transition-colors"
+//               className="hover:bg-surface-1-hover p-1.5 rounded-full transition-colors"
 //             >
 //               <ImageIcon size={20} />
 //             </button>
@@ -90,7 +90,7 @@
 //               type="submit"
 //               disabled={isSubmitting}
 //               className={cn(
-//                 "px-4 py-1.5 bg-[#4B96D8] hover:bg-[#3b7db5] text-white text-[14px] font-semibold rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+//                 "px-4 py-1.5 bg-link hover:bg-link-hover text-white text-[14px] font-semibold rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed",
 //                 isSubmitting && "animate-pulse",
 //               )}
 //             >
@@ -175,7 +175,7 @@ export function CommentForm({
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="flex-1 flex flex-col border border-stone-700 bg-transparent focus-within:border-stone-500 transition-all overflow-hidden rounded-lg"
+        className="flex-1 flex flex-col border border-border bg-transparent focus-within:border-border transition-all overflow-hidden rounded-lg"
       >
         <textarea
           {...rest}
@@ -187,7 +187,7 @@ export function CommentForm({
           placeholder={placeholder}
           autoFocus={autoFocus}
           disabled={isSubmitting}
-          className="w-full bg-transparent px-4 py-3 text-[14px] text-[#EBE9E1] placeholder:text-stone-500 focus:outline-none resize-none min-h-[45px] max-h-[200px]"
+          className="w-full bg-transparent px-4 py-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none resize-none min-h-[45px] max-h-[200px]"
         />
 
         {/* არჩეული მედიის პატარა პრივიუ ან სია (სურვილისამებრ) */}
@@ -195,7 +195,7 @@ export function CommentForm({
           <div className="px-4 pb-2 flex flex-wrap gap-2">
             {mediaFiles.map((file, idx) => (
               <div key={idx} className="relative group">
-                <div className="text-[10px] bg-stone-800 text-stone-300 px-2 py-1 rounded">
+                <div className="text-[10px] bg-surface-2 text-text-secondary px-2 py-1 rounded">
                   {file.type.includes("image") ? "IMG" : "VID"}:{" "}
                   {file.name.substring(0, 10)}...
                 </div>
@@ -205,7 +205,7 @@ export function CommentForm({
         )} */}
 
         <div className="flex items-center justify-between px-3 pb-2">
-          <div className="flex items-center gap-1 text-stone-400">
+          <div className="flex items-center gap-1 text-text-secondary">
             {/* მედია კონტროლერი */}
             <Controller
               name="media"
@@ -227,7 +227,7 @@ export function CommentForm({
                         field.value.filter((m: any) => m.type.includes("image"))
                           .length
                       }
-                      colorClass="text-[#EBE9E1] hover:text-amber-500"
+                      colorClass="text-text-primary hover:text-accent"
                     />
                   </FileUploader>
 
@@ -246,7 +246,7 @@ export function CommentForm({
                         field.value.filter((m: any) => m.type.includes("video"))
                           .length
                       }
-                      colorClass="text-[#EBE9E1] hover:text-blue-500"
+                      colorClass="text-text-primary hover:text-info"
                     />
                   </FileUploader>
                 </div>
@@ -255,7 +255,7 @@ export function CommentForm({
 
             <button
               type="button"
-              className="hover:bg-stone-800 p-1.5 rounded-full transition-colors"
+              className="hover:bg-surface-1-hover p-1.5 rounded-full transition-colors"
             >
               <Smile size={20} />
             </button>
@@ -266,7 +266,7 @@ export function CommentForm({
               type="submit"
               disabled={isSubmitting}
               className={cn(
-                "px-4 py-1.5 bg-[#4B96D8] hover:bg-[#3b7db5] text-white text-[14px] font-semibold rounded-full transition-all disabled:opacity-50",
+                "px-4 py-1.5 bg-link hover:bg-link-hover text-white text-[14px] font-semibold rounded-full transition-all disabled:opacity-50",
                 isSubmitting && "animate-pulse",
               )}
             >
@@ -282,12 +282,12 @@ export function CommentForm({
 const MediaButton = ({ type, icon: Icon, count, colorClass }: any) => (
   <button
     type="button"
-    className={`relative p-2 transition-all rounded hover:bg-stone-900/50 ${colorClass}`}
+    className={`relative p-2 transition-all rounded hover:bg-surface-1-hover/50 ${colorClass}`}
   >
     <Icon size={16} />
     {count > 0 && (
       <span
-        className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-[8px] text-white flex items-center justify-center font-bold rounded-full border border-[#1c1917] ${type === "image" ? "bg-amber-600" : "bg-blue-600"}`}
+        className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-[8px] text-white flex items-center justify-center font-bold rounded-full border border-surface-1 ${type === "image" ? "bg-accent" : "bg-info"}`}
       >
         {count}
       </span>

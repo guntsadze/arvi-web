@@ -13,6 +13,7 @@ import { usePresence } from "@/context/PresenceContext";
 import { useGroupPostActions } from "@/hooks/useGroupPostActions";
 import { usePostEdit } from "@/hooks/usePostEdit";
 import { Pin } from "lucide-react";
+import { Card } from "../ui/Card";
 
 interface GroupPostCardProps {
   post: any;
@@ -43,19 +44,19 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
       />
 
       <div
-        className={`relative mb-8 group/card transition-all ${actions.isPinned ? "ring-1 ring-amber-900/50" : ""}`}
+        className={`relative mb-8 group/card transition-all ${actions.isPinned ? "ring-1 ring-accent/50" : ""}`}
       >
         {actions.isPinned && (
-          <div className="absolute -top-3 left-4 z-20 bg-amber-700 px-2 py-0.5 flex items-center gap-1">
-            <Pin size={10} className="text-stone-950 fill-stone-950" />
-            <span className="font-mono text-[8px] text-stone-950 font-bold uppercase tracking-widest">
+          <div className="absolute -top-3 left-4 z-20 bg-accent px-2 py-0.5 flex items-center gap-1">
+            <Pin size={10} className="text-background fill-background" />
+            <span className="font-mono text-[8px] text-background font-bold uppercase tracking-widest">
               Pinned_Entry
             </span>
           </div>
         )}
 
-        <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-700 transition-colors duration-300 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-stone-700 to-transparent opacity-50" />
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent opacity-50" />
 
           <PostHeader
             user={post.user}
@@ -71,20 +72,20 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
               onClick={actions.handlePin}
               className={`absolute top-4 right-12 p-1 transition-colors ${
                 actions.isPinned
-                  ? "text-amber-500"
-                  : "text-stone-700 hover:text-stone-400"
+                  ? "text-accent"
+                  : "text-text-muted hover:text-text-secondary"
               }`}
             >
               <Pin size={14} />
             </button>
           )}
 
-          <div className="p-4 bg-[#201d1b]">
+          <div className="p-4">
             <PostContent post={post} />
           </div>
 
           {post.media?.length > 0 && (
-            <div className="border-y border-stone-800/50">
+            <div className="border-y border-border/50">
               <MediaSlider media={post.media} aspectRatio="aspect-[16/9]" />
             </div>
           )}
@@ -100,7 +101,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
           />
 
           {actions.showComments && (
-            <div className="bg-[#151413] border-t border-stone-800 p-6">
+            <div className="bg-surface-2 border-t border-border p-6">
               <CommentForm
                 onSubmit={(data) => actions.handleAddComment(data)}
                 placeholder="..."
@@ -124,7 +125,7 @@ export function GroupPostCard({ post, refresh, myRole }: GroupPostCardProps) {
               </div>
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </>
   );

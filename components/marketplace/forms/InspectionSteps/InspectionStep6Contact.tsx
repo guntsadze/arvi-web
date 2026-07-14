@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 
 export const InspectionStep6Contact: React.FC = () => {
   const { register } = useFormContext();
@@ -13,21 +13,20 @@ export const InspectionStep6Contact: React.FC = () => {
       {/* Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Price */}
-        <RuggedInput label="ფასი" name="price" register={register} />
+        <Input label="ფასი" {...register("price")} />
 
         {/* Location */}
-        <RuggedInput label="ლოკაცია" name="location" register={register} />
+        <Input label="ლოკაცია" {...register("location")} />
 
         {/* Phone */}
-        <RuggedInput label="ტელეფონი" name="phone" register={register} />
-        <RuggedInput label="ელ-ფოსტა" name="email" register={register} />
+        <Input label="ტელეფონი" {...register("phone")} />
+        <Input label="ელ-ფოსტა" {...register("email")} />
 
         {/* Description */}
-        <RuggedTextArea
+        <Textarea
           label="დამატებითი აღწერა"
-          name="description"
-          register={register}
           className="md:col-span-2"
+          {...register("description")}
         />
       </div>
     </div>

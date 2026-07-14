@@ -110,7 +110,7 @@ export const FloatingChatWindow = ({
             e.stopPropagation();
             dispatch(closeChat(chat.id));
           }}
-          className="absolute -top-2 -right-1 z-20 bg-red-600 text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity border border-black shadow-lg"
+          className="absolute -top-2 -right-1 z-20 bg-error text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity border border-black shadow-lg"
         >
           <X size={10} />
         </button>
@@ -119,9 +119,9 @@ export const FloatingChatWindow = ({
         <div
           onClick={() => dispatch(toggleMinimize(chat.id))}
           className={cn(
-            "cursor-pointer w-[160px] h-10 bg-stone-950 border-t-2 border-x border-stone-800",
-            "flex items-center gap-2 px-2 hover:bg-stone-900 transition-all relative overflow-hidden",
-            "border-t-amber-600 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]",
+            "cursor-pointer w-[160px] h-10 bg-background border-t-2 border-x border-border",
+            "flex items-center gap-2 px-2 hover:bg-surface-1-hover transition-all relative overflow-hidden",
+            "border-t-accent shadow-[0_-4px_10px_rgba(0,0,0,0.5)]",
           )}
         >
           {/* Scanline effect for minimized tab */}
@@ -137,7 +137,7 @@ export const FloatingChatWindow = ({
           />
 
           <div className="flex flex-col flex-1 truncate">
-            <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest truncate">
+            <span className="text-[9px] font-black text-accent uppercase tracking-widest truncate">
               {chat.user.firstName}
             </span>
           </div>
@@ -146,7 +146,7 @@ export const FloatingChatWindow = ({
           <div
             className={cn(
               "w-1 h-1 rounded-full",
-              online ? "bg-green-500 shadow-[0_0_5px_#22c55e]" : "bg-stone-800",
+              online ? "bg-success shadow-[0_0_5px_#22c55e]" : "bg-surface-2",
             )}
           />
         </div>
@@ -157,16 +157,16 @@ export const FloatingChatWindow = ({
   return (
     <div
       className={cn(
-        "fixed bottom-0 z-50 w-[320px] h-[450px] bg-[#0a0a0a] flex flex-col transition-all duration-300",
-        "border-x border-t border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.8)]",
+        "fixed bottom-0 z-50 w-[320px] h-[450px] bg-background flex flex-col transition-all duration-300",
+        "border-x border-t border-border shadow-[0_0_50px_rgba(0,0,0,0.8)]",
       )}
       style={{ right: `${24 + index * 340}px` }}
     >
       {/* Top Accent Bar */}
-      <div className="h-1 w-full bg-amber-600 shadow-[0_0_10px_rgba(217,119,6,0.5)]" />
+      <div className="h-1 w-full bg-accent shadow-[0_0_10px_rgba(217,119,6,0.5)]" />
 
       {/* Header - Industrial Style */}
-      <div className="p-3 bg-stone-950 border-b border-stone-800 flex items-center justify-between">
+      <div className="p-3 bg-background border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
             <UserAvatarItem
@@ -177,7 +177,7 @@ export const FloatingChatWindow = ({
             />
           </div>
           <div>
-            <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-widest leading-none">
+            <h3 className="text-[10px] font-black text-accent uppercase tracking-widest leading-none">
               {chat.user.firstName} {chat.user.lastName}
             </h3>
           </div>
@@ -186,13 +186,13 @@ export const FloatingChatWindow = ({
         <div className="flex items-center">
           <button
             onClick={() => dispatch(toggleMinimize(chat.id))}
-            className="p-1.5 hover:bg-stone-800 text-stone-300 hover:text-amber-500 transition-colors"
+            className="p-1.5 hover:bg-surface-1-hover text-text-secondary hover:text-accent transition-colors"
           >
             <Minus size={14} />
           </button>
           <button
             onClick={() => dispatch(closeChat(chat.id))}
-            className="p-1.5 hover:bg-red-900/20 text-stone-300 hover:text-red-500 transition-colors"
+            className="p-1.5 hover:bg-error/10/20 text-text-secondary hover:text-error transition-colors"
           >
             <X size={14} />
           </button>
@@ -201,7 +201,7 @@ export const FloatingChatWindow = ({
 
       {/* Messages Area - Grid Pattern Background */}
       <div
-        className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 bg-[#0c0c0c] custom-scrollbar"
+        className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 bg-background custom-scrollbar"
         style={{
           backgroundImage:
             "linear-gradient(#151515 1px, transparent 1px), linear-gradient(90deg, #151515 1px, transparent 1px)",
@@ -224,7 +224,7 @@ export const FloatingChatWindow = ({
               key={msg.id}
               className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}
             >
-              <span className="text-[7px] font-mono text-[#EBE9E1] mb-1 uppercase tracking-tighter">
+              <span className="text-[7px] font-mono text-text-primary mb-1 uppercase tracking-tighter">
                 {isMine ? "შენ" : chat.user.firstName} -{" "}
                 {isPending
                   ? "..."
@@ -238,20 +238,20 @@ export const FloatingChatWindow = ({
                 className={cn(
                   "relative max-w-[85%] px-3 py-2 text-[11px] font-mono border",
                   isMine
-                    ? "bg-amber-600/10 border-amber-600/30 text-amber-500"
-                    : "bg-stone-900 border-stone-700 text-stone-300",
+                    ? "bg-accent/10 border-accent/30 text-accent"
+                    : "bg-surface-1 border-border text-text-secondary",
                   isPending && "opacity-50",
                 )}
               >
                 {msg.content}
                 {isMine && (
-                  <div className="absolute top-0 right-0 w-1 h-1 bg-amber-600" />
+                  <div className="absolute top-0 right-0 w-1 h-1 bg-accent" />
                 )}
               </div>
 
               {/* 👁️ SEEN INDICATOR (მხოლოდ ჩემს მესიჯებზე) */}
               {isMine && !isPending && isSeen && isLastMyMessage && (
-                <span className="text-[6px] font-mono text-amber-600/60 mt-1 uppercase tracking-widest">
+                <span className="text-[6px] font-mono text-accent/60 mt-1 uppercase tracking-widest">
                   წაიკითხა
                 </span>
               )}
@@ -259,7 +259,7 @@ export const FloatingChatWindow = ({
           );
         })}
         {Object.values(typingUsers).length > 0 && (
-          <div className="text-[8px] font-mono text-amber-600/50 animate-pulse uppercase">
+          <div className="text-[8px] font-mono text-accent/50 animate-pulse uppercase">
             // {Object.values(typingUsers).join(", ")} Typing...
           </div>
         )}
@@ -273,7 +273,7 @@ export const FloatingChatWindow = ({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute bottom-[70px] right-4 z-[100] shadow-2xl border border-stone-800 scrollbar-hide"
+            className="absolute bottom-[70px] right-4 z-[100] shadow-2xl border border-border scrollbar-hide"
           >
             <EmojiPicker
               theme={"dark" as any}
@@ -292,18 +292,18 @@ export const FloatingChatWindow = ({
       {/* Input Area - Command Line Style */}
       <form
         onSubmit={onSubmit}
-        className="p-3 bg-stone-950 border-t border-stone-800"
+        className="p-3 bg-background border-t border-border"
       >
-        <div className="flex items-center gap-2 border border-stone-800 bg-black p-1 transition-all focus-within:border-amber-600/50">
-          <div className="pl-1 text-amber-600 font-mono text-[8px]">&gt;_</div>
+        <div className="flex items-center gap-2 border border-border bg-black p-1 transition-all focus-within:border-accent/50">
+          <div className="pl-1 text-accent font-mono text-[8px]">&gt;_</div>
           <button
             type="button"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className={cn(
               "pl-2 transition-colors",
               showEmojiPicker
-                ? "text-amber-500"
-                : "text-stone-700 hover:text-amber-600",
+                ? "text-accent"
+                : "text-text-muted hover:text-accent",
             )}
           >
             <Smile size={16} />
@@ -315,12 +315,12 @@ export const FloatingChatWindow = ({
             onFocus={markAsRead}
             onChange={handleInputChange}
             placeholder="..."
-            className="flex-1 bg-transparent py-2 text-[11px] font-mono text-amber-500 focus:outline-none placeholder:text-stone-400 uppercase"
+            className="flex-1 bg-transparent py-2 text-[11px] font-mono text-accent focus:outline-none placeholder:text-text-secondary uppercase"
           />
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="p-2 bg-stone-900 text-amber-600 hover:bg-amber-600 hover:text-black disabled:opacity-10 transition-all"
+            className="p-2 bg-surface-1 text-accent hover:bg-primary-hover hover:text-black disabled:opacity-10 transition-all"
           >
             <Send size={12} />
           </button>
@@ -328,13 +328,13 @@ export const FloatingChatWindow = ({
       </form>
 
       {/* Bottom status bar */}
-      <div className="px-3 py-1 bg-stone-950 border-t border-stone-900 flex justify-between items-center">
-        <div className="text-[6px] font-mono text-stone-700 tracking-widest uppercase">
+      <div className="px-3 py-1 bg-background border-t border-border flex justify-between items-center">
+        <div className="text-[6px] font-mono text-text-muted tracking-widest uppercase">
           Encrypted Channel // Node_{chat.conversationId.substring(0, 4)}
         </div>
         <div className="flex gap-1">
-          <div className="w-1 h-1 bg-amber-600/30" />
-          <div className="w-1 h-1 bg-amber-600/30" />
+          <div className="w-1 h-1 bg-accent/30" />
+          <div className="w-1 h-1 bg-accent/30" />
         </div>
       </div>
     </div>

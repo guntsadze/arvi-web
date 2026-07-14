@@ -27,9 +27,9 @@ export const CarDetailView: React.FC<CarDetailViewProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-[#1c1917] z-50 flex flex-col">
+    <div className="fixed inset-0 h-screen w-screen overflow-hidden bg-background z-50 flex flex-col">
       {/* Large Brand Text */}
-      <div className="fixed top-20 -left-10 text-[20vw] font-black text-stone-400/20 leading-none select-none pointer-events-none whitespace-nowrap z-0">
+      <div className="fixed top-20 -left-10 text-[20vw] font-black text-text-secondary/20 leading-none select-none pointer-events-none whitespace-nowrap z-0">
         {car.make}
       </div>
 

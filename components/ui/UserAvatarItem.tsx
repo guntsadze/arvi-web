@@ -76,7 +76,7 @@ export const UserAvatarItem = ({
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-[#EBE9E1] bg-stone-800">
+        <div className="w-full h-full flex items-center justify-center text-text-primary bg-surface-2">
           <UserIcon size={variant === "profile" ? 40 : 24} />
         </div>
       )}
@@ -88,11 +88,11 @@ export const UserAvatarItem = ({
     return (
       <div className={cn("relative group shrink-0", className)}>
         {/* Neon Background Effect */}
-        <div className="absolute inset-0 bg-orange-500 rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
+        <div className="absolute inset-0 bg-accent rotate-3 rounded-2xl blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
 
         <button
           onClick={onClick}
-          className="relative w-32 h-32 md:w-44 md:h-44 rounded-xl border-2 border-orange-500 overflow-hidden bg-neutral-900 shadow-xl cursor-zoom-in"
+          className="relative w-32 h-32 md:w-44 md:h-44 rounded-xl border-2 border-accent overflow-hidden bg-surface-1 shadow-xl cursor-zoom-in"
         >
           <AvatarImage />
 
@@ -104,7 +104,7 @@ export const UserAvatarItem = ({
 
         {/* Online Status for Profile */}
         {isOnline && (
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-[#0a0a0a] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-2" />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-background rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)] z-2" />
         )}
       </div>
     );
@@ -116,26 +116,26 @@ export const UserAvatarItem = ({
       <Link
         href={`/profile/${user.username || user.id}`}
         className={cn(
-          "flex items-center gap-4 p-6 rounded-2xl bg-stone-900/50 border border-stone-800/50 backdrop-blur-md group hover:border-amber-500/50 transition-all",
+          "flex items-center gap-4 p-6 rounded-2xl bg-surface-1/50 border border-border/50 backdrop-blur-md group hover:border-accent/50 transition-all",
           className,
         )}
       >
         <div className="relative shrink-0">
-          <div className="w-12 h-12 rounded-full bg-stone-800 overflow-hidden flex items-center justify-center border border-stone-700 group-hover:border-amber-500 transition-all">
+          <div className="w-12 h-12 rounded-full bg-surface-2 overflow-hidden flex items-center justify-center border border-border group-hover:border-accent transition-all">
             <AvatarImage />
           </div>
           {isOnline && <OnlineIndicator />}
         </div>
         <div>
           {fullName && <h4 className="text-white font-bold">{fullName}</h4>}
-          <p className="text-stone-300 text-xs">
+          <p className="text-text-secondary text-xs">
             @{user.username || "anonymous"}
           </p>
         </div>
 
         {/* HEADLINE ჩამატება */}
         {user.headline && (
-          <p className="text-stone-400 text-sm italic line-clamp-1 mt-0.5 border-l border-amber-500/30 pl-2">
+          <p className="text-text-secondary text-sm italic line-clamp-1 mt-0.5 border-l border-accent/30 pl-2">
             {user.headline}
           </p>
         )}
@@ -153,7 +153,7 @@ export const UserAvatarItem = ({
     //     <div
     //       className={cn(
     //         sizes[size],
-    //         "rounded-sm border-2 border-stone-700 overflow-hidden group-hover:border-amber-500 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+    //         "rounded-sm border-2 border-border overflow-hidden group-hover:border-accent transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
     //       )}
     //     >
     //       <AvatarImage />
@@ -162,7 +162,7 @@ export const UserAvatarItem = ({
     //     {user.role === "ADMIN" && <AdminBadge size={size} />}
     //   </div>
     //   {showName && (
-    //     <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full uppercase">
+    //     <p className="text-[8px] font-mono text-text-secondary text-center mt-1.5 truncate w-full uppercase">
     //       {user.username || "Anonymous"}
     //     </p>
     //   )}
@@ -173,7 +173,7 @@ export const UserAvatarItem = ({
         <div
           className={cn(
             sizes[size],
-            "rounded-sm border-2 border-stone-700 overflow-hidden group-hover:border-amber-500 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+            "rounded-sm border-2 border-border overflow-hidden group-hover:border-accent transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
           )}
         >
           <AvatarImage />
@@ -183,12 +183,12 @@ export const UserAvatarItem = ({
       </div>
       {showName && (
         <div className="mt-1.5 text-center w-full">
-          <p className="text-[8px] font-mono text-stone-300 truncate uppercase">
+          <p className="text-[8px] font-mono text-text-secondary truncate uppercase">
             {user.username || "Anonymous"}
           </p>
           {/* აქაც შეიძლება პატარა headline-ის ჩამატება თუ საჭიროა */}
           {user.headline && size === "lg" && (
-            <p className="text-[7px] text-stone-500 truncate italic">
+            <p className="text-[7px] text-text-muted truncate italic">
               {user.headline}ასსს
             </p>
           )}
@@ -200,15 +200,15 @@ export const UserAvatarItem = ({
 
 const OnlineIndicator = () => (
   <div className="absolute -bottom-0.5 -right-0.5 z-20 flex items-center justify-center">
-    <div className="absolute w-3 h-3 bg-green-500/60 blur-[3px] animate-pulse rounded-none" />
-    <div className="relative w-2 h-2 bg-green-400 border border-green-900 rounded-none shadow-[0_0_8px_rgba(74,222,128,0.8)]">
+    <div className="absolute w-3 h-3 bg-success/60 blur-[3px] animate-pulse rounded-none" />
+    <div className="relative w-2 h-2 bg-success border border-success rounded-none shadow-[0_0_8px_rgba(74,222,128,0.8)]">
       <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white/40" />
     </div>
   </div>
 );
 
 const AdminBadge = ({ size }: { size: string }) => (
-  <div className="absolute -top-1 -right-1 bg-red-900 text-white p-0.5 rounded-sm border border-stone-700 shadow-md">
+  <div className="absolute -top-1 -right-1 bg-error/10 text-white p-0.5 rounded-sm border border-border shadow-md">
     <Star size={size === "sm" ? 6 : 8} fill="currentColor" />
   </div>
 );

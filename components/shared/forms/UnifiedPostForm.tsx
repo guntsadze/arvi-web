@@ -93,13 +93,13 @@ export function UnifiedPostForm({
   const ActionButton = ({ type, icon: Icon, count, activeColor }: any) => (
     <button
       type="button"
-      className={`relative p-2 transition-all rounded hover:bg-stone-900/50 text-stone-700 hover:${activeColor}`}
+      className={`relative p-2 transition-all rounded hover:bg-surface-1-hover/50 text-text-muted hover:${activeColor}`}
     >
       <Icon size={16} />
       {count > 0 && (
         <span
-          className={`absolute -top-1 -right-1 w-4 h-4 text-[8px] text-white flex items-center justify-center font-bold rounded-sm border border-[#1c1917] ${
-            type === "image" ? "bg-amber-600" : "bg-blue-600"
+          className={`absolute -top-1 -right-1 w-4 h-4 text-[8px] text-white flex items-center justify-center font-bold rounded-sm border border-surface-1 ${
+            type === "image" ? "bg-accent" : "bg-info"
           }`}
         >
           {count}
@@ -114,16 +114,16 @@ export function UnifiedPostForm({
     <div className="w-full mb-6 relative">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex items-end gap-2 bg-[#1c1917] border border-stone-800 p-2 min-h-[54px] shadow-2xl focus-within:border-stone-700 transition-all"
+        className="relative flex items-end gap-2 bg-surface-1 border border-border p-2 min-h-[54px] shadow-2xl focus-within:border-border transition-all"
       >
-        <div className="absolute -top-px -left-px w-1 h-1 bg-amber-500/50" />
-        <div className="absolute -bottom-px -right-px w-1 h-1 bg-amber-500/50" />
+        <div className="absolute -top-px -left-px w-1 h-1 bg-accent/50" />
+        <div className="absolute -bottom-px -right-px w-1 h-1 bg-accent/50" />
 
-        <div className="flex items-center px-1 mb-1.5 border-r border-stone-800/50">
+        <div className="flex items-center px-1 mb-1.5 border-r border-border/50">
           <Terminal
             size={14}
             className={
-              isSubmitting ? "animate-pulse text-amber-500" : "text-stone-700"
+              isSubmitting ? "animate-pulse text-accent" : "text-text-muted"
             }
           />
         </div>
@@ -136,7 +136,7 @@ export function UnifiedPostForm({
           }}
           rows={1}
           placeholder={placeholder}
-          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-300 px-2 py-1.5 resize-none overflow-hidden max-h-[300px]"
+          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-text-primary placeholder:text-text-secondary px-2 py-1.5 resize-none overflow-hidden max-h-[300px]"
           disabled={isSubmitting}
         />
 
@@ -161,7 +161,7 @@ export function UnifiedPostForm({
                       field.value.filter((m: any) => m.type.includes("image"))
                         .length
                     }
-                    activeColor="text-amber-500"
+                    activeColor="text-accent"
                   />
                 </FileUploader>
 
@@ -180,7 +180,7 @@ export function UnifiedPostForm({
                       field.value.filter((m: any) => m.type.includes("video"))
                         .length
                     }
-                    activeColor="text-blue-500"
+                    activeColor="text-info"
                   />
                 </FileUploader>
               </>
@@ -190,7 +190,7 @@ export function UnifiedPostForm({
           <button
             type="submit"
             disabled={isSubmitting || !content?.trim()}
-            className="ml-2 h-9 px-5 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-900 disabled:text-stone-300 text-stone-950 font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
+            className="ml-2 h-9 px-5 bg-accent hover:bg-primary-hover disabled:bg-surface-1 disabled:text-text-secondary text-background font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             {isSubmitting ? (

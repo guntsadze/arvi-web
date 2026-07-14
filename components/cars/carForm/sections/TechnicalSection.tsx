@@ -1,7 +1,7 @@
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import {
   FUEL_TYPES,
   TRANSMISSION_TYPES,
@@ -19,55 +19,48 @@ export const TechnicalSection: React.FC<TechnicalSectionProps> = ({
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="space-y-6">
-      <RuggedInput
+      <Input
         label="ძრავის კოიდი / მოცულობა"
-        name="engine"
-        register={register}
         placeholder="S50B30 / 3.0L"
+        {...register("engine")}
       />
-      <RuggedSelect
+      <Select
         label="საწვავის ტიპი"
-        name="fuelType"
-        register={register}
-        options={FUEL_TYPES}
+        options={[...FUEL_TYPES]}
+        {...register("fuelType")}
       />
     </div>
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <RuggedInput
+        <Input
           label="ცხენისძალა"
-          name="horsepower"
           type="number"
-          register={register}
           placeholder="286"
+          {...register("horsepower")}
         />
-        <RuggedInput
+        <Input
           label="ნიუტონი"
-          name="torque"
           type="number"
-          register={register}
           placeholder="320"
+          {...register("torque")}
         />
       </div>
-      <RuggedSelect
+      <Select
         label="გადაცემათა კოლოფი"
-        name="transmission"
-        register={register}
-        options={TRANSMISSION_TYPES}
+        options={[...TRANSMISSION_TYPES]}
+        {...register("transmission")}
       />
     </div>
     <div className="space-y-6">
-      <RuggedSelect
+      <Select
         label="წამყვანი თვლები"
-        name="driveType"
-        register={register}
-        options={DRIVE_TYPES}
+        options={[...DRIVE_TYPES]}
+        {...register("driveType")}
       />
-      <RuggedSelect
+      <Select
         label="ძარის ტიპი"
-        name="bodyType"
-        register={register}
-        options={BODY_TYPES}
+        options={[...BODY_TYPES]}
+        {...register("bodyType")}
       />
     </div>
   </div>

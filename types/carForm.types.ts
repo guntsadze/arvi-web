@@ -43,6 +43,29 @@ export const BRAKE_CONDITION_OPTIONS = [
 
 export const COOLANT_STATUS_OPTIONS = ["CLEAR", "MIXED_WITH_OIL"] as const;
 
+export interface MaintenanceRecord {
+  type?: string;
+  title?: string;
+  location?: string;
+  serviceDate?: string;
+  cost?: string | number;
+  nextServiceMileage?: string | number;
+  nextServiceDue?: string;
+  description?: string;
+}
+
+export interface ModificationRecord {
+  type?: string;
+  name?: string;
+  brand?: string;
+  installedBy?: string;
+  hpGain?: string | number;
+  weightChange?: string | number;
+  cost?: string | number;
+  installDate?: string;
+  description?: string;
+}
+
 export type CarFormData = {
   make: string;
   model: string;
@@ -63,6 +86,8 @@ export type CarFormData = {
   isProject: boolean;
   isPublic: boolean;
   photos?: any[];
+  maintenanceRecords?: MaintenanceRecord[];
+  modifications?: ModificationRecord[];
 
   inspection: {
     // Exterior & Chassis

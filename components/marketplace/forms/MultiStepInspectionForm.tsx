@@ -80,15 +80,15 @@ export const MultiStepInspectionForm: React.FC<
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-4xl bg-[#201d1b] border border-stone-800 shadow-2xl rounded-lg overflow-hidden max-h-[90vh] flex flex-col"
+        className="relative w-full max-w-4xl bg-surface-1 border border-border shadow-2xl rounded-lg overflow-hidden max-h-[90vh] flex flex-col"
       >
-        <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-black/20">
-          <h1 className="text-xl font-bold text-orange-500 font-mono italic">
+        <div className="flex items-center justify-between p-4 border-b border-border bg-black/20">
+          <h1 className="text-xl font-bold text-accent font-mono italic">
             Vehicle Inspection Report for {car.make} {car.model}
           </h1>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-stone-800 text-stone-300 transition-colors rounded-full"
+            className="p-2 hover:bg-surface-1-hover text-text-secondary transition-colors rounded-full"
           >
             <X size={20} />
           </button>
@@ -102,24 +102,24 @@ export const MultiStepInspectionForm: React.FC<
               className="space-y-8"
             >
               {/* Progress Bar */}
-              <div className="w-full bg-stone-700 rounded-full h-2.5 mb-8">
+              <div className="w-full bg-surface-2 rounded-full h-2.5 mb-8">
                 <div
-                  className="bg-orange-500 h-2.5 rounded-full transition-all duration-300 ease-out"
+                  className="bg-accent h-2.5 rounded-full transition-all duration-300 ease-out"
                   style={{ width: `${progressPercentage}%` }}
                 ></div>
-                <p className="text-right text-stone-400 text-sm mt-1">
+                <p className="text-right text-text-secondary text-sm mt-1">
                   Step {currentStep + 1} of {totalSteps}
                 </p>
               </div>
 
               <div>{steps[currentStep]}</div>
 
-              <div className="flex justify-between mt-8 pt-4 border-t border-stone-800">
+              <div className="flex justify-between mt-8 pt-4 border-t border-border">
                 {currentStep > 0 && (
                   <button
                     type="button"
                     onClick={handlePrevious}
-                    className="px-6 py-2 bg-stone-700 text-white rounded hover:bg-stone-600 transition duration-200"
+                    className="px-6 py-2 bg-surface-2 text-white rounded hover:bg-surface-1-hover transition duration-200"
                   >
                     Previous
                   </button>
@@ -129,14 +129,14 @@ export const MultiStepInspectionForm: React.FC<
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="px-6 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition duration-200 ml-auto"
+                    className="px-6 py-2 bg-accent text-white rounded hover:bg-primary-hover transition duration-200 ml-auto"
                   >
                     Next
                   </button>
                 ) : (
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-200 ml-auto"
+                    className="px-6 py-2 bg-success text-white rounded hover:bg-success transition duration-200 ml-auto"
                   >
                     Submit Inspection
                   </button>

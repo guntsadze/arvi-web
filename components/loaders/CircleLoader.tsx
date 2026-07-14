@@ -4,10 +4,10 @@ const CircleLoader = ({ size = 32, className = "" }) => {
   return (
     <div className="flex flex-col items-center justify-center py-12 gap-4">
       <Loader2
-        className={`animate-spin text-amber-600 ${className}`}
+        className={`animate-spin text-accent ${className}`}
         size={size}
       />
-      <span className="text-stone-400 text-sm animate-pulse">იტვირთება...</span>
+      <span className="text-text-secondary text-sm animate-pulse">იტვირთება...</span>
     </div>
   );
 };

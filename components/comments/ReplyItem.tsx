@@ -30,7 +30,7 @@ export function ReplyItem({
 
   return (
     <div className="flex gap-3 relative group/reply ml-4">
-      <div className="absolute -left-6 top-4 w-4 h-px bg-stone-800" />
+      <div className="absolute -left-6 top-4 w-4 h-px bg-surface-2" />
 
       <UserAvatarItem user={reply.user} size="sm" showName={false} />
 
@@ -48,7 +48,7 @@ export function ReplyItem({
           />
         ) : (
           <>
-            <p className="text-xs text-stone-400 font-mono leading-relaxed mt-1">
+            <p className="text-xs text-text-secondary font-mono leading-relaxed mt-1">
               {reply.content}
             </p>
             <div className="flex gap-4 mt-2 opacity-0 group-hover/reply:opacity-100 transition-opacity">
@@ -57,13 +57,13 @@ export function ReplyItem({
                   editForm.setValue("content", reply.content);
                   setEditingId(reply.id);
                 }}
-                className="text-[8px] text-stone-300 hover:text-blue-500 uppercase font-bold"
+                className="text-[8px] text-text-secondary hover:text-info uppercase font-bold"
               >
                 რედაქტირება
               </button>
               <button
                 onClick={() => onDelete(reply.id, true, parentId)}
-                className="text-[8px] text-stone-300 hover:text-red-500 uppercase font-bold"
+                className="text-[8px] text-text-secondary hover:text-error uppercase font-bold"
               >
                 წაშლა
               </button>

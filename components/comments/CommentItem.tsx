@@ -47,7 +47,7 @@ export function CommentItem({
           style={{ height: "24px" }} // ეს სიმაღლე განსაზღვრავს მოხრის წერტილს
         >
           {/* მოხრილი "L" ნაწილი */}
-          <div className="absolute left-0 bottom-0 w-full h-full border-l-[1.5px] border-b-[1.5px] border-stone-700/50 rounded-bl-xl" />
+          <div className="absolute left-0 bottom-0 w-full h-full border-l-[1.5px] border-b-[1.5px] border-border/50 rounded-bl-xl" />
         </div>
       )}
 
@@ -59,7 +59,7 @@ export function CommentItem({
             size={depth > 0 ? "exsm" : "sm"}
             showName={false}
             // Ring-ი აუცილებელია! ის ფარავს ხაზის ნარჩენებს
-            className="ring-[6px] ring-[#1a1817] rounded-full bg-[#1a1817]"
+            className="ring-[6px] ring-surface-1 rounded-full bg-surface-1"
           />
         </div>
 

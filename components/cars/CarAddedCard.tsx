@@ -47,11 +47,11 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
 
   return (
     <div className="relative mb-8 group/card">
-      <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-600 transition-colors duration-300 overflow-hidden">
+      <div className="bg-surface-1 border border-border hover:border-border transition-colors duration-300 overflow-hidden">
         {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
         {/* Bottom accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
 
         {/* Header */}
         <ActivityHeader
@@ -75,15 +75,15 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
         )}
 
         {/* Car Info */}
-        <div className="p-4 space-y-3 bg-[#201d1b]">
+        <div className="p-4 space-y-3 bg-surface-1">
           {/* Title row */}
           <div className="flex items-end justify-between gap-3">
             <div className="flex items-end gap-3 flex-wrap">
-              <h3 className="text-amber-500 font-mono font-bold text-lg leading-none">
+              <h3 className="text-accent font-mono font-bold text-lg leading-none">
                 {car.year} {car.make} {car.model}
               </h3>
               {car.nickname && (
-                <span className="text-stone-300 text-xs font-mono pb-0.5">
+                <span className="text-text-secondary text-xs font-mono pb-0.5">
                   "{car.nickname}"
                 </span>
               )}
@@ -91,7 +91,7 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
 
             {/* isProject badge */}
             {car.isProject && (
-              <span className="shrink-0 px-2 py-0.5 border border-amber-700/50 bg-amber-900/20 text-amber-500 text-[9px] font-mono uppercase tracking-widest">
+              <span className="shrink-0 px-2 py-0.5 border border-accent/50 bg-accent/10 text-accent text-[9px] font-mono uppercase tracking-widest">
                 Project Car
               </span>
             )}
@@ -105,8 +105,8 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
                   key={i}
                   className={`flex items-center gap-1 px-2 py-0.5 border text-[10px] font-mono uppercase tracking-wider ${
                     spec.highlight
-                      ? "bg-amber-900/30 border-amber-800/50 text-amber-400"
-                      : "bg-stone-800 border-stone-700 text-stone-400"
+                      ? "bg-accent/20 border-accent/50 text-accent"
+                      : "bg-surface-2 border-border text-text-secondary"
                   }`}
                 >
                   {spec.icon}
@@ -118,7 +118,7 @@ export function CarAddedCard({ activity, refresh }: CarCardProps) {
 
           {/* Description */}
           {car.description && (
-            <p className="text-stone-400 text-sm font-mono leading-relaxed border-l-2 border-stone-700 pl-3">
+            <p className="text-text-secondary text-sm font-mono leading-relaxed border-l-2 border-border pl-3">
               {car.description}
             </p>
           )}

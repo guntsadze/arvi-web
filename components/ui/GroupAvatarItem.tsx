@@ -40,7 +40,7 @@ export const GroupAvatarItem = ({
       <div
         className={cn(
           sizes[size],
-          "bg-[#201d1b] border-2 border-stone-800 p-1 relative shadow-2xl group/avatar",
+          "bg-surface-1 border-2 border-border p-1 relative shadow-2xl group/avatar",
         )}
       >
         {avatarUrl ? (
@@ -52,7 +52,7 @@ export const GroupAvatarItem = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-stone-950 flex items-center justify-center font-mono text-stone-400 text-[10px]">
+          <div className="w-full h-full bg-background flex items-center justify-center font-mono text-text-secondary text-[10px]">
             NO_IMG
           </div>
         )}
@@ -65,14 +65,14 @@ export const GroupAvatarItem = ({
         )}
 
         {/* სტატუსის ბეიჯი (Activity Icon) */}
-        <div className="absolute -bottom-2 -right-2 bg-amber-700 p-1.5 border border-[#1c1917] z-20 shadow-lg">
-          <Activity size={size === "sm" ? 10 : 14} className="text-stone-950" />
+        <div className="absolute -bottom-2 -right-2 bg-accent p-1.5 border border-surface-1 z-20 shadow-lg">
+          <Activity size={size === "sm" ? 10 : 14} className="text-background" />
         </div>
       </div>
 
       {/* ჯგუფის სახელი (თუ საჭიროა) */}
       {showName && (
-        <p className="mt-3 font-mono text-[10px] text-stone-300 uppercase tracking-widest truncate w-full text-center">
+        <p className="mt-3 font-mono text-[10px] text-text-secondary uppercase tracking-widest truncate w-full text-center">
           {group.name}
         </p>
       )}

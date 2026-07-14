@@ -3,12 +3,12 @@ import { GroupPrivacy } from "@/types/groups.types";
 export const GroupSettingsSection = ({ register }: any) => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div className="md:col-span-2">
-      <label className="block font-mono text-[10px] uppercase tracking-widest text-stone-300 mb-2">
+      <label className="block font-mono text-[10px] uppercase tracking-widest text-text-secondary mb-2">
         Access Protocol
       </label>
       <select
         {...register("privacy")}
-        className="w-full bg-[#1c1917] border border-stone-800 p-3 text-stone-300 font-mono text-xs focus:outline-none focus:border-amber-900/50 transition-colors"
+        className="w-full bg-surface-1 border border-border p-3 text-text-secondary font-mono text-xs focus:outline-none focus:border-accent/50 transition-colors"
       >
         <option value={GroupPrivacy.PUBLIC}>
           PUBLIC_ACCESS (Visible to all)

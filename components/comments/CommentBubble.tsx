@@ -26,24 +26,24 @@ export function CommentBubble({
   const images = comment.media;
 
   return (
-    <div className="bg-[#2b2826] p-2 relative group/bubble">
+    <div className="bg-surface-2 p-2 relative group/bubble">
       <div className="flex justify-between items-start">
         <div className="flex flex-col">
           <div className="flex items-center gap-2 flex-wrap hover:underline cursor-pointer">
-            <p className="font-bold text-[#EBE9E1] tracking-wide text-xs">
+            <p className="font-bold text-text-primary tracking-wide text-xs">
               {comment.user?.firstName} {comment.user?.lastName}
             </p>
-            <span className="text-[10px] text-[#EBE9E1] font-mono">
+            <span className="text-[10px] text-text-primary font-mono">
               @{comment.user?.username}
             </span>
           </div>
-          <span className="text-[10px] text-stone-500 font-mono">
+          <span className="text-[10px] text-text-muted font-mono">
             {comment.user.headline}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-stone-500 whitespace-nowrap">
+          <span className="text-[10px] text-text-muted whitespace-nowrap">
             {timeAgo}
           </span>
           <ActivityMenu
@@ -68,7 +68,7 @@ export function CommentBubble({
             }}
           />
         ) : (
-          <p className="text-[13px] text-[#dcd8c8] leading-normal break-words">
+          <p className="text-[13px] text-text-primary leading-normal break-words">
             {comment.content}
           </p>
         )}
@@ -109,7 +109,7 @@ export function CommentBubble({
         >
           {/* დახურვა */}
           <button
-            className="absolute top-4 right-4 text-white hover:text-stone-300 transition-colors"
+            className="absolute top-4 right-4 text-white hover:text-text-secondary transition-colors"
             onClick={() => setLightboxIndex(null)}
           >
             <X size={28} />
@@ -118,7 +118,7 @@ export function CommentBubble({
           {/* წინა */}
           {images.length > 1 && lightboxIndex > 0 && (
             <button
-              className="absolute left-4 text-white hover:text-stone-300 transition-colors"
+              className="absolute left-4 text-white hover:text-text-secondary transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setLightboxIndex(lightboxIndex - 1);
@@ -139,7 +139,7 @@ export function CommentBubble({
           {/* შემდეგი */}
           {images.length > 1 && lightboxIndex < images.length - 1 && (
             <button
-              className="absolute right-4 text-white hover:text-stone-300 transition-colors"
+              className="absolute right-4 text-white hover:text-text-secondary transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setLightboxIndex(lightboxIndex + 1);
@@ -151,7 +151,7 @@ export function CommentBubble({
 
           {/* Counter */}
           {images.length > 1 && (
-            <div className="absolute bottom-4 text-stone-400 text-sm">
+            <div className="absolute bottom-4 text-text-secondary text-sm">
               {lightboxIndex + 1} / {images.length}
             </div>
           )}

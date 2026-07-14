@@ -11,7 +11,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack }) => {
       {onBack && (
         <button
           onClick={onBack}
-          className="text-stone-400 hover:text-stone-200 transition-colors duration-200 flex items-center"
+          className="text-text-secondary hover:text-text-primary transition-colors duration-200 flex items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, onBack }) => {
         </button>
       )}
       <h1
-        className={`text-4xl font-bold text-stone-100 ${!onBack ? "w-full text-center" : ""}`}
+        className={`text-4xl font-bold text-text-primary ${!onBack ? "w-full text-center" : ""}`}
       >
         {title}
       </h1>

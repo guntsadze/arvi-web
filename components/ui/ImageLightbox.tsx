@@ -113,7 +113,7 @@ export const ImageLightbox = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-[#0a0a0a]/95 backdrop-blur-xl"
+            className="absolute inset-0 bg-background/95 backdrop-blur-xl"
           />
 
           {/* ── SCANLINE EFFECT ── */}
@@ -123,17 +123,17 @@ export const ImageLightbox = ({
           <motion.header
             initial={{ y: -50 }}
             animate={{ y: 0 }}
-            className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-stone-800 bg-black/40"
+            className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-border bg-black/40"
           >
             <div className="flex items-center gap-4">
               {/* <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <Cpu size={12} className="text-amber-500" />
-                  <span className="text-[10px] text-amber-500 font-black tracking-[0.3em] uppercase">
+                  <Cpu size={12} className="text-accent" />
+                  <span className="text-[10px] text-accent font-black tracking-[0.3em] uppercase">
                     Visual_Buffer_v2.0
                   </span>
                 </div>
-                <span className="text-[8px] text-stone-300 mt-1 uppercase tracking-tighter">
+                <span className="text-[8px] text-text-secondary mt-1 uppercase tracking-tighter">
                   ID: {id?.slice(0, 12)}... // Status: ESTABLISHED
                 </span>
               </div> */}
@@ -143,7 +143,7 @@ export const ImageLightbox = ({
               {src && (
                 <button
                   onClick={() => window.open(src, "_blank")}
-                  className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-stone-800 text-stone-300 hover:text-amber-500 hover:border-amber-500/50 transition-all text-[9px] uppercase tracking-widest"
+                  className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-border text-text-secondary hover:text-accent hover:border-accent/50 transition-all text-[9px] uppercase tracking-widest"
                 >
                   <Download size={12} />
                   სურათის ჩამოტვირთვა
@@ -151,7 +151,7 @@ export const ImageLightbox = ({
               )}
               <button
                 onClick={onClose}
-                className="w-10 h-10 flex items-center justify-center border border-stone-800 text-stone-300 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/50 transition-all group"
+                className="w-10 h-10 flex items-center justify-center border border-border text-text-secondary hover:bg-error/10 hover:text-error hover:border-error/50 transition-all group"
               >
                 <X size={20} className="group-rotate-90 transition-transform" />
               </button>
@@ -161,10 +161,10 @@ export const ImageLightbox = ({
           {/* ── VIEWPORT ── */}
           <div className="relative flex-1 flex items-center justify-center p-4 md:p-12 z-20">
             {/* Corner Brackets */}
-            <div className="absolute inset-10 pointer-events-none opacity-20 border-l border-t border-stone-600 w-20 h-20" />
-            <div className="absolute top-10 right-10 pointer-events-none opacity-20 border-r border-t border-stone-600 w-20 h-20" />
-            <div className="absolute bottom-10 left-10 pointer-events-none opacity-20 border-l border-b border-stone-600 w-20 h-20" />
-            <div className="absolute bottom-10 right-10 pointer-events-none opacity-20 border-r border-b border-stone-600 w-20 h-20" />
+            <div className="absolute inset-10 pointer-events-none opacity-20 border-l border-t border-border w-20 h-20" />
+            <div className="absolute top-10 right-10 pointer-events-none opacity-20 border-r border-t border-border w-20 h-20" />
+            <div className="absolute bottom-10 left-10 pointer-events-none opacity-20 border-l border-b border-border w-20 h-20" />
+            <div className="absolute bottom-10 right-10 pointer-events-none opacity-20 border-r border-b border-border w-20 h-20" />
 
             <div className="relative group">
               {src ? (
@@ -172,7 +172,7 @@ export const ImageLightbox = ({
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ type: "spring", damping: 20 }}
-                  className={`relative p-1 bg-stone-900 border border-stone-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] 
+                  className={`relative p-1 bg-surface-1 border border-border shadow-[0_0_50px_rgba(0,0,0,0.5)] 
                   ${
                     type === "avatar"
                       ? "w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
@@ -188,13 +188,13 @@ export const ImageLightbox = ({
                     className="object-contain"
                   />
 
-                  {/* <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[8px] text-stone-300 uppercase">
+                  {/* <div className="absolute -bottom-6 left-0 right-0 flex justify-between px-2 text-[8px] text-text-secondary uppercase">
                     <span>Type: {type || "unknown"}</span>
                     <span>Source: Encrypted_Node</span>
                   </div> */}
                 </motion.div>
               ) : (
-                <div className="w-64 h-64 border-2 border-dashed border-stone-800 flex flex-col items-center justify-center gap-4 text-stone-300">
+                <div className="w-64 h-64 border-2 border-dashed border-border flex flex-col items-center justify-center gap-4 text-text-secondary">
                   <Maximize2 size={40} className="animate-pulse" />
                   <span className="text-[10px] tracking-widest">
                     ინფორმაცია არ არის
@@ -209,7 +209,7 @@ export const ImageLightbox = ({
             <motion.footer
               initial={{ y: 100 }}
               animate={{ y: 0 }}
-              className="relative z-30 p-6 bg-stone-950/80 border-t border-stone-800 backdrop-blur-md"
+              className="relative z-30 p-6 bg-background/80 border-t border-border backdrop-blur-md"
             >
               <div className="max-w-2xl mx-auto">
                 <AnimatePresence mode="wait">
@@ -229,7 +229,7 @@ export const ImageLightbox = ({
                       >
                         <button
                           disabled={uploading}
-                          className="w-full md:w-auto flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-amber-500/5 border border-amber-500/20 text-amber-500 hover:bg-amber-500 hover:text-black transition-all group disabled:opacity-50"
+                          className="w-full md:w-auto flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-accent/5 border border-accent/20 text-accent hover:bg-primary-hover hover:text-black transition-all group disabled:opacity-50"
                         >
                           {uploading ? (
                             <Loader2 size={16} className="animate-spin" />
@@ -248,7 +248,7 @@ export const ImageLightbox = ({
                       {src && (
                         <button
                           onClick={() => setConfirmDelete(true)}
-                          className="flex items-center justify-center gap-3 px-6 py-4 border border-red-900/30 text-red-900 hover:border-red-500 hover:text-red-500 transition-all"
+                          className="flex items-center justify-center gap-3 px-6 py-4 border border-error/30 text-error hover:border-error hover:text-error transition-all"
                         >
                           <Trash2 size={16} />
                           <span className="text-[11px] font-black uppercase tracking-[0.2em]">
@@ -262,25 +262,25 @@ export const ImageLightbox = ({
                       key="confirm"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col md:flex-row items-center gap-4 p-4 border border-red-500/20 bg-red-500/5"
+                      className="flex flex-col md:flex-row items-center gap-4 p-4 border border-error/20 bg-error/5"
                     >
                       <div className="flex-1 flex items-center gap-3">
-                        <div className="w-2 h-2 bg-red-500 animate-ping" />
-                        <span className="text-[10px] text-red-500 font-bold uppercase tracking-widest">
+                        <div className="w-2 h-2 bg-error animate-ping" />
+                        <span className="text-[10px] text-error font-bold uppercase tracking-widest">
                           ყურადღება: ფოტოსურათი წაიშლება!
                         </span>
                       </div>
                       <div className="flex gap-2 w-full md:w-auto">
                         <button
                           onClick={() => setConfirmDelete(false)}
-                          className="flex-1 md:flex-none px-6 py-2 border border-stone-700 text-stone-300 hover:text-stone-300 transition-all text-[10px] uppercase"
+                          className="flex-1 md:flex-none px-6 py-2 border border-border text-text-secondary hover:text-text-secondary transition-all text-[10px] uppercase"
                         >
                           გაუქმება
                         </button>
                         <button
                           onClick={handleDelete}
                           disabled={deleting}
-                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-red-600 text-white hover:bg-red-500 transition-all text-[10px] font-bold uppercase"
+                          className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-error text-white hover:bg-error transition-all text-[10px] font-bold uppercase"
                         >
                           {deleting ? (
                             <Loader2 size={12} className="animate-spin" />

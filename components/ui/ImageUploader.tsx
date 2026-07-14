@@ -99,10 +99,10 @@ export default function ImageUploader({ id, type, context }: Props) {
       >
         <button
           disabled={loading}
-          className="group relative flex items-center gap-2 px-3 py-1.5 bg-black/50 hover:bg-amber-600 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest transition-all disabled:opacity-50"
+          className="group relative flex items-center gap-2 px-3 py-1.5 bg-black/50 hover:bg-primary-hover backdrop-blur-md border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest transition-all disabled:opacity-50"
         >
           {loading ? (
-            <Loader2 size={12} className="animate-spin text-amber-500" />
+            <Loader2 size={12} className="animate-spin text-accent" />
           ) : (
             <Camera
               size={12}
@@ -115,7 +115,7 @@ export default function ImageUploader({ id, type, context }: Props) {
 
       <button
         onClick={handleDelete}
-        className="p-1.5 bg-red-950/40 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white transition-colors"
+        className="p-1.5 bg-error/10/40 hover:bg-error border border-error/20 text-error hover:text-white transition-colors"
       >
         <Trash2 size={12} />
       </button>

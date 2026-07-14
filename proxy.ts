@@ -18,7 +18,7 @@ export default function proxy(request: NextRequest) {
 
   if (isPublic) {
     if (token && AUTH_ROUTES.includes(pathname)) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/feed", request.url));
     }
     return NextResponse.next();
   }

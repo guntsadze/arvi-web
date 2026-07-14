@@ -55,7 +55,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
         {/* Close Button */}
         <button
           onClick={closeSlider}
-          className="absolute top-6 right-6 text-white/50 hover:text-amber-500 transition-colors z-[110]"
+          className="absolute top-6 right-6 text-white/50 hover:text-accent transition-colors z-[110]"
         >
           <X size={40} strokeWidth={1} />
         </button>
@@ -70,13 +70,13 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
           <>
             <button
               onClick={prevImage}
-              className="absolute left-4 md:left-10 p-4 text-white/30 hover:text-amber-500 hover:bg-white/5 rounded-full transition-all"
+              className="absolute left-4 md:left-10 p-4 text-white/30 hover:text-accent hover:bg-white/5 rounded-full transition-all"
             >
               <ChevronLeft size={48} strokeWidth={1} />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 md:right-10 p-4 text-white/30 hover:text-amber-500 hover:bg-white/5 rounded-full transition-all"
+              className="absolute right-4 md:right-10 p-4 text-white/30 hover:text-accent hover:bg-white/5 rounded-full transition-all"
             >
               <ChevronRight size={48} strokeWidth={1} />
             </button>
@@ -89,7 +89,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
           alt={`${car.make} ${car.model}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="max-w-full max-h-[80vh] object-contain select-none shadow-2xl shadow-amber-500/10 transition-all duration-500"
+          className="max-w-full max-h-[80vh] object-contain select-none shadow-2xl shadow-accent/10 transition-all duration-500"
         />
 
         {/* Thumbnails */}
@@ -100,7 +100,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
               onClick={() => setCurrentIndex(idx)}
               className={`w-12 h-12 border-2 transition-all ${
                 idx === currentIndex
-                  ? "border-amber-500 scale-110"
+                  ? "border-accent scale-110"
                   : "border-white/10 opacity-40 hover:opacity-100"
               }`}
             >
@@ -123,7 +123,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
       {/* მთავარი ქარდი */}
       <div
         onClick={() => photos.length > 0 && setIsSliderOpen(true)}
-        className="relative w-full h-full grayscale contrast-125 sepia-[0.3] group-hover:grayscale-0 group-hover:sepia-0 group-hover:scale-[1.01] transition-all duration-700 ease-in-out bg-stone-900/50 border-2 border-stone-800 overflow-hidden cursor-pointer"
+        className="relative w-full h-full grayscale contrast-125 sepia-[0.3] group-hover:grayscale-0 group-hover:sepia-0 group-hover:scale-[1.01] transition-all duration-700 ease-in-out bg-surface-1/50 border-2 border-border overflow-hidden cursor-pointer"
       >
         <div className="w-full h-full flex items-center justify-center">
           {photos.length > 0 ? (
@@ -135,7 +135,7 @@ export const CarVisual: React.FC<CarVisualProps> = ({ car }) => {
               className="object-cover w-full h-full"
             />
           ) : (
-            <Car className="w-24 h-24 text-stone-700 group-hover:text-amber-500 transition-colors duration-500" />
+            <Car className="w-24 h-24 text-text-muted group-hover:text-accent transition-colors duration-500" />
           )}
         </div>
       </div>

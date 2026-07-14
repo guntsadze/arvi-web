@@ -1,6 +1,6 @@
 import React from "react";
 import { useFieldArray, Control, UseFormRegister } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
+import { Input } from "@/components/ui/Input";
 import {
   Plus,
   Trash2,
@@ -10,14 +10,15 @@ import {
   Weight,
   DollarSign,
 } from "lucide-react";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Select } from "@/components/ui/Select";
 import { MODIFICATIONS_TYPES } from "@/constants/carOptions";
-import { RuggedDateInput } from "@/components/ui/RuggedDateInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
+import { DateInput } from "@/components/ui/DateInput";
+import { Textarea } from "@/components/ui/Textarea";
+import { CarFormData } from "@/types/carForm.types";
 
 interface ModificationsSectionProps {
-  control: Control<any>;
-  register: UseFormRegister<any>;
+  control: Control<CarFormData>;
+  register: UseFormRegister<CarFormData>;
 }
 
 export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
@@ -32,13 +33,13 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-800 pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-5">
         <div className="space-y-1">
-          <h3 className="text-2xl font-black text-stone-100 uppercase tracking-tighter flex items-center gap-3">
-            <Zap className="text-yellow-500 w-6 h-6 fill-yellow-500/20" />
+          <h3 className="text-2xl font-black text-text-primary uppercase tracking-tighter flex items-center gap-3">
+            <Zap className="text-warning w-6 h-6 fill-warning/20" />
             ავტომობილის მოდიფიკაციები
           </h3>
-          <p className="text-stone-300 text-xs uppercase font-bold tracking-widest">
+          <p className="text-text-secondary text-xs uppercase font-bold tracking-widest">
             ფერფორმანსი & ვიზუალური განახლებები
           </p>
         </div>
@@ -52,7 +53,7 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
               installDate: new Date().toISOString().split("T")[0],
             })
           }
-          className="group flex items-center gap-2 px-6 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-black text-xs font-black rounded-sm transition-all shadow-[4px_4px_0px_0px_rgba(113,63,18,1)] active:translate-y-1 active:shadow-none uppercase tracking-widest"
+          className="group flex items-center gap-2 px-6 py-2.5 bg-warning hover:bg-warning text-black text-xs font-black rounded-sm transition-all shadow-[4px_4px_0px_0px_rgba(113,63,18,1)] active:translate-y-1 active:shadow-none uppercase tracking-widest"
         >
           <Plus size={16} /> ჩანაწერის დამატება
         </button>
@@ -62,17 +63,17 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="relative bg-stone-900/40 border border-stone-800 rounded-lg overflow-hidden transition-all hover:border-stone-700/50"
+            className="relative bg-surface-1/40 border border-border rounded-lg overflow-hidden transition-all hover:border-border/50"
           >
             {/* Top Bar for Delete & Label */}
-            <div className="flex items-center justify-between bg-stone-950/40 px-6 py-2 border-b border-stone-800/50">
-              <span className="text-[10px] font-black text-stone-300 uppercase tracking-widest">
+            <div className="flex items-center justify-between bg-background/40 px-6 py-2 border-b border-border/50">
+              <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest">
                 განახლების ჩანაწერი #{index + 1}
               </span>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-stone-300 hover:text-red-500 transition-colors flex items-center gap-1.5 group"
+                className="text-text-secondary hover:text-error transition-colors flex items-center gap-1.5 group"
               >
                 <span className="text-[10px] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                   ჩანაწერის წაშლა
@@ -84,76 +85,67 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
             <div className="p-6 space-y-6">
               {/* Row 1: Core Mod Info */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <RuggedSelect
+                <Select
                   label="განახლების კატეგორია"
-                  name={`modifications.${index}.type`}
-                  options={MODIFICATIONS_TYPES}
-                  register={register}
+                  options={[...MODIFICATIONS_TYPES]}
+                  {...register(`modifications.${index}.type`)}
                 />
-                <RuggedInput
+                <Input
                   label="განახლების სახელი"
-                  name={`modifications.${index}.name`}
-                  register={register}
                   placeholder="მაგ: Stage 2 Turbo"
+                  {...register(`modifications.${index}.name`)}
                 />
-                <RuggedInput
+                <Input
                   label="ბრენდი"
-                  name={`modifications.${index}.brand`}
-                  register={register}
                   placeholder="Garrett, HKS, etc."
+                  {...register(`modifications.${index}.brand`)}
                 />
               </div>
 
               {/* Row 2: Performance & Details */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
                 <div className="lg:col-span-3">
-                  <RuggedInput
+                  <Input
                     label="განახლება გააკეთა"
-                    name={`modifications.${index}.installedBy`}
-                    register={register}
                     placeholder="Shop or DIY"
+                    {...register(`modifications.${index}.installedBy`)}
                   />
                 </div>
 
                 {/* Stats Group */}
-                <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-4 bg-stone-950/30 p-4 rounded border border-stone-800/50">
-                  <RuggedInput
+                <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-4 bg-surface-2 p-4 rounded border border-border">
+                  <Input
                     label="ცხენისძალის ნამატი"
                     type="number"
-                    icon={<Gauge size={14} className="text-yellow-500" />}
-                    name={`modifications.${index}.hpGain`}
-                    register={register}
+                    leftIcon={<Gauge size={14} className="text-warning" />}
+                    {...register(`modifications.${index}.hpGain`)}
                   />
-                  <RuggedInput
+                  <Input
                     label="წონის ცვლილება"
                     type="number"
-                    icon={<Weight size={14} className="text-blue-500" />}
-                    name={`modifications.${index}.weightChange`}
-                    register={register}
+                    leftIcon={<Weight size={14} className="text-info" />}
+                    {...register(`modifications.${index}.weightChange`)}
                   />
-                  <RuggedInput
+                  <Input
                     label="ღირებულება (₾)"
                     type="number"
-                    icon={<DollarSign size={14} className="text-green-500" />}
-                    name={`modifications.${index}.cost`}
-                    register={register}
+                    leftIcon={<DollarSign size={14} className="text-success" />}
+                    {...register(`modifications.${index}.cost`)}
                   />
-                  <RuggedDateInput
+                  <DateInput
                     label="განახლების თარიღი"
-                    name={`modifications.${index}.installDate`}
-                    control={control}
+                    {...register(`modifications.${index}.installDate`)}
                   />
                 </div>
               </div>
 
               {/* Row 3: Full-width Description */}
               <div className="pt-2">
-                <RuggedTextArea
+                <Textarea
                   label="განახლების აღწერა დეტალურად"
-                  name={`modifications.${index}.description`}
-                  register={register}
                   placeholder="Describe the upgrade, tuning specs, or part numbers..."
                   rows={2}
+                  {...register(`modifications.${index}.description`)}
                 />
               </div>
             </div>
@@ -161,12 +153,12 @@ export const ModificationsSection: React.FC<ModificationsSectionProps> = ({
         ))}
 
         {fields.length === 0 && (
-          <div className="text-center py-16 border-2 border-dashed border-stone-800 rounded-lg bg-stone-900/10">
-            <Zap className="mx-auto h-12 w-12 text-stone-300 mb-4" />
-            <p className="text-stone-300 font-bold uppercase tracking-widest text-sm">
+          <div className="text-center py-16 border-2 border-dashed border-border rounded-lg bg-surface-1/10">
+            <Zap className="mx-auto h-12 w-12 text-text-secondary mb-4" />
+            <p className="text-text-secondary font-bold uppercase tracking-widest text-sm">
               მოდიფიკაციები არ მოიძებნა
             </p>
-            <p className="text-stone-300 text-xs mt-1 font-medium italic">
+            <p className="text-text-secondary text-xs mt-1 font-medium italic">
               დაამატე შენი ავტომობილის პირველი განახლება
             </p>
           </div>

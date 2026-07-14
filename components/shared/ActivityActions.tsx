@@ -35,11 +35,11 @@ export function ActivityActions({
   if (variant === "minimal") {
     // Car card-ისთვის მარტო like
     return (
-      <div className="flex items-center gap-4 pt-2 border-t border-stone-800 px-4 pb-3">
+      <div className="flex items-center gap-4 pt-2 border-t border-border px-4 pb-3">
         <button
           onClick={onLike}
           className={`flex items-center gap-1.5 transition-colors group/like ${
-            isLiked ? "text-amber-500" : "text-stone-300 hover:text-amber-500"
+            isLiked ? "text-accent" : "text-text-secondary hover:text-accent"
           }`}
         >
           <ThumbsUp size={14} className={isLiked ? "fill-current" : ""} />
@@ -56,12 +56,12 @@ export function ActivityActions({
   const cols = onShare ? "grid-cols-4" : "grid-cols-3";
 
   return (
-    <div className={`grid ${cols} border-t border-stone-800 bg-[#181615]`}>
+    <div className={`grid ${cols} border-t border-border bg-surface-2`}>
       {/* Like */}
       <button
         onClick={onLike}
-        className={`flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase transition-colors hover:bg-stone-800 ${
-          isLiked ? "text-red-500" : "text-stone-300"
+        className={`flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase transition-colors hover:bg-surface-1-hover ${
+          isLiked ? "text-error" : "text-text-secondary"
         }`}
       >
         {variant === "car" ? (
@@ -76,7 +76,7 @@ export function ActivityActions({
       {onToggleComments && (
         <button
           onClick={onToggleComments}
-          className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-stone-300 hover:text-amber-500 hover:bg-stone-800 border-l border-stone-800"
+          className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-text-secondary hover:text-accent hover:bg-surface-1-hover border-l border-border"
         >
           <MessageCircle size={16} />
           <span>{commentsCount}</span>
@@ -87,7 +87,7 @@ export function ActivityActions({
       {onShare && (
         <button
           onClick={onShare}
-          className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-stone-300 hover:text-blue-500 hover:bg-stone-800 border-l border-stone-800"
+          className="flex items-center justify-center gap-2 py-3 text-xs font-mono uppercase text-text-secondary hover:text-info hover:bg-surface-1-hover border-l border-border"
         >
           <Share2 size={16} />
         </button>
@@ -97,8 +97,8 @@ export function ActivityActions({
       {onSave && (
         <button
           onClick={onSave}
-          className={`flex items-center justify-center gap-2 py-3 border-l border-stone-800 hover:bg-stone-800 transition-colors ${
-            isSaved ? "text-amber-600" : "text-[#EBE9E1]"
+          className={`flex items-center justify-center gap-2 py-3 border-l border-border hover:bg-surface-1-hover transition-colors ${
+            isSaved ? "text-accent" : "text-text-primary"
           }`}
         >
           <Bookmark size={16} className={isSaved ? "fill-current" : ""} />

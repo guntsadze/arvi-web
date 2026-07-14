@@ -70,12 +70,12 @@ export function PostForm({ refresh }: { refresh: () => void }) {
   const MediaButton = ({ type, icon: Icon, count, colorClass }: any) => (
     <button
       type="button"
-      className={`relative p-2 transition-all rounded hover:bg-stone-900/50 ${colorClass}`}
+      className={`relative p-2 transition-all rounded hover:bg-surface-1-hover/50 ${colorClass}`}
     >
       <Icon size={16} />
       {count > 0 && (
         <span
-          className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-[8px] text-white flex items-center justify-center font-bold rounded-full border border-[#1c1917] ${type === "image" ? "bg-amber-600" : "bg-blue-600"}`}
+          className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-[8px] text-white flex items-center justify-center font-bold rounded-full border border-surface-1 ${type === "image" ? "bg-accent" : "bg-info"}`}
         >
           {count}
         </span>
@@ -89,19 +89,19 @@ export function PostForm({ refresh }: { refresh: () => void }) {
     <div className="w-full max-w-3xl mx-auto mb-6 px-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex items-end gap-2 bg-[#1c1917] border border-stone-800 p-2 min-h-[54px] shadow-lg group focus-within:border-stone-700 transition-all"
+        className="relative flex items-end gap-2 bg-surface-1 border border-border p-2 min-h-[54px] shadow-lg group focus-within:border-border transition-all"
       >
         {/* Tech Decor */}
-        <div className="absolute -top-px -left-px w-1 h-1 bg-amber-500/50" />
-        <div className="absolute -bottom-px -right-px w-1 h-1 bg-amber-500/50" />
+        <div className="absolute -top-px -left-px w-1 h-1 bg-accent/50" />
+        <div className="absolute -bottom-px -right-px w-1 h-1 bg-accent/50" />
 
-        <div className="flex items-center justify-center px-1 mb-1.5 border-r border-stone-800/50">
+        <div className="flex items-center justify-center px-1 mb-1.5 border-r border-border/50">
           <Terminal
             size={14}
             className={
               isSubmitting
-                ? "animate-pulse text-amber-500"
-                : "text-stone-700 group-focus-within:text-amber-600"
+                ? "animate-pulse text-accent"
+                : "text-text-muted group-focus-within:text-accent"
             }
           />
         </div>
@@ -114,7 +114,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
           }}
           rows={1}
           placeholder="New status..."
-          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-stone-200 placeholder:text-stone-700 px-2 py-1.5 resize-none overflow-hidden max-h-[200px]"
+          className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-text-primary placeholder:text-text-muted px-2 py-1.5 resize-none overflow-hidden max-h-[200px]"
           disabled={isSubmitting}
         />
 
@@ -138,7 +138,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     count={
                       field.value.filter((m: any) => m.type === "image").length
                     }
-                    colorClass="text-[#EBE9E1] hover:text-amber-500"
+                    colorClass="text-text-primary hover:text-accent"
                   />
                 </FileUploader>
 
@@ -156,7 +156,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
                     count={
                       field.value.filter((m: any) => m.type === "video").length
                     }
-                    colorClass="text-[#EBE9E1] hover:text-blue-500"
+                    colorClass="text-text-primary hover:text-info"
                   />
                 </FileUploader>
               </>
@@ -166,7 +166,7 @@ export function PostForm({ refresh }: { refresh: () => void }) {
           <button
             type="submit"
             disabled={isSubmitting || !content?.trim()}
-            className="ml-2 h-9 px-4 bg-amber-600 hover:bg-amber-500 disabled:bg-stone-800/50 disabled:text-[#EBE9E1] text-stone-950 font-black text-[10px] tracking-tight uppercase transition-all flex items-center gap-2"
+            className="ml-2 h-9 px-4 bg-accent hover:bg-primary-hover disabled:bg-surface-2/50 disabled:text-text-primary text-background font-black text-[10px] tracking-tight uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
             {isSubmitting ? (

@@ -41,3 +41,5 @@ export const selectCurrentUser = (state: { user: UserState }) =>
   state.user.currentUser;
 export const selectIsAuthenticated = (state: { user: UserState }) =>
   state.user.isAuthenticated;
+export const selectIsInitialized = (state: { user: UserState }) =>
+  state.user.isInitialized;

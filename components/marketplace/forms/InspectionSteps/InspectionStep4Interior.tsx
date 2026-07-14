@@ -2,11 +2,11 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
-import { RuggedInput } from "@/components/ui/RuggedInput";
+import { Select, toSelectOptions } from "@/components/ui/Select";
+import { Input } from "@/components/ui/Input";
 import { INTERIOR_GRADE_OPTIONS } from "@/types/carForm.types";
 import { RatingSlider } from "@/components/ui/RatingSlider";
-import { RuggedCheckbox } from "@/components/ui/RuggedCheckbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export const InspectionStep4Interior: React.FC = () => {
   const { register } = useFormContext();
@@ -19,41 +19,35 @@ export const InspectionStep4Interior: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <RuggedSelect
+          <Select
             label="ინტერიერის შეფასება"
-            name="inspection.interiorCondition"
-            register={register}
-            options={[...INTERIOR_GRADE_OPTIONS]}
+            options={toSelectOptions(INTERIOR_GRADE_OPTIONS)}
+            {...register("inspection.interiorCondition")}
           />
 
-          <RuggedCheckbox
-            name="inspection.isSmokedIn"
-            register={register}
+          <Checkbox
             label="არამწევლის მანქანა"
+            {...register("inspection.isSmokedIn")}
           />
-          <RuggedCheckbox
-            name="inspection.hasWaterDamage"
-            register={register}
+          <Checkbox
             label="წყლის ლაქების კვალი"
+            {...register("inspection.hasWaterDamage")}
           />
-          <RuggedCheckbox
-            name="inspection.acFunctional"
-            register={register}
+          <Checkbox
             label="A/C მდგომარეობა"
+            {...register("inspection.acFunctional")}
           />
         </div>
 
         <div className="space-y-4">
-          <RuggedInput
+          <Input
             label="მაჩვენებელთა დაფის შეცდომები"
-            name="inspection.dashboardWarnings"
-            register={register}
             placeholder="None / Clear"
+            {...register("inspection.dashboardWarnings")}
           />
-          <RuggedCheckbox
-            name="inspection.airbagsIntact"
-            register={register}
+          <Checkbox
             label="აირბაგის სისტემა"
+            {...register("inspection.airbagsIntact")}
           />
 
           <RatingSlider

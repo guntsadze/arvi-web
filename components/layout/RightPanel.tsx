@@ -68,14 +68,14 @@ export const RightPanel = () => {
   // if (loading) return <GlobalLoader />;
 
   return (
-    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-[#151413] border-l-4 border-stone-800">
+    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-surface-1 border-l-4 border-border">
       {/* HEADER */}
-      <div className="bg-[#1c1917] border-b-4 border-stone-800 p-4 flex justify-between items-center shrink-0">
+      <div className="bg-surface-1 border-b-4 border-border p-4 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2 overflow-hidden">
           <div
-            className={`w-1 h-3 shrink-0 ${activeView === "messages" ? "bg-amber-500 animate-pulse" : "bg-stone-700"}`}
+            className={`w-1 h-3 shrink-0 ${activeView === "messages" ? "bg-accent animate-pulse" : "bg-surface-2"}`}
           />
-          {/* <span className="font-mono text-[9px] text-stone-300 uppercase tracking-widest truncate">
+          {/* <span className="font-mono text-[9px] text-text-secondary uppercase tracking-widest truncate">
             {activeView === "messages"
               ? "Frequencies_Active"
               : `${activeView}_Module`}
@@ -102,8 +102,8 @@ export const RightPanel = () => {
             onClick={() => handleViewChange("profile")}
             className={`w-9 h-9 rounded-sm overflow-hidden border-2 transition-all ${
               activeView === "profile"
-                ? "border-amber-500 scale-105"
-                : "border-stone-800 grayscale"
+                ? "border-accent scale-105"
+                : "border-border grayscale"
             }`}
           >
             {/* {currentUser?.avatar?.url ? (
@@ -112,7 +112,7 @@ export const RightPanel = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-stone-800 flex items-center justify-center text-stone-300">
+              <div className="w-full h-full bg-surface-2 flex items-center justify-center text-text-secondary">
                 <UserIcon size={16} />
               </div>
             )} */}
@@ -135,13 +135,13 @@ export const RightPanel = () => {
         {/* {activeView !== "messages" && (
           <button
             onClick={() => setActiveView("messages")}
-            className="w-full bg-amber-900/10 hover:bg-amber-900/20 text-[8px] font-mono text-amber-700 py-1.5 border-b border-stone-800 flex items-center justify-center gap-2 uppercase tracking-widest transition-all"
+            className="w-full bg-accent/10 hover:bg-accent/20 text-[8px] font-mono text-accent py-1.5 border-b border-border flex items-center justify-center gap-2 uppercase tracking-widest transition-all"
           >
             <X size={10} /> Exit_Current_Module
           </button>
         )} */}
         {/* CONTENT RENDERING */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#1c1917]">
+        <div className="flex-1 overflow-y-auto custom-scrollbar bg-surface-1">
           {activeView === "messages" && (
             <ActiveFrequencies
               conversations={conversations}
@@ -180,14 +180,14 @@ export const RightPanel = () => {
       </div>
 
       {/* FOOTER */}
-      {/* <div className="bg-[#1c1917] border-t-4 border-stone-800 p-3 flex justify-between items-center shrink-0">
+      {/* <div className="bg-surface-1 border-t-4 border-border p-3 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2">
-          <Activity size={10} className="text-amber-900 animate-pulse" />
-          <span className="font-mono text-[7px] text-stone-300 uppercase tracking-widest">
+          <Activity size={10} className="text-accent animate-pulse" />
+          <span className="font-mono text-[7px] text-text-secondary uppercase tracking-widest">
             System_Ready
           </span>
         </div>
-        <span className="font-mono text-[7px] text-stone-300 uppercase tracking-tighter italic">
+        <span className="font-mono text-[7px] text-text-secondary uppercase tracking-tighter italic">
           Sector_041_Comms
         </span>
       </div> */}
@@ -200,13 +200,13 @@ const HeaderButton = ({ children, active, onClick, badge }: any) => (
     onClick={onClick}
     className={`p-2 rounded-sm transition-all relative border-2 ${
       active
-        ? "bg-amber-500 text-stone-900 border-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
-        : "bg-stone-900 border-stone-800 text-stone-300 hover:text-amber-500 hover:border-stone-700"
+        ? "bg-accent text-background border-accent shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+        : "bg-surface-1 border-border text-text-secondary hover:text-accent hover:border-border"
     }`}
   >
     {children}
     {badge > 0 && (
-      <div className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[8px] font-black rounded-full w-4 h-4 flex items-center justify-center border-2 border-[#1c1917]">
+      <div className="absolute -top-1.5 -right-1.5 bg-error text-white text-[8px] font-black rounded-full w-4 h-4 flex items-center justify-center border-2 border-surface-1">
         {badge}
       </div>
     )}

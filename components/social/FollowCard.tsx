@@ -7,6 +7,7 @@ import { selectCurrentUser } from "@/store/slices/userSlice";
 import { usePresence } from "@/context/PresenceContext";
 import { UserPlus, Users } from "lucide-react";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
+import { Card } from "../ui/Card";
 
 interface FollowCardProps {
   activity: any;
@@ -29,11 +30,11 @@ export function FollowCard({ activity, refresh }: FollowCardProps) {
 
   return (
     <div className="relative mb-8 group/card">
-      <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-600 transition-colors duration-300 overflow-hidden">
+      <Card className="overflow-hidden">
         {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
         {/* Bottom accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
 
         {/* Header */}
         <ActivityHeader
@@ -45,19 +46,19 @@ export function FollowCard({ activity, refresh }: FollowCardProps) {
         />
 
         {/* Follow visual */}
-        <div className="p-6 bg-[#1a1714] border-b border-stone-800">
+        <div className="p-6 bg-surface-2 border-b border-border">
           <div className="flex items-center justify-center gap-6">
             {/* Follower */}
             <UserAvatarItem user={follower} isOnline={isFollowerOnline} />
 
             {/* Arrow */}
             <div className="flex flex-col items-center gap-1">
-              <UserPlus size={18} className="text-amber-600" />
+              <UserPlus size={18} className="text-accent" />
               <div className="flex items-center gap-1">
-                <div className="w-6 h-px bg-stone-700" />
-                <div className="w-1.5 h-1.5 rotate-45 border-t border-r border-stone-600" />
+                <div className="w-6 h-px bg-surface-2" />
+                <div className="w-1.5 h-1.5 rotate-45 border-t border-r border-border" />
               </div>
-              <span className="text-[9px] font-mono text-[#EBE9E1] uppercase tracking-widest">
+              <span className="text-[9px] font-mono text-text-primary uppercase tracking-widest">
                 follows
               </span>
             </div>
@@ -69,14 +70,14 @@ export function FollowCard({ activity, refresh }: FollowCardProps) {
 
         {/* Stats footer */}
         <div className="px-4 py-3 flex items-center justify-center gap-6">
-          <div className="flex items-center gap-1.5 text-stone-300">
+          <div className="flex items-center gap-1.5 text-text-secondary">
             <Users size={12} />
             <span className="text-[10px] font-mono">
               {following.followersCount ?? 0} followers
             </span>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

@@ -58,7 +58,7 @@ export const ChatWindow = ({ conversation, socket }: ChatWindowProps) => {
   if (!currentUser) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-neutral-400">იტვირთება...</div>
+        <div className="text-text-secondary">იტვირთება...</div>
       </div>
     );
   }

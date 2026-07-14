@@ -73,7 +73,7 @@ export function MediaSlider({
   const renderGrid = () => {
     const CountBadge = () => (
       <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-2 py-1 border border-white/10 rounded-sm pointer-events-none">
-        <Layers size={12} className="text-amber-500" />
+        <Layers size={12} className="text-accent" />
         <span className="text-[10px] font-mono font-bold text-white tracking-wider">
           {count} ITEMS
         </span>
@@ -93,11 +93,11 @@ export function MediaSlider({
 
       return (
         <div
-          className={`relative h-full cursor-zoom-in overflow-hidden group border border-stone-800/50 ${className}`}
+          className={`relative h-full cursor-zoom-in overflow-hidden group border border-border/50 ${className}`}
           onClick={() => openLightbox(index)}
         >
           {isVid ? (
-            <div className="relative w-full h-full bg-stone-900">
+            <div className="relative w-full h-full bg-surface-1">
               <video
                 src={item.url}
                 className="w-full h-full object-cover opacity-80"
@@ -164,7 +164,7 @@ export function MediaSlider({
         <GridItem item={media[0]} index={0} className="col-span-3 row-span-2" />
         <GridItem item={media[1]} index={1} />
         <div
-          className="relative h-full cursor-zoom-in overflow-hidden group border border-stone-800/50"
+          className="relative h-full cursor-zoom-in overflow-hidden group border border-border/50"
           onClick={() => openLightbox(2)}
         >
           {isVideo(media[2]) ? (
@@ -183,7 +183,7 @@ export function MediaSlider({
             />
           )}
 
-          <div className="absolute inset-0 bg-stone-900/90 flex flex-col items-center justify-center text-white border-l border-stone-800">
+          <div className="absolute inset-0 bg-surface-1/90 flex flex-col items-center justify-center text-white border-l border-border">
             <span className="text-lg font-bold">+{count - 3}</span>
             <span className="text-[9px] uppercase tracking-tighter opacity-60">
               More
@@ -198,7 +198,7 @@ export function MediaSlider({
 
   return (
     <>
-      <div className="relative bg-[#1a1817] overflow-hidden border-y border-stone-800">
+      <div className="relative bg-surface-1 overflow-hidden border-y border-border">
         {renderGrid()}
       </div>
 
@@ -249,13 +249,13 @@ export function MediaSlider({
                 <>
                   <button
                     onClick={(e) => prev(e)}
-                    className="absolute left-4 p-4 text-white/20 hover:text-amber-500 transition-all"
+                    className="absolute left-4 p-4 text-white/20 hover:text-accent transition-all"
                   >
                     <ChevronLeft size={48} strokeWidth={1} />
                   </button>
                   <button
                     onClick={(e) => next(e)}
-                    className="absolute right-4 p-4 text-white/20 hover:text-amber-500 transition-all"
+                    className="absolute right-4 p-4 text-white/20 hover:text-accent transition-all"
                   >
                     <ChevronRight size={48} strokeWidth={1} />
                   </button>
@@ -264,19 +264,19 @@ export function MediaSlider({
             </div>
 
             {/* Thumbnails */}
-            <div className="mt-auto mb-6 flex gap-3 p-2 bg-stone-900/50 border border-white/5 rounded-lg max-w-[90vw] ">
+            <div className="mt-auto mb-6 flex gap-3 p-2 bg-surface-1/50 border border-white/5 rounded-lg max-w-[90vw] ">
               {media.map((item, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrent(idx)}
                   className={`relative flex-shrink-0 w-16 h-12 border transition-all duration-300 overflow-hidden ${
                     idx === current
-                      ? "border-amber-500 scale-110 opacity-100"
+                      ? "border-accent scale-110 opacity-100"
                       : "border-transparent opacity-30 hover:opacity-60"
                   }`}
                 >
                   {isVideo(item) ? (
-                    <div className="w-full h-full bg-stone-800 flex items-center justify-center">
+                    <div className="w-full h-full bg-surface-2 flex items-center justify-center">
                       <Play size={12} className="text-white" />
                     </div>
                   ) : (

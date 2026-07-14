@@ -22,8 +22,8 @@ export const ConversationItem = ({
   return (
     <div
       onClick={onClick}
-      className={`p-1 border-b border-neutral-800/50 cursor-pointer transition-all hover:bg-orange-500/10 ${
-        isActive ? "bg-orange-500/20 border-r-4 border-r-orange-500" : ""
+      className={`p-1 border-b border-border/50 cursor-pointer transition-all hover:bg-primary-hover/10 ${
+        isActive ? "bg-accent/20 border-r-4 border-r-accent" : ""
       }`}
     >
       <div className="flex items-center gap-3">
@@ -41,15 +41,15 @@ export const ConversationItem = ({
               {user.firstName} {user.lastName}
             </span>
             {user.isVerified && (
-              <ShieldCheck className="w-4 h-4 text-orange-500 flex-shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-accent flex-shrink-0" />
             )}
           </div>
-          <div className="text-sm text-neutral-400 truncate">
+          <div className="text-sm text-text-secondary truncate">
             @{user.username}
           </div>
         </div>
         {conversation.unreadCount && conversation.unreadCount > 0 && (
-          <div className="bg-orange-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">
+          <div className="bg-accent text-white text-xs rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">
             {conversation.unreadCount}
           </div>
         )}

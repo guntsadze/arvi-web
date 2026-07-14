@@ -45,8 +45,8 @@ export default function FollowButton({
         disabled:opacity-40 disabled:cursor-not-allowed
         ${
           isFollowing
-            ? "bg-orange-500/15 border-orange-500/60 text-orange-300 hover:bg-red-500/10 hover:border-red-500/60 hover:text-red-300"
-            : "bg-transparent border-orange-500 text-orange-500 hover:bg-orange-500/10"
+            ? "bg-accent/15 border-accent/60 text-accent hover:bg-error/10 hover:border-error/60 hover:text-error"
+            : "bg-transparent border-accent text-accent hover:bg-primary-hover/10"
         }
       `}
     >

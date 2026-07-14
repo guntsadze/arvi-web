@@ -37,8 +37,9 @@ export const useCarForm = ({
       let finalPhotos = [];
 
       // 1. ვახარისხებთ ფოტოებს: რომელია უკვე ატვირთული და რომელია ახალი (File)
-      const existingPhotos = data.photos.filter((p) => !(p instanceof File));
-      const newFiles = data.photos.filter((p) => p instanceof File) as File[];
+      const photos = data.photos ?? [];
+      const existingPhotos = photos.filter((p) => !(p instanceof File));
+      const newFiles = photos.filter((p) => p instanceof File) as File[];
 
       // 2. ავტვირთოთ მხოლოდ ახალი ფაილები
       if (newFiles.length > 0) {
@@ -55,11 +56,11 @@ export const useCarForm = ({
       const submitData = {
         ...data,
         photos: finalPhotos, // აქ უკვე მხოლოდ Cloudinary-ს ობიექტებია
-        modifications: data.modifications.map((m) => ({
+        modifications: (data.modifications ?? []).map((m) => ({
           ...m,
           carId: initialData?.id,
         })),
-        maintenanceRecords: data.maintenanceRecords.map((r) => ({
+        maintenanceRecords: (data.maintenanceRecords ?? []).map((r) => ({
           ...r,
           carId: initialData?.id,
         })),

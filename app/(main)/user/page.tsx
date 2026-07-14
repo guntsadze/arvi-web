@@ -24,8 +24,8 @@ export default function Page() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
-        <div className="max-w-7xl mx-auto text-center text-red-500 font-mono py-20">
+      <div className="min-h-screen bg-background bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
+        <div className="max-w-7xl mx-auto text-center text-error font-mono py-20">
           ERROR: {error}
         </div>
       </div>
@@ -33,13 +33,13 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
-      {/* <div className="max-w-7xl mx-auto mb-10 border-b-4 border-double border-stone-700 pb-4">
-        <h1 className="text-3xl md:text-5xl font-black text-[#dcd8c8] uppercase tracking-tighter flex items-center gap-4">
-          <Hash className="text-amber-600" size={40} />
+    <div className="min-h-screen bg-background bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:20px_20px] py-12 px-4">
+      {/* <div className="max-w-7xl mx-auto mb-10 border-b-4 border-double border-border pb-4">
+        <h1 className="text-3xl md:text-5xl font-black text-text-primary uppercase tracking-tighter flex items-center gap-4">
+          <Hash className="text-accent" size={40} />
           Personnel Database
         </h1>
-        <p className="text-stone-300 font-mono text-xs mt-2 uppercase tracking-[0.3em]">
+        <p className="text-text-secondary font-mono text-xs mt-2 uppercase tracking-[0.3em]">
           Secure Archive • Authorized Access Only
         </p>
       </div> */}
@@ -52,7 +52,7 @@ export default function Page() {
         {loading && <CircleLoader />}
 
         {!hasMore && users.length > 0 && (
-          <div className="col-span-full text-center text-[#EBE9E1] font-mono py-10">
+          <div className="col-span-full text-center text-text-primary font-mono py-10">
             მეტი ინფორმაცი არ არის.
           </div>
         )}

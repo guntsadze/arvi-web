@@ -47,12 +47,12 @@ export const SinglePostView = ({ postId }: SinglePostViewProps) => {
 
   if (error || !post) {
     return (
-      <div className="flex flex-col items-center justify-center p-20 border-2 border-dashed border-stone-800 bg-stone-900/50">
-        <AlertCircle className="w-8 h-8 text-red-500 mb-2" />
-        <p className="text-stone-400 font-mono text-xs uppercase">{error}</p>
+      <div className="flex flex-col items-center justify-center p-20 border-2 border-dashed border-border bg-surface-1/50">
+        <AlertCircle className="w-8 h-8 text-error mb-2" />
+        <p className="text-text-secondary font-mono text-xs uppercase">{error}</p>
         <button
           onClick={() => window.history.back()}
-          className="mt-4 text-[10px] text-amber-500 underline font-black uppercase"
+          className="mt-4 text-[10px] text-accent underline font-black uppercase"
         >
           Feed - ზე დაბრუნება
         </button>

@@ -59,7 +59,7 @@ export default async function CarPage({ params }: { params: { id: string } }) {
         {/* Back Button */}
         <Link
           href="/cars"
-          className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-accent hover:text-accent mb-6 transition-colors"
         >
           ← უკან მანქანების სიაში
         </Link>
@@ -71,7 +71,7 @@ export default async function CarPage({ params }: { params: { id: string } }) {
             {car.photos && car.photos.length > 0 ? (
               <>
                 {/* Main Image - პირველი ფოტო */}
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-stone-900">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-surface-1">
                   <Image
                     src={car.photos[0].url}
                     alt={`${car.make} ${car.model} - მთავარი ფოტო`}
@@ -88,7 +88,7 @@ export default async function CarPage({ params }: { params: { id: string } }) {
                     {car.photos.slice(1).map((photo, index) => (
                       <div
                         key={photo.id}
-                        className="relative aspect-square rounded-lg overflow-hidden bg-stone-900 cursor-pointer hover:opacity-90 transition-opacity"
+                        className="relative aspect-square rounded-lg overflow-hidden bg-surface-1 cursor-pointer hover:opacity-90 transition-opacity"
                         // სურვილისამებრ: onClick-ით გახსნა მთავარ ფოტოდ
                       >
                         <Image
@@ -105,9 +105,9 @@ export default async function CarPage({ params }: { params: { id: string } }) {
               </>
             ) : (
               /* No photos fallback */
-              <div className="relative aspect-video rounded-xl bg-stone-900 flex items-center justify-center flex-col gap-4">
-                <Car size={80} className="text-[#EBE9E1]" />
-                <p className="text-stone-300 text-lg">
+              <div className="relative aspect-video rounded-xl bg-surface-1 flex items-center justify-center flex-col gap-4">
+                <Car size={80} className="text-text-primary" />
+                <p className="text-text-secondary text-lg">
                   ფოტოები არ არის ატვირთული
                 </p>
               </div>
@@ -122,16 +122,16 @@ export default async function CarPage({ params }: { params: { id: string } }) {
                 {car.year} {car.make} {car.model}
               </h1>
               {car.nickname && (
-                <p className="text-2xl text-amber-500 mt-2">"{car.nickname}"</p>
+                <p className="text-2xl text-accent mt-2">"{car.nickname}"</p>
               )}
             </div>
 
             {/* Owner */}
             <Link
               href={`/profile/${car.user.username}`}
-              className="flex items-center gap-3 hover:bg-stone-900 p-3 rounded-lg transition-colors"
+              className="flex items-center gap-3 hover:bg-surface-1-hover p-3 rounded-lg transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-stone-700 overflow-hidden flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-surface-2 overflow-hidden flex items-center justify-center">
                 {car.user.avatar ? (
                   <Image
                     src={car.user.avatar?.url}
@@ -141,11 +141,11 @@ export default async function CarPage({ params }: { params: { id: string } }) {
                     className="object-cover"
                   />
                 ) : (
-                  <User size={24} className="text-amber-500" />
+                  <User size={24} className="text-accent" />
                 )}
               </div>
               <div>
-                <p className="text-sm text-stone-400">მფლობელი</p>
+                <p className="text-sm text-text-secondary">მფლობელი</p>
                 <p className="font-medium">
                   {car.user.firstName} {car.user.lastName} (@{car.user.username}
                   )
@@ -156,8 +156,8 @@ export default async function CarPage({ params }: { params: { id: string } }) {
             {/* Specs Grid */}
             <div className="grid grid-cols-2 gap-4">
               {car.horsepower && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm flex items-center gap-2">
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm flex items-center gap-2">
                     <Gauge size={16} />
                     ცხ.ძ.
                   </p>
@@ -166,15 +166,15 @@ export default async function CarPage({ params }: { params: { id: string } }) {
               )}
 
               {car.torque && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm">ბრუნვის მომენტი</p>
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm">ბრუნვის მომენტი</p>
                   <p className="text-xl font-bold">{car.torque} Nm</p>
                 </div>
               )}
 
               {car.fuelType && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm flex items-center gap-2">
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm flex items-center gap-2">
                     <Fuel size={16} />
                     საწვავი
                   </p>
@@ -183,8 +183,8 @@ export default async function CarPage({ params }: { params: { id: string } }) {
               )}
 
               {car.transmission && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm flex items-center gap-2">
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm flex items-center gap-2">
                     <Settings size={16} />
                     გადაცემათა კოლოფი
                   </p>
@@ -193,15 +193,15 @@ export default async function CarPage({ params }: { params: { id: string } }) {
               )}
 
               {car.driveType && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm">წამყვანი</p>
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm">წამყვანი</p>
                   <p className="text-xl font-bold">{car.driveType}</p>
                 </div>
               )}
 
               {car.mileage !== null && car.mileage !== undefined && (
-                <div className="bg-stone-900 rounded-lg p-4">
-                  <p className="text-stone-400 text-sm">გარბენი</p>
+                <div className="bg-surface-1 rounded-lg p-4">
+                  <p className="text-text-secondary text-sm">გარბენი</p>
                   <p className="text-xl font-bold">
                     {car.mileage.toLocaleString()} კმ
                   </p>
@@ -209,8 +209,8 @@ export default async function CarPage({ params }: { params: { id: string } }) {
               )}
 
               {car.location && (
-                <div className="bg-stone-900 rounded-lg p-4 col-span-2">
-                  <p className="text-stone-400 text-sm flex items-center gap-2">
+                <div className="bg-surface-1 rounded-lg p-4 col-span-2">
+                  <p className="text-text-secondary text-sm flex items-center gap-2">
                     <MapPin size={16} />
                     ადგილმდებარეობა
                   </p>
@@ -221,16 +221,16 @@ export default async function CarPage({ params }: { params: { id: string } }) {
 
             {/* Description */}
             {car.description && (
-              <div className="bg-stone-900 rounded-lg p-6">
+              <div className="bg-surface-1 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3">აღწერა</h3>
-                <p className="text-stone-300 leading-relaxed whitespace-pre-wrap">
+                <p className="text-text-secondary leading-relaxed whitespace-pre-wrap">
                   {car.description}
                 </p>
               </div>
             )}
 
             {/* Created Date */}
-            <div className="text-sm text-stone-300 flex items-center gap-2">
+            <div className="text-sm text-text-secondary flex items-center gap-2">
               <Calendar size={16} />
               დამატებულია: {new Date(car.createdAt).toLocaleDateString("ka-GE")}
             </div>

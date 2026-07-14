@@ -38,8 +38,8 @@ export const CarAvatarItem = ({
       <div
         className={cn(
           sizes[size],
-          "relative rounded-sm border-2 border-stone-700 bg-stone-900 overflow-hidden",
-          "group-hover:border-amber-500 transition-all duration-300",
+          "relative rounded-sm border-2 border-border bg-surface-1 overflow-hidden",
+          "group-hover:border-accent transition-all duration-300",
           "flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
         )}
       >
@@ -54,13 +54,13 @@ export const CarAvatarItem = ({
         ) : (
           <CarIcon
             size={size === "sm" ? 18 : 24}
-            className="text-stone-700 group-hover:text-amber-500 transition-colors"
+            className="text-text-muted group-hover:text-accent transition-colors"
           />
         )}
       </div>
 
       {showLabel && (
-        <p className="text-[8px] font-mono text-stone-300 text-center mt-1.5 truncate w-full group-hover:text-amber-500 transition-colors uppercase tracking-tighter">
+        <p className="text-[8px] font-mono text-text-secondary text-center mt-1.5 truncate w-full group-hover:text-accent transition-colors uppercase tracking-tighter">
           {car.make}
         </p>
       )}

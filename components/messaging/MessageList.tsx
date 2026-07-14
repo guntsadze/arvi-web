@@ -27,7 +27,7 @@ export const MessageList = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-neutral-400">იტვირთება...</div>
+        <div className="text-text-secondary">იტვირთება...</div>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export const MessageList = ({
   if (messages.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-neutral-400 text-center">
+        <div className="text-text-secondary text-center">
           <p>შეტყობინებები ჯერ არ არის</p>
           <p className="text-sm mt-2">დაწერეთ პირველი მესიჯი!</p>
         </div>

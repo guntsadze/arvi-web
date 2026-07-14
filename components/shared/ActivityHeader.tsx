@@ -32,32 +32,32 @@ const VARIANT_CONFIG: Record<
   post_created: {
     label: "გამოაქვეყნა პოსტი",
     icon: <CalendarDays size={10} />,
-    color: "text-stone-300",
+    color: "text-text-secondary",
   },
   post_updated: {
     label: "განაახლა პოსტი",
     icon: <Wrench size={10} />,
-    color: "text-amber-600",
+    color: "text-accent",
   },
   car_added: {
     label: "დაამატა ახალი მანქანა",
     icon: <Car size={10} />,
-    color: "text-amber-500",
+    color: "text-accent",
   },
   car_updated: {
     label: "განაახლა მანქანის ინფორმაცია",
     icon: <Wrench size={10} />,
-    color: "text-amber-400",
+    color: "text-accent",
   },
   modification: {
     label: "დაამატა ახალი მოდიფიკაცია",
     icon: <Wrench size={10} />,
-    color: "text-blue-400",
+    color: "text-info",
   },
   follow: {
     label: "დაიწყო გამოწერა",
     icon: <UserPlus size={10} />,
-    color: "text-green-400",
+    color: "text-success",
   },
   avatar_changed: {
     label: "განაახლა პროფილის ფოტო",
@@ -77,12 +77,12 @@ const VARIANT_CONFIG: Record<
   listing_created: {
     label: "დაამატა განცხადება",
     icon: <ShoppingBag size={10} />,
-    color: "text-amber-400",
+    color: "text-accent",
   },
   listing_updated: {
     label: "განაახლა განცხადების ინფორმაცია",
     icon: <Wrench size={10} />,
-    color: "text-amber-400",
+    color: "text-accent",
   },
 };
 
@@ -113,7 +113,7 @@ export function ActivityHeader({
   const config = VARIANT_CONFIG[safeVariant] || VARIANT_CONFIG["post_created"];
 
   return (
-    <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-[#1c1917]">
+    <div className="flex items-center justify-between p-4 border-b border-border bg-surface-1">
       <Link
         href={`/profile/${user?.username}`}
         className="flex items-center gap-3 group/user"
@@ -127,10 +127,10 @@ export function ActivityHeader({
         />
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-bold text-[#EBE9E1] uppercase tracking-wide text-xs group-hover/user:text-amber-500 transition-colors">
+            <p className="font-bold text-text-primary uppercase tracking-wide text-xs group-hover/user:text-accent transition-colors">
               {user?.firstName} {user?.lastName}
             </p>
-            <span className="text-[10px] text-[#EBE9E1] font-mono">
+            <span className="text-[10px] text-text-primary font-mono">
               @{user?.username}
             </span>
           </div>
@@ -141,7 +141,7 @@ export function ActivityHeader({
             <span className="text-[10px] font-mono uppercase tracking-widest">
               {config.label}
             </span>
-            <span className="text-[10px] text-[#EBE9E1] font-mono ml-1">
+            <span className="text-[10px] text-text-primary font-mono ml-1">
               ·{" "}
               {formatDistanceToNow(new Date(createdAt), {
                 addSuffix: true,

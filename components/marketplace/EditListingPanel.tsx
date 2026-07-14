@@ -16,9 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 
-import { RuggedSelect } from "../ui/RuggedSelect";
-import { RuggedInput } from "../ui/RuggedInput";
-import { RuggedTextArea } from "../ui/RuggedTexArea";
+import { Select, toSelectOptions } from "../ui/Select";
+import { Input } from "../ui/Input";
+import { Textarea } from "../ui/Textarea";
 
 interface EditListingPanelProps {
   listing: any;
@@ -103,30 +103,30 @@ export const EditListingPanel = ({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="fixed right-0 top-0 h-full z-[80] w-full max-w-lg bg-[#181512] border-l border-stone-800 flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 h-full z-[80] w-full max-w-lg bg-surface-1 border-l border-border flex flex-col shadow-2xl"
           >
             {/* HEADER */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800 bg-black/20 shrink-0">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-black/20 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-amber-500 animate-pulse" />
-                <span className="text-[11px] font-mono font-black uppercase tracking-[0.2em] text-amber-500">
+                <div className="w-2 h-2 bg-accent animate-pulse" />
+                <span className="text-[11px] font-mono font-black uppercase tracking-[0.2em] text-accent">
                   Edit_Listing
                 </span>
-                <ChevronRight size={12} className="text-stone-700" />
-                <span className="text-[11px] font-mono text-stone-300 uppercase truncate max-w-[150px]">
+                <ChevronRight size={12} className="text-text-muted" />
+                <span className="text-[11px] font-mono text-text-secondary uppercase truncate max-w-[150px]">
                   {listing?.title}
                 </span>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 text-[#EBE9E1] hover:text-stone-300 hover:bg-stone-800 transition-all"
+                className="p-1.5 text-text-primary hover:text-text-secondary hover:bg-surface-1-hover transition-all"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* TABS */}
-            <div className="flex border-b border-stone-800 shrink-0">
+            <div className="flex border-b border-border shrink-0">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
@@ -134,8 +134,8 @@ export const EditListingPanel = ({
                   className={cn(
                     "flex-1 flex items-center justify-center gap-2 py-3 text-[9px] font-mono uppercase tracking-widest transition-all",
                     activeTab === tab.id
-                      ? "text-amber-500 border-b-2 border-amber-500 bg-amber-500/5"
-                      : "text-[#EBE9E1] hover:text-stone-400 border-b-2 border-transparent",
+                      ? "text-accent border-b-2 border-accent bg-accent/5"
+                      : "text-text-primary hover:text-text-secondary border-b-2 border-transparent",
                   )}
                 >
                   <tab.icon size={12} /> {tab.label}
@@ -159,36 +159,25 @@ export const EditListingPanel = ({
                     className="space-y-5"
                   >
                     <SectionLabel>Basic Information</SectionLabel>
-                    <RuggedInput
-                      label="Title"
-                      name="title"
-                      register={register}
-                    />
-                    <RuggedTextArea
+                    <Input label="Title" {...register("title")} />
+                    <Textarea
                       label="Description"
-                      name="description"
-                      register={register}
                       rows={5}
+                      {...register("description")}
                     />
                     <div className="grid grid-cols-2 gap-4">
-                      <RuggedInput
+                      <Input
                         label="Price"
-                        name="price"
                         type="number"
-                        register={register}
+                        {...register("price")}
                       />
-                      <RuggedSelect
+                      <Select
                         label="Currency"
-                        name="currency"
-                        options={["GEL", "USD", "EUR"]}
-                        register={register}
+                        options={toSelectOptions(["GEL", "USD", "EUR"] as const)}
+                        {...register("currency")}
                       />
                     </div>
-                    <RuggedInput
-                      label="Location"
-                      name="location"
-                      register={register}
-                    />
+                    <Input label="Location" {...register("location")} />
                   </motion.div>
                 )}
 
@@ -201,17 +190,11 @@ export const EditListingPanel = ({
                     className="space-y-5"
                   >
                     <SectionLabel>Contact Information</SectionLabel>
-                    <RuggedInput
-                      label="Phone"
-                      name="phone"
-                      type="tel"
-                      register={register}
-                    />
-                    <RuggedInput
+                    <Input label="Phone" type="tel" {...register("phone")} />
+                    <Input
                       label="Email"
-                      name="email"
                       type="email"
-                      register={register}
+                      {...register("email")}
                     />
                     <Toggle
                       label="Allow Direct Messages"
@@ -257,30 +240,30 @@ export const EditListingPanel = ({
                     <div>
                       <SectionLabel>Exterior & Chassis</SectionLabel>
                       <div className="space-y-3 mt-3">
-                        <RuggedSelect
+                        <Select
                           label="Body Condition"
-                          name="inspection.bodyCondition"
-                          options={["ORIGINAL", "REPAINTED", "DAMAGED"]}
-                          register={register}
+                          options={toSelectOptions(
+                            ["ORIGINAL", "REPAINTED", "DAMAGED"] as const,
+                          )}
+                          {...register("inspection.bodyCondition")}
                         />
-                        <RuggedSelect
+                        <Select
                           label="Glass Condition"
-                          name="inspection.glassCondition"
-                          options={["ORIGINAL", "REPLACED", "CRACKED"]}
-                          register={register}
+                          options={toSelectOptions(
+                            ["ORIGINAL", "REPLACED", "CRACKED"] as const,
+                          )}
+                          {...register("inspection.glassCondition")}
                         />
                         <div className="grid grid-cols-2 gap-3">
-                          <RuggedInput
+                          <Input
                             label="Tire Tread (mm)"
-                            name="inspection.tireTreadDepth"
                             type="number"
-                            register={register}
+                            {...register("inspection.tireTreadDepth")}
                           />
-                          <RuggedInput
+                          <Input
                             label="Tire Age (Year)"
-                            name="inspection.tireAge"
                             type="number"
-                            register={register}
+                            {...register("inspection.tireAge")}
                           />
                         </div>
                         <Toggle
@@ -301,17 +284,19 @@ export const EditListingPanel = ({
                     <div>
                       <SectionLabel>Mechanical</SectionLabel>
                       <div className="space-y-3 mt-3">
-                        <RuggedSelect
+                        <Select
                           label="Engine Oil"
-                          name="inspection.engineOilStatus"
-                          options={["CLEAN", "DARK", "LOW", "LEAKING"]}
-                          register={register}
+                          options={toSelectOptions(
+                            ["CLEAN", "DARK", "LOW", "LEAKING"] as const,
+                          )}
+                          {...register("inspection.engineOilStatus")}
                         />
-                        <RuggedSelect
+                        <Select
                           label="Transmission"
-                          name="inspection.transmissionShift"
-                          options={["SMOOTH", "ROUGH", "SLIPPING"]}
-                          register={register}
+                          options={toSelectOptions(
+                            ["SMOOTH", "ROUGH", "SLIPPING"] as const,
+                          )}
+                          {...register("inspection.transmissionShift")}
                         />
                         <Toggle
                           label="Oil Leaking"
@@ -319,11 +304,10 @@ export const EditListingPanel = ({
                           register={register}
                           checked={watchedValues.inspection?.oilLeaking}
                         />
-                        <RuggedTextArea
+                        <Textarea
                           label="Inspector Notes"
-                          name="inspection.inspectorNotes"
-                          register={register}
                           rows={3}
+                          {...register("inspection.inspectorNotes")}
                         />
                       </div>
                     </div>
@@ -333,7 +317,7 @@ export const EditListingPanel = ({
             </form>
 
             {/* FOOTER */}
-            <div className="px-5 py-4 border-t border-stone-800 bg-black/20 shrink-0">
+            <div className="px-5 py-4 border-t border-border bg-black/20 shrink-0">
               <button
                 type="submit"
                 form="edit-form"
@@ -341,8 +325,8 @@ export const EditListingPanel = ({
                 className={cn(
                   "w-full flex items-center justify-center gap-2 py-3 font-mono font-black text-[11px] uppercase tracking-[0.15em] transition-all",
                   saved
-                    ? "bg-emerald-500 text-black"
-                    : "bg-amber-500 hover:bg-amber-400 text-black active:scale-[0.98]",
+                    ? "bg-success text-black"
+                    : "bg-accent hover:bg-primary-hover text-black active:scale-[0.98]",
                   saving && "opacity-70 cursor-not-allowed",
                 )}
               >
@@ -370,11 +354,11 @@ export const EditListingPanel = ({
 
 const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center gap-2">
-    <div className="h-px flex-1 bg-stone-800" />
-    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-[#EBE9E1] px-2">
+    <div className="h-px flex-1 bg-surface-2" />
+    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-text-primary px-2">
       {children}
     </span>
-    <div className="h-px flex-1 bg-stone-800" />
+    <div className="h-px flex-1 bg-surface-2" />
   </div>
 );
 
@@ -386,7 +370,7 @@ const Field = ({
   children: React.ReactNode;
 }) => (
   <div className="space-y-1.5">
-    <label className="block text-[9px] font-mono uppercase tracking-[0.2em] text-stone-300">
+    <label className="block text-[9px] font-mono uppercase tracking-[0.2em] text-text-secondary">
       {label}
     </label>
     {children}
@@ -412,9 +396,9 @@ const RatingSlider = ({
         max={10}
         step={1}
         {...register(name, { valueAsNumber: true })}
-        className="flex-1 accent-amber-500 h-1 cursor-pointer"
+        className="flex-1 accent-accent h-1 cursor-pointer"
       />
-      <span className="w-8 text-right text-amber-500 font-mono text-sm font-bold">
+      <span className="w-8 text-right text-accent font-mono text-sm font-bold">
         {value ?? 0}
       </span>
     </div>
@@ -432,16 +416,16 @@ const Toggle = ({
   register: any;
   checked: boolean;
 }) => (
-  <label className="flex items-center justify-between w-full p-3 bg-black/20 border border-stone-800 hover:border-stone-700 transition-colors cursor-pointer group">
+  <label className="flex items-center justify-between w-full p-3 bg-black/20 border border-border hover:border-border transition-colors cursor-pointer group">
     {/* დამალული ინპუტი, რომელიც მართავს ფორმის მნიშვნელობას */}
     <input type="checkbox" {...register(name)} className="hidden" />
-    <span className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">
+    <span className="text-[11px] font-mono text-text-secondary uppercase tracking-wider">
       {label}
     </span>
     <div
       className={cn(
         "relative w-8 h-4 transition-colors",
-        checked ? "bg-amber-500" : "bg-stone-700",
+        checked ? "bg-accent" : "bg-surface-2",
       )}
     >
       <div

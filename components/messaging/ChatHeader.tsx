@@ -11,7 +11,7 @@ export const ChatHeader = ({ partner }: ChatHeaderProps) => {
   const user = partner?.user;
   console.log(user);
   return (
-    <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-neutral-900">
+    <div className="flex items-center justify-between p-4 border-b border-border bg-surface-1">
       <div className="flex items-center gap-3">
         <UserAvatarItem key={user?.avatar} user={user} />
         <div>
@@ -20,14 +20,14 @@ export const ChatHeader = ({ partner }: ChatHeaderProps) => {
               {user?.firstName} {user?.lastName}
             </span>
             {user?.isVerified && (
-              <ShieldCheck className="w-4 h-4 text-orange-500" />
+              <ShieldCheck className="w-4 h-4 text-accent" />
             )}
           </div>
-          <div className="text-sm text-neutral-400">@{user?.username}</div>
+          <div className="text-sm text-text-secondary">@{user?.username}</div>
         </div>
       </div>
-      <div className="flex items-center gap-2 text-green-500 text-sm">
-        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+      <div className="flex items-center gap-2 text-success text-sm">
+        <div className="w-2 h-2 bg-success rounded-full"></div>
         <span>ENCRYPTED</span>
       </div>
     </div>

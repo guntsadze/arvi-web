@@ -5,7 +5,6 @@ import { RightPanel } from "@/components/layout/RightPanel";
 import { FloatingChatsContainer } from "@/components/messaging/FloatingChatsContainer";
 import { useAppSelector } from "@/store/hooks";
 import { selectIsAuthenticated } from "@/store/slices/userSlice";
-import { Toaster } from "sonner";
 
 export default function MainLayout({
   children,
@@ -15,10 +14,10 @@ export default function MainLayout({
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
 
-      <main className="flex-1 border-x border-gray-800">{children}</main>
+      <main className="flex-1 border-x border-border">{children}</main>
 
       {isAuthenticated && (
         <>
@@ -26,7 +25,6 @@ export default function MainLayout({
           <FloatingChatsContainer />
         </>
       )}
-      <Toaster theme="dark" richColors />
     </div>
   );
 }

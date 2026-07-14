@@ -27,7 +27,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     <div className="space-y-4">
       <div
         onClick={() => fileInputRef.current?.click()}
-        className="border-2 border-dashed border-stone-700 bg-stone-800/30 flex flex-col items-center justify-center p-6 cursor-pointer hover:border-amber-600 transition-colors"
+        className="border-2 border-dashed border-border bg-surface-2/30 flex flex-col items-center justify-center p-6 cursor-pointer hover:border-accent transition-colors"
       >
         <input
           type="file"
@@ -37,8 +37,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           ref={fileInputRef}
           onChange={handleFileChange}
         />
-        <Upload className="w-8 h-8 mb-2 text-stone-300" />
-        <span className="text-xs uppercase font-mono text-stone-300">
+        <Upload className="w-8 h-8 mb-2 text-text-secondary" />
+        <span className="text-xs uppercase font-mono text-text-secondary">
           ფოტოს დამატება
         </span>
       </div>
@@ -47,7 +47,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         {images.map((img, index) => (
           <div
             key={index}
-            className="relative aspect-square border border-stone-700 group"
+            className="relative aspect-square border border-border group"
           >
             <Image
               src={getImageUrl(img)}
@@ -59,7 +59,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             <button
               type="button"
               onClick={() => onChange(images.filter((_, i) => i !== index))}
-              className="absolute -top-1 -right-1 bg-red-500 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute -top-1 -right-1 bg-error p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <X className="w-3 h-3 text-white" />
             </button>

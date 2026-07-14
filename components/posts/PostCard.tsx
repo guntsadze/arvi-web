@@ -15,6 +15,7 @@ import { ActivityMenu } from "../shared/ActivityMenu";
 import { ActivityActions } from "../shared/ActivityActions";
 import { useLikeAction } from "@/hooks/useLikeAction";
 import { CommentTree } from "../comments/CommentTree";
+import { Card } from "../ui/Card";
 
 interface PostCardProps {
   activity?: any;
@@ -59,9 +60,9 @@ export function PostCard({ activity, post, refresh }: PostCardProps) {
       />
 
       <div className="relative mb-6 group/card">
-        <div className="bg-[#1a1817] border border-stone-800/60 hover:border-stone-700 transition-all duration-300 overflow-hidden rounded-sm">
+        <Card className="overflow-hidden">
           {/* დეკორატიული ხაზები */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-600/30 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
           <ActivityHeader
             user={content.user}
@@ -100,7 +101,7 @@ export function PostCard({ activity, post, refresh }: PostCardProps) {
 
           {/* კომენტარების სექცია - იხსნება მხოლოდ toggle-ზე */}
           {actions.showComments && (
-            <div className="border-t border-stone-800/50 bg-[#1e1c1b]/30 pb-4">
+            <div className="border-t border-border/50 bg-surface-2/30 pb-4">
               <CommentForm
                 onSubmit={(data) => actions.handleAddComment(data)}
                 placeholder="დაწერე კომენტარი..."
@@ -114,7 +115,7 @@ export function PostCard({ activity, post, refresh }: PostCardProps) {
               )}
             </div>
           )}
-        </div>
+        </Card>
       </div>
     </>
   );

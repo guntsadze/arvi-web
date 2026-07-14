@@ -108,7 +108,7 @@ export function EditPostModal({
       m.mediaType === "VIDEO" || m.type === "video" || m.url?.endsWith(".mp4");
 
     return (
-      <div className="relative aspect-square border border-stone-800 bg-stone-900 group overflow-hidden">
+      <div className="relative aspect-square border border-border bg-surface-1 group overflow-hidden">
         {isVid ? (
           <video
             src={m.url || m.preview}
@@ -142,7 +142,7 @@ export function EditPostModal({
               currentMedia.filter((_, i) => i !== index),
             )
           }
-          className="absolute top-1 right-1 bg-red-600/80 hover:bg-red-600 text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          className="absolute top-1 right-1 bg-error/80 hover:bg-error text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           <X size={12} />
         </button>
@@ -165,16 +165,16 @@ export function EditPostModal({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative w-full max-w-2xl bg-[#1c1917] border border-stone-800 shadow-2xl"
+          className="relative w-full max-w-2xl bg-surface-1 border border-border shadow-2xl"
         >
-          <div className="flex items-center justify-between px-6 py-4 border-b border-stone-800 bg-[#25211f]">
-            <h2 className="text-[10px] font-mono uppercase tracking-widest text-stone-400">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface-2">
+            <h2 className="text-[10px] font-mono uppercase tracking-widest text-text-secondary">
               Update Protocol:{" "}
-              {/* <span className="text-amber-600">POST_{post.id.slice(-6)}</span> */}
+              {/* <span className="text-accent">POST_{post.id.slice(-6)}</span> */}
             </h2>
             <button
               onClick={onClose}
-              className="text-stone-300 hover:text-white"
+              className="text-text-secondary hover:text-white"
             >
               <X size={20} />
             </button>
@@ -183,8 +183,8 @@ export function EditPostModal({
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <div className="flex flex-col items-center gap-3">
-                <Loader2 className="animate-spin text-amber-600" size={24} />
-                <span className="text-[9px] font-mono text-stone-300 uppercase tracking-widest">
+                <Loader2 className="animate-spin text-accent" size={24} />
+                <span className="text-[9px] font-mono text-text-secondary uppercase tracking-widest">
                   Fetching post data...
                 </span>
               </div>
@@ -193,11 +193,11 @@ export function EditPostModal({
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
               <textarea
                 {...register("content")}
-                className="w-full bg-stone-900/50 border border-stone-800 p-4 font-mono text-sm text-stone-200 focus:border-amber-600/50 outline-none resize-none min-h-[120px]"
+                className="w-full bg-surface-1/50 border border-border p-4 font-mono text-sm text-text-primary focus:border-accent/50 outline-none resize-none min-h-[120px]"
               />
 
               <div className="space-y-3">
-                <label className="text-[9px] font-mono text-stone-300 uppercase flex justify-between">
+                <label className="text-[9px] font-mono text-text-secondary uppercase flex justify-between">
                   Media Assets <span>{currentMedia.length} / 10</span>
                 </label>
 
@@ -220,7 +220,7 @@ export function EditPostModal({
                       >
                         <button
                           type="button"
-                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-stone-800 hover:border-stone-600 hover:bg-stone-900/50 text-[#EBE9E1] transition-all"
+                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-border hover:border-border hover:bg-surface-1-hover/50 text-text-primary transition-all"
                         >
                           <ImageIcon size={20} />
                           <span className="text-[8px] uppercase">
@@ -233,8 +233,8 @@ export function EditPostModal({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-stone-800">
-                <div className="flex items-center gap-2 text-[#EBE9E1] text-[9px] font-mono uppercase">
+              <div className="flex items-center justify-between pt-6 border-t border-border">
+                <div className="flex items-center gap-2 text-text-primary text-[9px] font-mono uppercase">
                   <AlertCircle size={14} />{" "}
                   <span>Buffer modification active</span>
                 </div>
@@ -242,14 +242,14 @@ export function EditPostModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="text-[10px] font-mono uppercase text-stone-300 hover:text-stone-300"
+                    className="text-[10px] font-mono uppercase text-text-secondary hover:text-text-secondary"
                   >
                     Abort
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex items-center gap-2 px-6 py-2 bg-amber-600 text-stone-950 text-[10px] font-bold uppercase hover:bg-amber-500 disabled:opacity-50 transition-all"
+                    className="flex items-center gap-2 px-6 py-2 bg-accent text-background text-[10px] font-bold uppercase hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
                     {isSubmitting ? (
                       <Loader2 className="animate-spin" size={14} />

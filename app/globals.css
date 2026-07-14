@@ -2,34 +2,148 @@
 @import "tw-animate-css";
 @import "tailwindcss";
 
+/* Raw HSL-triplet variables (unwrapped — composed into real colors via
+   hsl()/rgb() inside @theme below, not usable as colors directly).
+   :root is the default/base palette (dark), matching this app's
+   dark-primary design; .dark duplicates it explicitly for forward
+   compatibility with a class-based toggle; .light overrides the subset
+   needed for an eventual light mode. */
+:root {
+  --font-georgian: "Noto Sans Georgian", sans-serif;
+
+  --radius: 0.625rem;
+  --gold-rgb: 212 168 67;
+  --gold-mid-rgb: 184 134 11;
+
+  --background: 0 0% 10%; /* #1a1a1a */
+  --card: 0 0% 9%; /* ~#171717 */
+  --foreground: 0 0% 100%; /* #ffffff */
+  --card-foreground: 0 0% 100%;
+  --muted-foreground: 210 14% 72%; /* #adb8c2 */
+  --border: 0 0% 18%; /* #2e2e2e */
+  --input: 0 0% 18%;
+  --primary: 112 100% 33%; /* #14a800 (Upwork Green) */
+  --primary-hover: 112 90% 42%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 112 100% 33%;
+  --muted: 0 0% 14%;
+  --accent: 0 0% 14%;
+  --accent-hover: 0 0% 20%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 70% 55%;
+}
+
+.dark {
+  --gold-rgb: 212 168 67;
+  --gold-mid-rgb: 184 134 11;
+
+  --background: 0 0% 10%;
+  --card: 0 0% 9%;
+  --foreground: 0 0% 100%;
+  --card-foreground: 0 0% 100%;
+  --muted-foreground: 210 14% 72%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --primary: 112 100% 33%;
+  --primary-hover: 112 90% 42%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 112 100% 33%;
+  --muted: 0 0% 14%;
+  --accent: 0 0% 14%;
+  --accent-hover: 0 0% 20%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 70% 55%;
+}
+
+.light {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 8%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --primary: 112 100% 33%;
+  --primary-hover: 112 90% 42%;
+  --primary-foreground: 0 0% 100%;
+  --ring: 112 100% 33%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --accent: 220 14% 96%;
+  --accent-hover: 220 14% 91%;
+  --accent-foreground: 0 0% 8%;
+  --destructive: 0 72% 51%;
+}
+
 @theme {
   --font-sans: "Noto Sans Georgian", sans-serif;
   --font-georgian: "Noto Sans Georgian", sans-serif;
 
-  /* Design tokens — dark-only palette (near-black warm charcoal, not pure black) */
-  --color-background: #141517;
-  --color-surface-1: #1c1e21;
+  /* Canonical design-system tokens — now sourced from the HSL variables
+     above instead of flat hex, so every component migrated onto
+     bg-surface-1 / text-text-primary / border-border / bg-accent (etc.) in
+     the previous session inherits the new palette automatically with zero
+     component-level changes. New shadcn-convention names are registered
+     alongside the existing ones, both resolving to the same variable. */
+  --color-background: hsl(var(--background));
+  --color-surface-1: hsl(var(--card));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-border: hsl(var(--border));
+  --color-text-primary: hsl(var(--foreground));
+  --color-foreground: hsl(var(--foreground));
+  --color-text-secondary: hsl(var(--muted-foreground));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  /* --color-accent now maps to the neutral --accent (dark grey, 0 0% 14%)
+     instead of --primary (green) — it was wired to green by mistake,
+     which meant every bg-accent/text-accent usage across the app (nav
+     tabs, sidebar active states, inactive containers) rendered bright
+     green instead of a calm neutral. --color-primary keeps the green, so
+     only actual primary-action buttons stay green. */
+  --color-accent: hsl(var(--accent));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  /* Corrected from the previous session's flat #f59a3d (orange) — that
+     would now flash orange on hover against a green primary/accent. */
+  --color-primary-hover: hsl(var(--primary-hover));
+
+  /* Neutral hover for accent-colored elements (tabs, nav items) — deliberately
+     NOT hsl(var(--muted)) or --color-surface-1-hover as suggested: --muted
+     (0 0% 14%) is numerically identical to the new --accent, and
+     --color-surface-1-hover (#242628) is close enough to be indistinguishable
+     from it too — either would produce a hover state with no visible change
+     from the resting state. --accent-hover is a new, genuinely distinct raw
+     variable (one step lighter in dark mode / darker in light mode) instead. */
+  --color-accent-hover: hsl(var(--accent-hover));
+
+  /* Unchanged from the previous session — not part of this update. */
   --color-surface-2: #242628;
-  --color-border: #2e3033;
-  --color-text-primary: #f1f2f4;
-  --color-text-secondary: #a9adb4;
+  --color-surface-1-hover: #242628;
   --color-text-muted: #75797f;
-  --color-accent: #e8871e;
-  --color-success: #22c55e;
+  --color-link: #4b96d8;
+  --color-link-hover: #3b7db5;
+  /* --color-success: #22c55e; */
   --color-warning: #f59e0b;
   --color-error: #f87171;
   --color-info: #60a5fa;
 
-  /* Radius scale — overrides Tailwind v4's default --radius-* theme vars, so
-     every existing rounded-sm/md/lg/xl utility class picks these up automatically */
+  /* Gold accent — raw values are RGB channel triplets, not HSL, despite
+     living alongside the HSL tokens above, so they're composed with rgb()
+     rather than hsl(). Tailwind v4 derives bg-gold/50-style opacity
+     modifiers automatically via color-mix() on the resolved color, so no
+     v3-style <alpha-value> placeholder is needed or valid here. */
+  --color-gold: rgb(var(--gold-rgb));
+  --color-gold-mid: rgb(var(--gold-mid-rgb));
+
+  /* Radius scale — unchanged from the previous session. --radius (above)
+     is registered separately for future shadcn-pattern component
+     compatibility; it does not replace this scale. */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
-}
-
-:root {
-  --font-georgian: "Noto Sans Georgian", sans-serif;
+  --radius-full: 9999px;
 }
 
 html,
@@ -56,5 +170,26 @@ body {
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Registered via @utility rather than plain @layer components — Tailwind
+   v4's @apply can only target actual registered utilities (built-ins or
+   @utility-declared ones), not another custom class defined via a plain
+   CSS rule. glass-card-hover's `@apply glass-card` requires glass-card to
+   be a real utility for that to compile at all. */
+@utility glass-card {
+  @apply bg-card text-card-foreground border border-border rounded-2xl shadow-[0_2px_24px_-4px_rgba(45,45,45,0.06)];
+}
+
+@layer components {
+  .glass-card-hover {
+    @apply glass-card hover:border-primary/40 hover:shadow-[0_8px_32px_-8px_rgba(212,175,55,0.18)] transition-all duration-200;
+  }
+  .gold-text {
+    @apply text-gold font-semibold;
+  }
+  .gold-border {
+    @apply border border-gold/30;
   }
 }

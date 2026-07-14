@@ -2,11 +2,11 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Input } from "@/components/ui/Input";
+import { Select, toSelectOptions } from "@/components/ui/Select";
 import { SUSPENSION_STATUS_OPTIONS } from "@/types/carForm.types";
 import { RatingSlider } from "@/components/ui/RatingSlider";
-import { RuggedCheckbox } from "@/components/ui/RuggedCheckbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export const InspectionStep2Chassis: React.FC = () => {
   const { register } = useFormContext();
@@ -17,40 +17,35 @@ export const InspectionStep2Chassis: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <RuggedInput
+          <Input
             label="პროტექტორის სიღრმე"
-            name="inspection.tireTreadDepth"
             type="number"
-            register={register}
             placeholder="6.5"
+            {...register("inspection.tireTreadDepth")}
           />
-          <RuggedInput
+          <Input
             label="საბურავის წელი"
-            name="inspection.tireAge"
             type="number"
-            register={register}
             placeholder="2023"
+            {...register("inspection.tireAge")}
           />
 
-          <RuggedCheckbox
-            name="inspection.tireUniformity"
-            register={register}
+          <Checkbox
             label="ყველა ერთნაირი საბურავი"
+            {...register("inspection.tireUniformity")}
           />
         </div>
 
         <div className="space-y-4">
-          <RuggedInput
+          <Input
             label="ძარის მდგომარეობა"
-            name="inspection.chassisCondition"
-            register={register}
             placeholder="Rust-free / Reinforced"
+            {...register("inspection.chassisCondition")}
           />
-          <RuggedSelect
+          <Select
             label="ამორტიზატორების მდგომარეობა"
-            name="inspection.suspensionStatus"
-            register={register}
-            options={[...SUSPENSION_STATUS_OPTIONS]}
+            options={toSelectOptions(SUSPENSION_STATUS_OPTIONS)}
+            {...register("inspection.suspensionStatus")}
           />
           <RatingSlider
             label="ძარის ჯამური მდგომარეობა"

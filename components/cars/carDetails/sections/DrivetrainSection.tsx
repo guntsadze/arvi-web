@@ -11,7 +11,7 @@ interface DrivetrainSectionProps {
 export const DrivetrainSection: React.FC<DrivetrainSectionProps> = ({
   car,
 }) => (
-  <div className="bg-[#201d1b] border border-stone-800 p-6">
+  <div className="bg-surface-1 border border-border p-6">
     <SectionHeader icon={Cpu} title="Drivetrain" />
     <div className="space-y-1">
       <DataRow label="ძრავი" value={car.engine} icon={Activity} />

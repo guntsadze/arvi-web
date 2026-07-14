@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SearchResults, searchService } from "@/services/search.service";
 import Image from "next/image";
+import { getProfileHref } from "@/lib/utils";
 
 export function GlobalSearchBar() {
   const [query, setQuery] = useState("");
@@ -95,7 +96,7 @@ export function GlobalSearchBar() {
       {/* Search Input */}
       <div className="relative">
         <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-300"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
           size={14}
         />
         <input
@@ -104,20 +105,20 @@ export function GlobalSearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="ძებნა..."
-          className="w-full pl-10 pr-10 py-2 bg-stone-800 text-white placeholder:text-stone-300 focus:border-amber-500 focus:outline-none transition-colors font-mono text-xs rounded-md"
+          className="w-full pl-10 pr-10 py-2 bg-surface-2 text-white placeholder:text-text-secondary focus:border-accent focus:outline-none transition-colors font-mono text-xs rounded-md"
         />
 
         {/* Loading / Clear */}
         {isLoading ? (
           <Loader2
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 animate-spin"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-accent animate-spin"
             size={20}
           />
         ) : (
           query && (
             <button
               onClick={handleClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-amber-500 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent transition-colors"
             >
               <X size={20} />
             </button>
@@ -127,25 +128,25 @@ export function GlobalSearchBar() {
 
       {/* Dropdown - ყოველთვის ჩანს, როცა isOpen = true */}
       {isOpen && (
-        <div className="absolute top-full mt-2 w-full bg-[#1a1918] border-2 border-stone-700 shadow-2xl z-50 max-h-[500px] overflow-y-auto custom-scrollbar rounded-md">
+        <div className="absolute top-full mt-2 w-full bg-surface-1 border-2 border-border shadow-2xl z-50 max-h-[500px] overflow-y-auto custom-scrollbar rounded-md">
           {/* თუ არის შედეგები */}
           {hasResults && (
             <>
               {/* Users */}
               {results.users.length > 0 && (
-                <div className="border-b border-stone-800">
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                <div className="border-b border-border">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <Users size={14} />
                     <span>მომხმარებლები</span>
                   </div>
                   {results.users.map((user) => (
                     <Link
                       key={user.id}
-                      href={`/profile/${user.username}`}
+                      href={getProfileHref(user.username)}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
-                      <div className="w-10 h-10 rounded-full bg-stone-700 flex items-center justify-center text-amber-500 font-bold overflow-hidden">
+                      <div className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center text-accent font-bold overflow-hidden">
                         {user.avatar ? (
                           <Image
                             src={user.avatar?.url}
@@ -164,14 +165,14 @@ export function GlobalSearchBar() {
                             {user.firstName} {user.lastName}
                           </span>
                           {user.isVerified && (
-                            <span className="text-amber-500 text-xs">✓</span>
+                            <span className="text-accent text-xs">✓</span>
                           )}
                         </div>
-                        <div className="text-stone-400 text-sm">
+                        <div className="text-text-secondary text-sm">
                           @{user.username}
                         </div>
                       </div>
-                      <div className="text-stone-300 text-xs">
+                      <div className="text-text-secondary text-xs">
                         {user.followersCount} followers
                       </div>
                     </Link>
@@ -181,8 +182,8 @@ export function GlobalSearchBar() {
 
               {/* Cars */}
               {results.cars.length > 0 && (
-                <div className="border-b border-stone-800">
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                <div className="border-b border-border">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <Car size={14} />
                     <span>მანქანები</span>
                   </div>
@@ -191,19 +192,19 @@ export function GlobalSearchBar() {
                       key={car.id}
                       href={`/cars/${car.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
-                      <Car className="text-amber-500" size={20} />
+                      <Car className="text-accent" size={20} />
                       <div className="flex-1">
                         <div className="text-white font-medium">
                           {car.make} {car.model}
                         </div>
                         {car.nickname && (
-                          <div className="text-stone-400 text-sm">
+                          <div className="text-text-secondary text-sm">
                             "{car.nickname}"
                           </div>
                         )}
-                        <div className="text-stone-300 text-xs">
+                        <div className="text-text-secondary text-xs">
                           by @{car.user.username}
                         </div>
                       </div>
@@ -216,8 +217,8 @@ export function GlobalSearchBar() {
               {/* (შენი ორიგინალური კოდიდან დარჩა უცვლელი) */}
 
               {results.posts.length > 0 && (
-                <div className="border-b border-stone-800">
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                <div className="border-b border-border">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <FileText size={14} />
                     <span>პოსტები</span>
                   </div>
@@ -226,13 +227,13 @@ export function GlobalSearchBar() {
                       key={post.id}
                       href={`/posts/${post.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
                       <div className="flex-1">
                         <div className="text-white text-sm line-clamp-2 mb-1">
                           {post.content}
                         </div>
-                        <div className="flex items-center gap-3 text-stone-300 text-xs">
+                        <div className="flex items-center gap-3 text-text-secondary text-xs">
                           <span>by @{post.user.username}</span>
                           <span>❤️ {post._count.likes}</span>
                           <span>💬 {post._count.comments}</span>
@@ -244,8 +245,8 @@ export function GlobalSearchBar() {
               )}
 
               {results.groups.length > 0 && (
-                <div className="border-b border-stone-800">
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                <div className="border-b border-border">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <Users2 size={14} />
                     <span>ჯგუფები</span>
                   </div>
@@ -254,19 +255,19 @@ export function GlobalSearchBar() {
                       key={group.id}
                       href={`/groups/${group.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
-                      <Users2 className="text-amber-500" size={20} />
+                      <Users2 className="text-accent" size={20} />
                       <div className="flex-1">
                         <div className="text-white font-medium">
                           {group.name}
                         </div>
                         {group.description && (
-                          <div className="text-stone-400 text-sm line-clamp-1">
+                          <div className="text-text-secondary text-sm line-clamp-1">
                             {group.description}
                           </div>
                         )}
-                        <div className="text-stone-300 text-xs">
+                        <div className="text-text-secondary text-xs">
                           by @{group.owner.username}
                         </div>
                       </div>
@@ -276,8 +277,8 @@ export function GlobalSearchBar() {
               )}
 
               {results.events.length > 0 && (
-                <div className="border-b border-stone-800">
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                <div className="border-b border-border">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <Calendar size={14} />
                     <span>ივენთები</span>
                   </div>
@@ -286,19 +287,19 @@ export function GlobalSearchBar() {
                       key={event.id}
                       href={`/events/${event.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
-                      <Calendar className="text-amber-500" size={20} />
+                      <Calendar className="text-accent" size={20} />
                       <div className="flex-1">
                         <div className="text-white font-medium">
                           {event.title}
                         </div>
                         {event.location && (
-                          <div className="text-stone-400 text-sm">
+                          <div className="text-text-secondary text-sm">
                             {event.location}
                           </div>
                         )}
-                        <div className="text-stone-300 text-xs">
+                        <div className="text-text-secondary text-xs">
                           {new Date(event.startDate).toLocaleDateString(
                             "ka-GE",
                           )}
@@ -311,7 +312,7 @@ export function GlobalSearchBar() {
 
               {results.listings.length > 0 && (
                 <div>
-                  <div className="px-4 py-2 bg-stone-900 text-amber-500 text-xs font-mono uppercase flex items-center gap-2">
+                  <div className="px-4 py-2 bg-surface-1 text-accent text-xs font-mono uppercase flex items-center gap-2">
                     <ShoppingBag size={14} />
                     <span>გაყიდვები</span>
                   </div>
@@ -320,18 +321,18 @@ export function GlobalSearchBar() {
                       key={listing.id}
                       href={`/marketplace/${listing.id}`}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-stone-800 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-surface-1-hover transition-colors"
                     >
-                      <ShoppingBag className="text-amber-500" size={20} />
+                      <ShoppingBag className="text-accent" size={20} />
                       <div className="flex-1">
                         <div className="text-white font-medium">
                           {listing.title}
                         </div>
-                        <div className="text-stone-400 text-sm">
+                        <div className="text-text-secondary text-sm">
                           {listing.make} {listing.model}
                         </div>
                         {listing.price && (
-                          <div className="text-amber-500 text-sm font-bold">
+                          <div className="text-accent text-sm font-bold">
                             ${listing.price.toLocaleString()}
                           </div>
                         )}
@@ -346,8 +347,8 @@ export function GlobalSearchBar() {
           {/* No results */}
           {!hasResults && results !== null && (
             <div className="p-8 text-center">
-              <Search className="mx-auto mb-3 text-[#EBE9E1]" size={40} />
-              <p className="text-stone-400 font-mono">
+              <Search className="mx-auto mb-3 text-text-primary" size={40} />
+              <p className="text-text-secondary font-mono">
                 შედეგი ვერ მოიძებნა "{query}"-ზე
               </p>
             </div>

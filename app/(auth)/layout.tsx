@@ -1,7 +1,9 @@
+import { CenteredShell } from "@/components/layout/CenteredShell";
+
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <CenteredShell>{children}</CenteredShell>;
 }

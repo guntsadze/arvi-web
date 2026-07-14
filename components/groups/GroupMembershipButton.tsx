@@ -22,8 +22,8 @@ export const GroupMembershipButton = ({
       disabled={isLoading}
       className={`px-6 py-2 font-mono text-[10px] uppercase tracking-widest transition-all border flex items-center gap-2 group/btn ${
         isMember
-          ? "bg-green-900/10 border-green-900/30 text-green-500 hover:bg-red-900/20 hover:border-red-900/50 hover:text-red-500"
-          : "bg-amber-700/10 border-amber-900/30 text-amber-600 hover:bg-amber-700/20"
+          ? "bg-success/10/10 border-success/30 text-success hover:bg-error/10/20 hover:border-error/50 hover:text-error"
+          : "bg-accent/10 border-accent/30 text-accent hover:bg-primary-hover/20"
       } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`} // isLoading სტილი
     >
       {isLoading ? (

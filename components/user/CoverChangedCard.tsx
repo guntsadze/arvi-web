@@ -22,11 +22,11 @@ export function CoverChangedCard({ activity, refresh }: CoverChangedCardProps) {
 
   return (
     <div className="relative mb-8 group/card">
-      <div className="bg-[#201d1b] border border-stone-800 hover:border-stone-600 transition-colors duration-300 overflow-hidden">
+      <div className="bg-surface-1 border border-border hover:border-border transition-colors duration-300 overflow-hidden">
         {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
         {/* Bottom accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-50 z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50 z-10" />
 
         {/* Header */}
         <ActivityHeader
@@ -45,7 +45,7 @@ export function CoverChangedCard({ activity, refresh }: CoverChangedCardProps) {
         />
 
         {/* Cover preview */}
-        <div className="relative w-full aspect-[3/1] bg-[#1a1714] border-b border-stone-800 overflow-hidden">
+        <div className="relative w-full aspect-[3/1] bg-surface-2 border-b border-border overflow-hidden">
           {newCoverUrl ? (
             <>
               <img
@@ -54,26 +54,26 @@ export function CoverChangedCard({ activity, refresh }: CoverChangedCardProps) {
                 className="w-full h-full object-cover"
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#201d1b]/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-1/60 to-transparent" />
             </>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-stone-700 text-[10px] font-mono uppercase tracking-widest">
+              <span className="text-text-muted text-[10px] font-mono uppercase tracking-widest">
                 No cover image
               </span>
             </div>
           )}
 
           {/* Corner decorations */}
-          <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-600/60" />
-          <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-600/60" />
-          <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-600/60" />
-          <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-600/60" />
+          <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-accent/60" />
+          <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-accent/60" />
+          <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-accent/60" />
+          <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-accent/60" />
         </div>
 
         {/* Info */}
-        <div className="p-4 bg-[#201d1b]">
-          <p className="text-stone-300 text-[10px] font-mono uppercase tracking-widest text-center">
+        <div className="p-4 bg-surface-1">
+          <p className="text-text-secondary text-[10px] font-mono uppercase tracking-widest text-center">
             Cover photo updated
           </p>
         </div>

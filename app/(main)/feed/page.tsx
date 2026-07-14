@@ -9,6 +9,7 @@ import { postsService } from "@/services/posts/posts.service";
 import { UnifiedPostForm } from "@/components/shared/forms/UnifiedPostForm";
 import { activityService } from "@/services/activity.service";
 import { FeedItem } from "@/components/feed/FeedItem";
+import { EmptyGarageCard } from "@/components/feed/EmptyGarageCard";
 
 export default function FeedPage() {
   const searchParams = useSearchParams();
@@ -32,7 +33,7 @@ export default function FeedPage() {
   }, [searchParams, router, pathname]);
 
   return (
-    <div className="min-h-screen bg-[#1c1917] relative">
+    <div className="min-h-screen bg-background relative">
       {/* GLOBAL BACKGROUND GRID */}
       <div
         className="fixed inset-0 opacity-10 pointer-events-none"
@@ -46,20 +47,22 @@ export default function FeedPage() {
       />
 
       {/* SCANLINE EFFECT */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-50" />
+      <div className="fixed top-0 left-0 w-full h-1 bg-accent/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-50" />
 
       <div className="relative z-10 max-w-3xl mx-auto py-10 px-4">
         {/* Header Decoration */}
         <div className="flex items-center justify-center gap-4 mb-12">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-stone-700" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border" />
           <div className="flex flex-col items-center gap-1">
-            <Activity className="text-amber-700" size={20} />
-            <span className="text-[8px] font-mono text-[#EBE9E1] uppercase tracking-[0.4em]">
+            <Activity className="text-accent" size={20} />
+            <span className="text-[8px] font-mono text-text-primary uppercase tracking-[0.4em]">
               Live Feed
             </span>
           </div>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-stone-700" />
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border" />
         </div>
+
+        <EmptyGarageCard />
 
         <UnifiedPostForm
           storageFolder="posts"
@@ -76,18 +79,18 @@ export default function FeedPage() {
           ))}
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-              <Loader2 className="animate-spin text-amber-600" size={32} />
+            <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-border border-dashed">
+              <Loader2 className="animate-spin text-accent" size={32} />
             </div>
             // <GlobalLoader />
           )}
 
           {!loading && activities.length === 0 && (
-            <div className="text-center py-24 border border-stone-800 bg-[#201d1b]">
-              <p className="text-stone-300 font-mono text-sm uppercase tracking-wider">
+            <div className="text-center py-24 border border-border bg-surface-1">
+              <p className="text-text-secondary font-mono text-sm uppercase tracking-wider">
                 // System Log Empty
               </p>
-              <p className="text-stone-300 text-xs mt-2">
+              <p className="text-text-secondary text-xs mt-2">
                 No activity recorded in the sector.
               </p>
             </div>

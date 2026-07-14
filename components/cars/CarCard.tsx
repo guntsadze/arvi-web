@@ -9,12 +9,21 @@ import {
   ArrowRightLeft,
 } from "lucide-react";
 import Image from "next/image";
+import { Card } from "../ui/Card";
 
+/**
+ * Deliberately light "license plate" card — a distinct visual motif from
+ * the app's dark surface tokens (cream/ivory palette on purpose, echoing a
+ * physical number plate), so it keeps its own bespoke light colors rather
+ * than the dark bg-surface-1/text-primary tokens used elsewhere. Card is
+ * still used as the structural shell (radius/shadow/hover), with its
+ * default dark background/border overridden via className.
+ */
 export const CarCard = ({ car, onClick }) => {
   return (
-    <div
+    <Card
       onClick={onClick}
-      className="group relative bg-[#f2f0e9] min-h-[450px] flex flex-col shadow-xl transition-all hover:-translate-y-2 duration-300 cursor-pointer border border-stone-300"
+      className="group relative bg-[#f2f0e9] min-h-[450px] flex flex-col rounded-none shadow-xl transition-all hover:-translate-y-2 duration-300 cursor-pointer border-stone-300"
     >
       {/* ზედა დეკორატიული "წებოვანი ლენტი" */}
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-[#e8dcc0] opacity-90 rotate-1 shadow-sm z-20 border-x border-stone-400/20 flex justify-center items-center">
@@ -23,7 +32,7 @@ export const CarCard = ({ car, onClick }) => {
         </span>
       </div>
 
-      <div className="h-44 bg-[#1c1917] relative flex items-center justify-center overflow-hidden border-b-4 border-stone-800">
+      <div className="h-44 bg-surface-1 relative flex items-center justify-center overflow-hidden border-b-4 border-border">
         {car.photos && car.photos.length > 0 ? (
           <Image
             src={car.photos[0].url}
@@ -33,14 +42,14 @@ export const CarCard = ({ car, onClick }) => {
             className="object-cover"
           />
         ) : (
-          <Car className="w-24 h-24 text-stone-700 group-hover:text-amber-500 transition-colors duration-500" />
+          <Car className="w-24 h-24 text-text-muted group-hover:text-accent transition-colors duration-500" />
         )}
       </div>
 
       <div className="p-6 flex-1 flex flex-col">
         {/* სათაური */}
-        <div className="mb-4 border-b-2 border-stone-900 pb-2">
-          <h3 className="text-xs font-bold text-stone-300 uppercase tracking-[0.2em]">
+        <div className="mb-4 border-b-2 border-border pb-2">
+          <h3 className="text-xs font-bold text-text-secondary uppercase tracking-[0.2em]">
             {car.model}
           </h3>
           <p className="text-3xl font-black text-stone-900 uppercase leading-none truncate">
@@ -49,7 +58,7 @@ export const CarCard = ({ car, onClick }) => {
         </div>
 
         {/* ტექნიკური მონაცემების ბლოკი */}
-        <div className="grid grid-cols-1 gap-2 font-mono text-[11px] text-stone-600">
+        <div className="grid grid-cols-1 gap-2 font-mono text-[11px] text-text-muted">
           {/* Year & Engine Row */}
           <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1">
             <span className="flex items-center gap-2">
@@ -66,7 +75,7 @@ export const CarCard = ({ car, onClick }) => {
           </div>
 
           {/* Power & Torque Row */}
-          <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1 text-amber-800">
+          <div className="flex justify-between items-center border-b border-dashed border-stone-300 pb-1 text-accent">
             <span className="flex items-center gap-2">
               <Gauge size={12} /> PERFORMANCE
             </span>
@@ -106,7 +115,7 @@ export const CarCard = ({ car, onClick }) => {
 
           {/* Mileage Section */}
           {car.mileage && (
-            <div className="mt-4 bg-stone-900 text-[#f2f0e9] p-2 flex justify-between items-center">
+            <div className="mt-4 bg-surface-1 text-[#f2f0e9] p-2 flex justify-between items-center">
               <span className="text-[9px] uppercase tracking-widest opacity-70">
                 Odometer Reading:
               </span>
@@ -121,7 +130,7 @@ export const CarCard = ({ car, onClick }) => {
 
       {/* ID & Footer */}
       <div className="bg-stone-300/50 p-2 text-center border-t border-stone-300 flex justify-between px-4 items-center">
-        <span className="font-mono text-[9px] text-stone-300 uppercase tracking-widest">
+        <span className="font-mono text-[9px] text-text-secondary uppercase tracking-widest">
           SN: {car.id.toString().slice(-8).toUpperCase()}
         </span>
         <div className="flex gap-1">
@@ -132,7 +141,7 @@ export const CarCard = ({ car, onClick }) => {
       </div>
 
       {/* Hover ეფექტი */}
-      <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/5 transition-colors pointer-events-none" />
-    </div>
+      <div className="absolute inset-0 bg-accent/0 group-hover:bg-primary-hover/5 transition-colors pointer-events-none" />
+    </Card>
   );
 };

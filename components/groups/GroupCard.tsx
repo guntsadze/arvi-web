@@ -7,6 +7,7 @@ import { Group } from "@/types/groups.types";
 import { GroupAvatarItem } from "../ui/GroupAvatarItem";
 import { useGroupMembership } from "@/hooks/useGroupMembership";
 import { GroupMembershipButton } from "./GroupMembershipButton";
+import { Card } from "../ui/Card";
 
 export const GroupCard = ({ group }: { group: Group }) => {
   const initialIsMemberStatus = group.members.length > 0;
@@ -22,29 +23,29 @@ export const GroupCard = ({ group }: { group: Group }) => {
   };
 
   return (
-    <div className="group relative bg-[#201d1b] border border-stone-800 p-5 shadow-2xl hover:border-stone-700 transition-all duration-500 overflow-hidden">
+    <Card className="group relative p-5 shadow-2xl transition-all duration-500 overflow-hidden">
       {/* Visual Accents */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-stone-700 to-transparent opacity-30" />
-      <div className="absolute top-0 left-0 w-1 h-0 group-hover:h-full bg-amber-700 transition-all duration-500" />
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent opacity-30" />
+      <div className="absolute top-0 left-0 w-1 h-0 group-hover:h-full bg-accent transition-all duration-500" />
 
       <Link href={`/groups/${group.slug}`} className="block space-y-5">
         {/* Header Area */}
         <div className="flex justify-between items-start">
           <div className="relative">
             <GroupAvatarItem group={group} size="sm" />
-            <div className="absolute -bottom-1 -right-1 w-14 h-14 border border-stone-800/50 -z-0" />
+            <div className="absolute -bottom-1 -right-1 w-14 h-14 border border-border/50 -z-0" />
           </div>
 
           <div className="text-right space-y-1">
-            <div className="flex items-center justify-end gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-stone-300">
+            <div className="flex items-center justify-end gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-text-secondary">
               {group.privacy === "PUBLIC" ? (
-                <Globe size={10} className="text-emerald-700" />
+                <Globe size={10} className="text-success" />
               ) : (
-                <Lock size={10} className="text-amber-700" />
+                <Lock size={10} className="text-accent" />
               )}
               {group.privacy}
             </div>
-            <div className="text-[8px] font-mono text-stone-400 uppercase tracking-widest">
+            <div className="text-[8px] font-mono text-text-secondary uppercase tracking-widest">
               Sector_ID: {group.id.slice(-6)}
             </div>
           </div>
@@ -52,30 +53,30 @@ export const GroupCard = ({ group }: { group: Group }) => {
 
         {/* Content Area */}
         <div className="space-y-2">
-          <h3 className="text-stone-200 font-mono text-sm uppercase tracking-widest group-hover:text-amber-600 transition-colors flex items-center gap-2">
+          <h3 className="text-text-primary font-mono text-sm uppercase tracking-widest group-hover:text-accent transition-colors flex items-center gap-2">
             {group.name}
             <ArrowUpRight
               size={12}
-              className="opacity-0 group-hover:opacity-100 transition-all text-[#EBE9E1]"
+              className="opacity-0 group-hover:opacity-100 transition-all text-text-primary"
             />
           </h3>
         </div>
 
         {/* Technical Stats */}
-        <div className="grid grid-cols-2 gap-4 py-3 border-y border-stone-800/50">
+        <div className="grid grid-cols-2 gap-4 py-3 border-y border-border/50">
           <div className="flex flex-col">
-            <span className="text-[8px] font-mono text-stone-700 uppercase">
+            <span className="text-[8px] font-mono text-text-muted uppercase">
               Active_Members
             </span>
-            <span className="text-stone-400 font-mono text-xs">
+            <span className="text-text-secondary font-mono text-xs">
               {group.membersCount ?? "—"}
             </span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[8px] font-mono text-stone-700 uppercase">
+            <span className="text-[8px] font-mono text-text-muted uppercase">
               Data_Entries
             </span>
-            <span className="text-stone-400 font-mono text-xs">
+            <span className="text-text-secondary font-mono text-xs">
               {group.postsCount ?? "—"}
             </span>
           </div>
@@ -92,10 +93,10 @@ export const GroupCard = ({ group }: { group: Group }) => {
 
       {/* Aesthetic terminal bit */}
       <div className="absolute bottom-1 right-2 opacity-10 pointer-events-none">
-        <span className="font-mono text-[6px] text-stone-300 uppercase">
+        <span className="font-mono text-[6px] text-text-secondary uppercase">
           v1.0.4_comm
         </span>
       </div>
-    </div>
+    </Card>
   );
 };

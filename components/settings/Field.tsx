@@ -9,7 +9,7 @@ export function Field({
 }) {
   return (
     <div className={className}>
-      <p className="text-[8px] uppercase tracking-[.14em] text-stone-300 font-mono mb-1.5">
+      <p className="text-[8px] uppercase tracking-[.14em] text-text-secondary font-mono mb-1.5">
         {label}
       </p>
       {children}

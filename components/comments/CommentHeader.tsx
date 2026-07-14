@@ -14,11 +14,11 @@ export const CommentHeader = ({
 }: CommentHeaderProps) => (
   <div className="flex items-baseline gap-2 mb-1">
     <span
-      className={`font-bold uppercase tracking-wider ${isReply ? "text-[9px] text-amber-700/80" : "text-[10px] text-stone-400"}`}
+      className={`font-bold uppercase tracking-wider ${isReply ? "text-[9px] text-accent/80" : "text-[10px] text-text-secondary"}`}
     >
       {user.firstName} {user.lastName}
     </span>
-    <span className="text-[8px] text-stone-700 font-mono">
+    <span className="text-[8px] text-text-muted font-mono">
       {formatDistanceToNow(new Date(createdAt), {
         addSuffix: true,
         locale: ka,

@@ -12,19 +12,19 @@ export const CommentActions = ({
   <div className="flex gap-4 opacity-40 group-hover/comment:opacity-100 transition-opacity">
     <button
       onClick={onReply}
-      className="text-[9px] uppercase font-bold text-stone-300 hover:text-amber-600 transition-colors"
+      className="text-[9px] uppercase font-bold text-text-secondary hover:text-accent transition-colors"
     >
       პასუხი
     </button>
     <button
       onClick={onEdit}
-      className="text-[9px] uppercase font-bold text-stone-300 hover:text-blue-500 transition-colors"
+      className="text-[9px] uppercase font-bold text-text-secondary hover:text-info transition-colors"
     >
       რედაქტირება
     </button>
     <button
       onClick={onDelete}
-      className="text-[9px] uppercase font-bold text-stone-300 hover:text-red-500 transition-colors"
+      className="text-[9px] uppercase font-bold text-text-secondary hover:text-error transition-colors"
     >
       წაშლა
     </button>

@@ -12,8 +12,8 @@ export const InspectionStep7Summary: React.FC = () => {
     if (typeof value === "boolean") {
       return (
         <p>
-          <span className="font-semibold text-stone-300">{label}:</span>{" "}
-          <span className={value ? "text-green-400" : "text-red-400"}>
+          <span className="font-semibold text-text-secondary">{label}:</span>{" "}
+          <span className={value ? "text-success" : "text-error"}>
             {value ? "Yes" : "No"}
           </span>
         </p>
@@ -21,14 +21,14 @@ export const InspectionStep7Summary: React.FC = () => {
     }
     if (typeof value === "number" && label.includes("Rating")) {
       const rating = Number(value);
-      let colorClass = "text-stone-400";
-      if (rating >= 8) colorClass = "text-green-400";
-      else if (rating >= 5) colorClass = "text-yellow-400";
-      else colorClass = "text-red-400";
+      let colorClass = "text-text-secondary";
+      if (rating >= 8) colorClass = "text-success";
+      else if (rating >= 5) colorClass = "text-warning";
+      else colorClass = "text-error";
 
       return (
         <p>
-          <span className="font-semibold text-stone-300">{label}:</span>{" "}
+          <span className="font-semibold text-text-secondary">{label}:</span>{" "}
           <span className={colorClass}>{value}/10</span>
         </p>
       );
@@ -36,8 +36,8 @@ export const InspectionStep7Summary: React.FC = () => {
     if (value) {
       return (
         <p>
-          <span className="font-semibold text-stone-300">{label}:</span>{" "}
-          <span className="text-stone-400">{value}</span>
+          <span className="font-semibold text-text-secondary">{label}:</span>{" "}
+          <span className="text-text-secondary">{value}</span>
         </p>
       );
     }
@@ -47,12 +47,12 @@ export const InspectionStep7Summary: React.FC = () => {
   return (
     <div className="space-y-8">
       <h2 className="text-2xl font-semibold text-white">7. Summary & Notes</h2>
-      <p className="text-stone-400">
+      <p className="text-text-secondary">
         Please review the inspection report before submitting.
       </p>
 
       <div className="space-y-6">
-        <h3 className="text-xl font-bold text-orange-400">
+        <h3 className="text-xl font-bold text-accent">
           // Exterior & Body
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -63,7 +63,7 @@ export const InspectionStep7Summary: React.FC = () => {
           {renderField("Exterior Visual Rating", formData.exteriorVisualRating)}
         </div>
 
-        <h3 className="text-xl font-bold text-orange-400 mt-8">
+        <h3 className="text-xl font-bold text-accent mt-8">
           // Wheels & Chassis
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -78,7 +78,7 @@ export const InspectionStep7Summary: React.FC = () => {
           )}
         </div>
 
-        <h3 className="text-xl font-bold text-orange-400 mt-8">
+        <h3 className="text-xl font-bold text-accent mt-8">
           // Lights & Exhaust
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -91,7 +91,7 @@ export const InspectionStep7Summary: React.FC = () => {
           )}
         </div>
 
-        <h3 className="text-xl font-bold text-orange-400 mt-8">
+        <h3 className="text-xl font-bold text-accent mt-8">
           // Interior & Electronics
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -107,7 +107,7 @@ export const InspectionStep7Summary: React.FC = () => {
           )}
         </div>
 
-        <h3 className="text-xl font-bold text-orange-400 mt-8">
+        <h3 className="text-xl font-bold text-accent mt-8">
           // Engine & Mechanical
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -123,7 +123,7 @@ export const InspectionStep7Summary: React.FC = () => {
           )}
         </div>
 
-        <h3 className="text-xl font-bold text-orange-400 mt-8">
+        <h3 className="text-xl font-bold text-accent mt-8">
           // Inspector Notes
         </h3>
         {renderField("Notes", formData.inspectorNotes)}

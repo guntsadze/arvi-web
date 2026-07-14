@@ -40,7 +40,7 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
     <div className="fixed inset-0 z-[9999]">
       {/* Background */}
       <div
-        className="absolute inset-0 bg-[#1c1917] bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] backdrop-blur-sm"
+        className="absolute inset-0 bg-background bg-[radial-gradient(#292524_1px,transparent_1px)] [background-size:16px_16px] backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -48,15 +48,15 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
       <div className="relative h-full w-full overflow-y-auto">
         <div className="relative max-w-7xl mx-auto pt-10 pb-20 px-4 md:px-8 animate-in slide-in-from-bottom-10 duration-500">
           {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-stone-800 pb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-border pb-6">
             <div>
-              <div className="flex items-center gap-2 text-amber-600 mb-2">
+              <div className="flex items-center gap-2 text-accent mb-2">
                 <FileText size={16} />
                 <span className="text-xs font-mono uppercase tracking-widest">
                   ავტომობილის სრული ინფორმაცია
                 </span>
               </div>
-              <h2 className="text-4xl font-black text-[#EBE9E1] uppercase">
+              <h2 className="text-4xl font-black text-text-primary uppercase">
                 {car.make} {car.model}
               </h2>
             </div>
@@ -65,9 +65,9 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
               {isOwner && (
                 <button
                   onClick={() => onEdit(car)}
-                  className="flex items-center gap-2 px-6 py-3 bg-stone-800 hover:bg-amber-600
-                             text-stone-300 hover:text-stone-900 font-bold uppercase tracking-wider
-                             transition-all border border-stone-700"
+                  className="flex items-center gap-2 px-6 py-3 bg-surface-2 hover:bg-primary-hover
+                             text-text-secondary hover:text-background font-bold uppercase tracking-wider
+                             transition-all border border-border"
                 >
                   <Settings className="w-4 h-4" />
                   <span>ინფორმაციის განახლება</span>
@@ -76,8 +76,8 @@ export const CarFullDetails: React.FC<CarFullDetailsProps> = ({
 
               <button
                 onClick={onClose}
-                className="flex items-center gap-2 px-6 py-3 border border-stone-700
-                           text-stone-300 hover:text-red-400 hover:border-red-500
+                className="flex items-center gap-2 px-6 py-3 border border-border
+                           text-text-secondary hover:text-error hover:border-error
                            transition-all uppercase font-bold"
               >
                 <X size={16} />

@@ -34,8 +34,8 @@ export default function MessageButton({ userId }: { userId: string }) {
       disabled={isLoading}
       className="
         w-[34px] h-[34px] flex items-center justify-center flex-shrink-0
-        bg-transparent border border-stone-700 rounded
-        text-stone-400 hover:border-stone-500 hover:text-stone-200
+        bg-transparent border border-border rounded
+        text-text-secondary hover:border-border hover:text-text-primary
         transition-all duration-150
         disabled:opacity-40 disabled:cursor-not-allowed
       "

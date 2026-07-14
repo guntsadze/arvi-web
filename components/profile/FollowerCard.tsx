@@ -23,23 +23,23 @@ type Props = {
 export default function FollowerCard({ follower }: Props) {
   return (
     <Link href={`/profile/${follower.username}`}>
-      <div className="group  border border-stone-700 rounded-xl p-3 hover:border-orange-500/50 transition-all duration-200 cursor-pointer h-full flex flex-col">
+      <div className="group  border border-border rounded-xl p-3 hover:border-accent/50 transition-all duration-200 cursor-pointer h-full flex flex-col">
         <UserAvatarItem user={follower} variant="card" />
         {/* Bio */}
         <div className="flex-1 mb-3">
           {follower.bio ? (
-            <p className="text-xs text-stone-400 leading-relaxed line-clamp-2 pt-2">
+            <p className="text-xs text-text-secondary leading-relaxed line-clamp-2 pt-2">
               {follower.bio}
             </p>
           ) : (
-            <p className="text-xs text-[#EBE9E1] italic pt-2">
+            <p className="text-xs text-text-primary italic pt-2">
               მძღოლის ინფორმაცია არ არის
             </p>
           )}
         </div>
 
         {/* Followers count */}
-        <p className="text-[10px] font-mono text-stone-300 mb-3">
+        <p className="text-[10px] font-mono text-text-secondary mb-3">
           {follower.followersCount.toLocaleString()}{" "}
           {follower.followersCount === 1 ? "follower" : "followers"}
         </p>

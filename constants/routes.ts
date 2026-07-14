@@ -10,6 +10,8 @@ export const PUBLIC_ROUTES = [
   "/user",
   "/login",
   "/register",
+  "/privacy-policy",
+  "/terms-of-service",
 ];
 
 export const AUTH_ROUTES = ["/login", "/register"];

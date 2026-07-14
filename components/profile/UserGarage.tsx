@@ -99,26 +99,26 @@ export function UserGarage({ userId }: Props) {
         {isOwner && (
           <button
             onClick={() => setIsAddingNew(true)}
-            className="group relative border-2 border-dashed border-stone-800 hover:border-amber-600 transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-stone-900/20 hover:bg-amber-500/5 min-h-[300px]"
+            className="group relative border-2 border-dashed border-border hover:border-accent transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-surface-1/20 hover:bg-primary-hover/5 min-h-[300px]"
           >
-            <div className="w-12 h-12 rounded-full border-2 border-stone-800 group-hover:border-amber-500 flex items-center justify-center transition-colors">
+            <div className="w-12 h-12 rounded-full border-2 border-border group-hover:border-accent flex items-center justify-center transition-colors">
               <Plus
-                className="text-[#EBE9E1] group-hover:text-amber-500"
+                className="text-text-primary group-hover:text-accent"
                 size={24}
               />
             </div>
             <div className="text-center">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-300 group-hover:text-amber-500">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary group-hover:text-accent">
                 ავტმომობილის დამატება გარაჟში
               </p>
-              {/* <p className="text-[9px] font-mono text-stone-300 uppercase mt-1">
+              {/* <p className="text-[9px] font-mono text-text-secondary uppercase mt-1">
                 Add to garage storage
               </p> */}
             </div>
             <div className="absolute bottom-2 right-2 opacity-20 group-hover:opacity-100 transition-opacity">
               <CarIcon
                 size={40}
-                className="text-stone-400 group-hover:text-amber-900"
+                className="text-text-secondary group-hover:text-accent"
               />
             </div>
           </button>
@@ -139,7 +139,7 @@ export function UserGarage({ userId }: Props) {
             {/* ლოადერი ქარდზე, სანამ ინფორმაცია მოდის */}
             {isLoadingDetails === car.id && (
               <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
-                <Loader2 className="text-amber-500 animate-spin" size={32} />
+                <Loader2 className="text-accent animate-spin" size={32} />
               </div>
             )}
           </div>

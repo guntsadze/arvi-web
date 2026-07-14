@@ -5,6 +5,25 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Every /profile/${username}-style link in the app assumed username was
+ * always present — it wasn't, for phone signups predating the backend
+ * fallback-username fix (and, defensively, in case a stale/partial user
+ * object is ever rendered mid-load). Falls back to the /profile redirect
+ * route, which resolves the current session server-side, rather than
+ * producing a literal "/profile/null" URL.
+ */
+export function getProfileHref(username: string | null | undefined): string {
+  return username ? `/profile/${username}` : "/profile";
+}
+
+export function getSettingsHref(
+  username: string | null | undefined,
+  tab: "profile" | "account",
+): string {
+  return username ? `/settings/${username}/${tab}` : "/profile";
+}
+
 export function buildCommentTree(flatComments: any[]) {
   const map = new Map();
   const roots: any[] = [];

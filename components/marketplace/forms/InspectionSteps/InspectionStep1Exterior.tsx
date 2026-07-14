@@ -2,13 +2,13 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Select, toSelectOptions } from "@/components/ui/Select";
 import {
   PAINT_CONDITION_OPTIONS,
   GLASS_STATE_OPTIONS,
 } from "@/types/carForm.types";
 import { RatingSlider } from "@/components/ui/RatingSlider";
-import { RuggedCheckbox } from "@/components/ui/RuggedCheckbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export const InspectionStep1Exterior: React.FC = () => {
   const { register } = useFormContext();
@@ -19,30 +19,26 @@ export const InspectionStep1Exterior: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <RuggedSelect
+          <Select
             label="საღებავის მდგომარეობა"
-            name="inspection.bodyCondition"
-            register={register}
-            options={[...PAINT_CONDITION_OPTIONS]}
+            options={toSelectOptions(PAINT_CONDITION_OPTIONS)}
+            {...register("inspection.bodyCondition")}
           />
-          <RuggedCheckbox
-            name="inspection.hasRust"
-            register={register}
+          <Checkbox
             label="შემჩნევადი ჟანგი"
+            {...register("inspection.hasRust")}
           />
-          <RuggedCheckbox
-            name="inspection.panelSymmetry"
-            register={register}
+          <Checkbox
             label="ზაზორების სიმეტრია"
+            {...register("inspection.panelSymmetry")}
           />
         </div>
 
         <div className="space-y-4">
-          <RuggedSelect
+          <Select
             label="შუშების მდგომარეობა"
-            name="inspection.glassCondition"
-            register={register}
-            options={[...GLASS_STATE_OPTIONS]}
+            options={toSelectOptions(GLASS_STATE_OPTIONS)}
+            {...register("inspection.glassCondition")}
           />
           {/* Rating for Exterior Visual Appeal */}
           <RatingSlider

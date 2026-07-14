@@ -25,8 +25,8 @@ export function UserPosts({ userId }: Props) {
         <FeedItem key={activity.id} activity={activity} refresh={refresh} />
       ))}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-stone-800 border-dashed">
-          <Loader2 className="animate-spin text-amber-600" size={32} />
+        <div className="flex flex-col items-center justify-center py-12 gap-4 border-t border-border border-dashed">
+          <Loader2 className="animate-spin text-accent" size={32} />
         </div>
       )}
     </div>

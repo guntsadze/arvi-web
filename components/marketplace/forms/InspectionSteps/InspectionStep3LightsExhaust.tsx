@@ -2,13 +2,13 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Select, toSelectOptions } from "@/components/ui/Select";
 import {
   EXHAHAUST_CONDITION_OPTIONS,
   EXHAUST_CONDITION_OPTIONS,
 } from "@/types/carForm.types";
 import { RatingSlider } from "@/components/ui/RatingSlider";
-import { RuggedCheckbox } from "@/components/ui/RuggedCheckbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export const InspectionStep3LightsExhaust: React.FC = () => {
   const { register } = useFormContext();
@@ -19,21 +19,18 @@ export const InspectionStep3LightsExhaust: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <RuggedCheckbox
-            name="inspection.lightsFunctional"
-            register={register}
+          <Checkbox
             label="ნათურების მდგომარეობა"
+            {...register("inspection.lightsFunctional")}
           />
-          <RuggedCheckbox
-            name="inspection.catalystPresent"
-            register={register}
+          <Checkbox
             label="კატალიზატორი?"
+            {...register("inspection.catalystPresent")}
           />
-          <RuggedSelect
+          <Select
             label="გამონაბოლქვი"
-            name="inspection.exhaustCondition"
-            register={register}
-            options={[...EXHAHAUST_CONDITION_OPTIONS]}
+            options={toSelectOptions(EXHAHAUST_CONDITION_OPTIONS)}
+            {...register("inspection.exhaustCondition")}
           />
         </div>
 

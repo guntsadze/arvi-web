@@ -9,6 +9,7 @@ import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { usePresence } from "@/context/PresenceContext";
+import { Card } from "../ui/Card";
 
 type User = {
   id: string;
@@ -26,6 +27,13 @@ type User = {
   isFollowing?: boolean;
 };
 
+/**
+ * Deliberately light "dossier" card — intentionally bespoke cream/ivory
+ * colors (border-stone-*, text-stone-*, bg-[#dcd8c8]) rather than the dark
+ * surface tokens used elsewhere, matching CarCard's light "license plate"
+ * motif. Card is used as the structural shell (radius/shadow), with its
+ * default dark background/border overridden via className.
+ */
 export default function UserCard({ user }: { user: User }) {
   const currentUser = useAppSelector(selectCurrentUser);
   const router = useRouter();
@@ -54,12 +62,12 @@ export default function UserCard({ user }: { user: User }) {
 
   return (
     <div className="relative group">
-      <div className="absolute inset-0 bg-stone-900 translate-x-2 translate-y-2 rounded-sm" />
-      <div
+      <div className="absolute inset-0 bg-surface-1 translate-x-2 translate-y-2 rounded-sm" />
+      <Card
         onClick={handleCardClick}
-        className="relative bg-[#dcd8c8] border border-stone-500 rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200 cursor-pointer"
+        className="relative bg-[#dcd8c8] rounded-sm overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 duration-200 cursor-pointer"
       >
-        <div className="relative h-24 bg-stone-800 border-b-2 border-stone-600">
+        <div className="relative h-24 bg-surface-2 border-b-2 border-border">
           {user.cover ? (
             <Image
               src={user.cover}
@@ -72,8 +80,8 @@ export default function UserCard({ user }: { user: User }) {
             <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]" />
           )}
 
-          <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-black/60 border border-stone-500 backdrop-blur-sm">
-            <span className="text-[9px] text-amber-500 font-mono tracking-widest">
+          <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-black/60 border border-border backdrop-blur-sm">
+            <span className="text-[9px] text-accent font-mono tracking-widest">
               #{user.id.slice(-4).toUpperCase()}
             </span>
           </div>
@@ -87,7 +95,7 @@ export default function UserCard({ user }: { user: User }) {
               isOnline={isUserOnline(user.id)}
             />
             {user.isVerified && (
-              <div className="absolute -bottom-1 -right-1 bg-blue-700 text-white p-1 rounded-full border-2 border-[#dcd8c8]">
+              <div className="absolute -bottom-1 -right-1 bg-info text-white p-1 rounded-full border-2 border-[#dcd8c8]">
                 <ShieldCheck size={12} />
               </div>
             )}
@@ -101,14 +109,14 @@ export default function UserCard({ user }: { user: User }) {
               <span
                 className={`text-[9px] px-1.5 py-0.5 border rounded-sm font-bold uppercase tracking-wider ${
                   user.role === "ADMIN"
-                    ? "bg-red-900/20 text-red-900 border-red-800"
-                    : "bg-stone-400/20 text-stone-600 border-stone-400"
+                    ? "bg-error/20 text-error border-error"
+                    : "bg-stone-400/20 text-text-muted border-stone-400"
                 }`}
               >
                 {user.role}
               </span>
             </div>
-            <p className="text-stone-600 font-mono text-xs mb-3">
+            <p className="text-text-muted font-mono text-xs mb-3">
               @{user.username || user.email.split("@")[0]}
             </p>
 
@@ -117,7 +125,7 @@ export default function UserCard({ user }: { user: User }) {
                 <span className="text-xs font-black text-stone-800">
                   {followersCount}
                 </span>
-                <span className="text-[9px] text-stone-500 uppercase tracking-wide">
+                <span className="text-[9px] text-text-muted uppercase tracking-wide">
                   Followers
                 </span>
               </div>
@@ -126,7 +134,7 @@ export default function UserCard({ user }: { user: User }) {
                 <span className="text-xs font-black text-stone-800">
                   {user.postsCount}
                 </span>
-                <span className="text-[9px] text-stone-500 uppercase tracking-wide">
+                <span className="text-[9px] text-text-muted uppercase tracking-wide">
                   Posts
                 </span>
               </div>
@@ -137,7 +145,7 @@ export default function UserCard({ user }: { user: User }) {
                     <span className="text-xs font-black text-stone-800 truncate flex items-center gap-1">
                       <MapPin size={10} /> {user.location}
                     </span>
-                    <span className="text-[9px] text-stone-500 uppercase tracking-wide">
+                    <span className="text-[9px] text-text-muted uppercase tracking-wide">
                       Loc
                     </span>
                   </div>
@@ -152,8 +160,8 @@ export default function UserCard({ user }: { user: User }) {
               disabled={isLoading}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 font-black uppercase tracking-widest text-[10px] transition-all ${
                 isFollowing
-                  ? "bg-amber-600 text-black shadow-[3px_3px_0px_0px_#000]"
-                  : "bg-stone-800 text-[#EBE9E1] shadow-[3px_3px_0px_0px_#b45309]"
+                  ? "bg-accent text-background shadow-[3px_3px_0px_0px_#000]"
+                  : "bg-surface-2 text-text-primary shadow-[3px_3px_0px_0px_#b45309]"
               } disabled:opacity-60`}
             >
               <UserPlus size={14} />
@@ -163,7 +171,7 @@ export default function UserCard({ user }: { user: User }) {
             <Link
               href={`/profile/${user.username || user.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center px-3 py-2 border-2 border-stone-800 text-stone-800 font-bold hover:bg-stone-200 transition-colors"
+              className="flex items-center justify-center px-3 py-2 border-2 border-border text-stone-800 font-bold hover:bg-stone-200 transition-colors"
               title="View Dossier"
             >
               <Shield size={16} />
@@ -171,10 +179,10 @@ export default function UserCard({ user }: { user: User }) {
           </div>
 
           {error && (
-            <p className="text-red-600 text-[10px] mt-1 text-center">{error}</p>
+            <p className="text-error text-[10px] mt-1 text-center">{error}</p>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedSelect } from "@/components/ui/RuggedSelect";
+import { Input } from "@/components/ui/Input";
+import { Select, toSelectOptions } from "@/components/ui/Select";
 import { CarFormData } from "@/types/carForm.types";
 
 interface InspectionSectionProps {
@@ -29,73 +29,68 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
     {/* --- EXTERIOR & CHASSIS --- */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Body & Paint
         </h4>
-        <RuggedSelect
+        <Select
           label="Paint Condition"
-          name="inspection.bodyCondition"
-          register={register}
-          options={[...PAINT_CONDITION]}
+          options={toSelectOptions(PAINT_CONDITION)}
+          {...register("inspection.bodyCondition")}
         />
-        <RuggedSelect
+        <Select
           label="Glass State"
-          name="inspection.glassCondition"
-          register={register}
-          options={[...GLASS_STATE]}
+          options={toSelectOptions(GLASS_STATE)}
+          {...register("inspection.glassCondition")}
         />
       </div>
 
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Wheels & Tires
         </h4>
         <div className="grid grid-cols-2 gap-4">
-          <RuggedInput
+          <Input
             label="Tread Depth (mm)"
-            name="inspection.tireTreadDepth"
             type="number"
-            register={register}
             placeholder="6.5"
+            {...register("inspection.tireTreadDepth")}
           />
-          <RuggedInput
+          <Input
             label="Tire Year"
-            name="inspection.tireAge"
             type="number"
-            register={register}
             placeholder="2023"
+            {...register("inspection.tireAge")}
           />
         </div>
-        <div className="flex items-center gap-4 p-4 border border-stone-800 bg-stone-900/20">
+        <div className="flex items-center gap-4 p-4 border border-border bg-surface-1/20">
           <input
             type="checkbox"
             {...register("inspection.tireUniformity")}
-            className="w-4 h-4 accent-orange-500 bg-stone-950 border-stone-800 rounded-none"
+            className="w-4 h-4 accent-accent bg-background border-border rounded-none"
           />
-          <label className="text-[10px] uppercase tracking-widest text-stone-400 font-mono">
+          <label className="text-[10px] uppercase tracking-widest text-text-secondary font-mono">
             Uniform Tire Set
           </label>
         </div>
       </div>
 
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Structural Integrity
         </h4>
-        <RuggedInput
+        <Input
           label="Chassis Notes"
-          name="inspection.chassisCondition"
-          register={register}
           placeholder="Rust-free / Reinforced"
+          {...register("inspection.chassisCondition")}
         />
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
               {...register("inspection.hasRust")}
-              className="accent-orange-500"
+              className="accent-accent"
             />
-            <span className="text-[9px] uppercase text-stone-300 font-mono">
+            <span className="text-[9px] uppercase text-text-secondary font-mono">
               Visible Rust
             </span>
           </div>
@@ -103,9 +98,9 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
             <input
               type="checkbox"
               {...register("inspection.panelSymmetry")}
-              className="accent-orange-500"
+              className="accent-accent"
             />
-            <span className="text-[9px] uppercase text-stone-300 font-mono">
+            <span className="text-[9px] uppercase text-text-secondary font-mono">
               Symmetric Panels
             </span>
           </div>
@@ -114,43 +109,40 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
     </div>
 
     {/* --- MECHANICAL & INTERIOR --- */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-stone-800/30">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border/30">
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Engine & Fluids
         </h4>
-        <RuggedSelect
+        <Select
           label="Oil Condition"
-          name="inspection.engineOilStatus"
-          register={register}
-          options={[...OIL_CONDITION]}
+          options={toSelectOptions(OIL_CONDITION)}
+          {...register("inspection.engineOilStatus")}
         />
-        <RuggedInput
+        <Input
           label="Engine Acoustics"
-          name="inspection.engineNoise"
-          register={register}
           placeholder="Smooth / No Tapping"
+          {...register("inspection.engineNoise")}
         />
       </div>
 
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Cabin & Systems
         </h4>
-        <RuggedSelect
+        <Select
           label="Interior Grade"
-          name="inspection.interiorCondition"
-          register={register}
-          options={[...INTERIOR_GRADE]}
+          options={toSelectOptions(INTERIOR_GRADE)}
+          {...register("inspection.interiorCondition")}
         />
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
               {...register("inspection.acFunctional")}
-              className="accent-orange-500"
+              className="accent-accent"
             />
-            <span className="text-[9px] uppercase text-stone-300 font-mono">
+            <span className="text-[9px] uppercase text-text-secondary font-mono">
               A/C Cold
             </span>
           </div>
@@ -158,9 +150,9 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
             <input
               type="checkbox"
               {...register("inspection.isSmokedIn")}
-              className="accent-orange-500"
+              className="accent-accent"
             />
-            <span className="text-[9px] uppercase text-stone-300 font-mono">
+            <span className="text-[9px] uppercase text-text-secondary font-mono">
               Smoker Car
             </span>
           </div>
@@ -168,22 +160,21 @@ export const InspectionSection: React.FC<InspectionSectionProps> = ({
       </div>
 
       <div className="space-y-6">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500/70 mb-4 font-mono italic">
+        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 mb-4 font-mono italic">
           // Safety & Electronics
         </h4>
-        <RuggedInput
+        <Input
           label="Dashboard Warnings"
-          name="inspection.dashboardWarnings"
-          register={register}
           placeholder="None / Clear"
+          {...register("inspection.dashboardWarnings")}
         />
-        <div className="flex items-center gap-4 p-4 border border-stone-800 bg-stone-900/20">
+        <div className="flex items-center gap-4 p-4 border border-border bg-surface-1/20">
           <input
             type="checkbox"
             {...register("inspection.airbagsIntact")}
-            className="w-4 h-4 accent-orange-500 bg-stone-950 border-stone-800 rounded-none"
+            className="w-4 h-4 accent-accent bg-background border-border rounded-none"
           />
-          <label className="text-[10px] uppercase tracking-widest text-stone-400 font-mono">
+          <label className="text-[10px] uppercase tracking-widest text-text-secondary font-mono">
             Safety Systems Intact
           </label>
         </div>

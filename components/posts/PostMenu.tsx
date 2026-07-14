@@ -29,25 +29,25 @@ export function PostMenu({ onEdit, onDelete, isOwner }: PostMenuProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-1 hover:bg-stone-800 rounded-sm transition-colors"
+        className="p-1 hover:bg-surface-1-hover rounded-sm transition-colors"
       >
         <MoreHorizontal
           className={`${
-            isOpen ? "text-amber-500" : "text-[#EBE9E1]"
-          } hover:text-amber-600`}
+            isOpen ? "text-accent" : "text-text-primary"
+          } hover:text-accent`}
           size={20}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-[#1c1917] border border-stone-800 shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-48 bg-surface-1 border border-border shadow-xl z-50 overflow-hidden">
           <div className="flex flex-col">
             <button
               onClick={() => {
                 onEdit();
                 setIsOpen(false);
               }}
-              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-400 hover:bg-stone-800 hover:text-amber-500 transition-colors border-b border-stone-800/50"
+              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-text-secondary hover:bg-surface-1-hover hover:text-accent transition-colors border-b border-border/50"
             >
               <Edit2 size={14} />
               Edit Records
@@ -58,14 +58,14 @@ export function PostMenu({ onEdit, onDelete, isOwner }: PostMenuProps) {
                 onDelete();
                 setIsOpen(false);
               }}
-              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-stone-300 hover:bg-red-950/30 hover:text-red-500 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-text-secondary hover:bg-error/10/30 hover:text-error transition-colors"
             >
               <Trash2 size={14} />
               Delete Entry
             </button>
 
             {/* აქ შეგიძლიათ მომავალში დაამატოთ სხვა ღილაკებიც */}
-            <button className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-[#EBE9E1] hover:bg-stone-800 transition-colors">
+            <button className="flex items-center gap-3 px-4 py-3 text-[10px] font-mono uppercase text-text-primary hover:bg-surface-1-hover transition-colors">
               <AlertCircle size={14} />
               Report
             </button>

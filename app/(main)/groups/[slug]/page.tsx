@@ -36,13 +36,13 @@ export default function GroupPage({
 
   if (!group)
     return (
-      <div className="min-h-screen bg-[#1c1917] flex items-center justify-center">
-        <Loader2 className="animate-spin text-amber-700" size={40} />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="animate-spin text-accent" size={40} />
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[#1c1917] relative">
+    <div className="min-h-screen bg-background relative">
       {/* BACKGROUND DECORATIONS */}
       <div
         className="fixed inset-0 opacity-10 pointer-events-none"
@@ -51,7 +51,7 @@ export default function GroupPage({
           backgroundSize: "40px 40px",
         }}
       />
-      <div className="fixed top-0 left-0 w-full h-1 bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-50" />
+      <div className="fixed top-0 left-0 w-full h-1 bg-accent/20 shadow-[0_0_20px_rgba(245,158,11,0.3)] animate-scan opacity-20 pointer-events-none z-50" />
 
       <GroupHeader group={group} isOwner={currentUser?.id === group.ownerId} />
 
@@ -84,17 +84,17 @@ export default function GroupPage({
 
               {loading && (
                 <div className="flex flex-col items-center py-10 gap-3">
-                  <Loader2 className="animate-spin text-amber-800" size={30} />
-                  <span className="font-mono text-[10px] text-stone-300 uppercase tracking-widest">
+                  <Loader2 className="animate-spin text-accent" size={30} />
+                  <span className="font-mono text-[10px] text-text-secondary uppercase tracking-widest">
                     Syncing_Node_Data...
                   </span>
                 </div>
               )}
 
               {!loading && posts.length === 0 && (
-                <div className="border border-stone-800 bg-[#201d1b] p-20 text-center">
-                  <Terminal className="mx-auto mb-4 text-stone-400" size={30} />
-                  <p className="font-mono text-[#EBE9E1] text-sm uppercase tracking-widest">
+                <div className="border border-border bg-surface-1 p-20 text-center">
+                  <Terminal className="mx-auto mb-4 text-text-secondary" size={30} />
+                  <p className="font-mono text-text-primary text-sm uppercase tracking-widest">
                     // Sector_Manifest_Empty
                   </p>
                 </div>

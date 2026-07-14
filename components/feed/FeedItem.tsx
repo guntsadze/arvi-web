@@ -40,22 +40,22 @@ export function FeedItem({
 
     case "MODIFICATION_ADDED":
       return (
-        <div className="border border-stone-800 bg-[#201d1b] p-5 rounded">
+        <div className="border border-border bg-surface-1 p-5 rounded">
           <div className="flex items-center gap-3 mb-3">
             <img
               src={activity.user.avatar?.url}
               className="w-8 h-8 rounded-full object-cover"
             />
-            <span className="text-stone-300 text-sm font-mono">
+            <span className="text-text-secondary text-sm font-mono">
               {activity.user.username}
             </span>
-            <span className="text-stone-300 text-xs">added a modification</span>
+            <span className="text-text-secondary text-xs">added a modification</span>
           </div>
-          <p className="text-amber-500 font-mono">
+          <p className="text-accent font-mono">
             🔧 {activity.modification.name}
           </p>
           {activity.modification.hpGain && (
-            <p className="text-green-500 text-xs mt-1">
+            <p className="text-success text-xs mt-1">
               +{activity.modification.hpGain} HP
             </p>
           )}

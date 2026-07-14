@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { Camera, MapPin, Link as LinkIcon, User } from "lucide-react";
-import { RuggedInput } from "@/components/ui/RuggedInput";
-import { RuggedTextArea } from "@/components/ui/RuggedTexArea";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { SaveRow } from "@/components/settings/SaveRow";
 import { ImageLightbox } from "@/components/ui/ImageLightbox";
 import { apiClient } from "@/lib/api";
@@ -62,7 +62,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
   return (
     <form className="p-0 overflow-hidden" onSubmit={handleSubmit(onSubmit)}>
       {/* ── HEADER AREA ── */}
-      <div className="relative h-44 w-full group/cover bg-stone-900">
+      <div className="relative h-44 w-full group/cover bg-surface-1">
         {/* Cover Photo */}
         {user?.cover ? (
           <Image
@@ -72,7 +72,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
             className="object-cover opacity-60 group-hover/cover:opacity-80 transition-opacity duration-500"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-950" />
+          <div className="absolute inset-0 bg-gradient-to-br from-surface-2 to-background" />
         )}
 
         {/* Change Cover Button */}
@@ -81,14 +81,14 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
           onClick={() =>
             setLightbox({ src: user?.cover || null, type: "cover" })
           }
-          className="absolute top-4 right-4 z-10 flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-widest text-white hover:bg-amber-600 hover:border-amber-500 transition-all duration-300 shadow-xl"
+          className="absolute top-4 right-4 z-10 flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-widest text-white hover:bg-primary-hover hover:border-accent transition-all duration-300 shadow-xl"
         >
           <Camera size={14} />
           ქოვერის განახლება
         </button>
 
         {/* Shadow Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f0d0c] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
 
         {/* Avatar Positioned on Edge */}
         <div className="absolute -bottom-10 left-8 z-20">
@@ -107,7 +107,7 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
             />
 
             {/* Status Indicator (Online) */}
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-[3px] border-[#0f0d0c] rounded-full" />
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-[3px] border-background rounded-full" />
           </div>
         </div>
       </div>
@@ -115,61 +115,56 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
       {/* ── FORM CONTENT ── */}
       <div className="px-8 pt-16 pb-8 space-y-6">
         <div>
-          <h2 className="text-xl font-black tracking-tighter text-[#EBE9E1] mb-1">
+          <h2 className="text-xl font-black tracking-tighter text-text-primary mb-1">
             პროფილის ინფორმაცია
           </h2>
-          {/* <p className="text-[10px] font-mono text-stone-300 uppercase tracking-widest">
+          {/* <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest">
             // update your tactical identity
           </p> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RuggedInput
+          <Input
             label="სახელი"
-            name="firstName"
-            register={register}
             required
-            error={errors.firstName}
+            error={errors.firstName?.message}
+            {...register("firstName")}
           />
-          <RuggedInput
+          <Input
             label="გვარი"
-            name="lastName"
-            register={register}
             required
-            error={errors.lastName}
+            error={errors.lastName?.message}
+            {...register("lastName")}
           />
         </div>
 
-        <RuggedInput
+        <Input
           label="Username"
-          name="username"
-          register={register}
           placeholder="@handle"
-          error={errors.username}
+          error={errors.username?.message}
+          {...register("username")}
         />
 
-        <RuggedInput
+        <Input
           label="Headline"
-          name="headline"
-          register={register}
           placeholder="@drifter"
-          error={errors.headline}
+          error={errors.headline?.message}
+          {...register("headline")}
         />
 
         <div className="space-y-1">
-          <RuggedTextArea
+          <Textarea
             label="Bio"
-            name="bio"
-            register={register}
             rows={3}
             placeholder="Tell the world who you are..."
+            {...register("bio")}
           />
           <div className="flex justify-between items-center px-1">
-            <span className="text-[8px] text-stone-300 font-mono uppercase tracking-tighter italic">
+            <span className="text-[8px] text-text-secondary font-mono uppercase tracking-tighter italic">
               Write a short briefing about yourself
             </span>
             <span
-              className={`text-[10px] font-mono ${bioLength > 150 ? "text-amber-600" : "text-stone-300"}`}
+              className={`text-[10px] font-mono ${bioLength > 150 ? "text-accent" : "text-text-secondary"}`}
             >
               {bioLength} / 160
             </span>
@@ -177,19 +172,17 @@ export default function ProfileSettingsPage({ user }: { user: any }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RuggedInput
+          <Input
             label="ლოკაცია"
-            name="location"
-            register={register}
-            icon={<MapPin size={14} />}
+            leftIcon={<MapPin size={14} />}
             placeholder="Tbilisi, GE"
+            {...register("location")}
           />
-          <RuggedInput
+          <Input
             label="ვებსაიტი"
-            name="website"
-            register={register}
-            icon={<LinkIcon size={14} />}
+            leftIcon={<LinkIcon size={14} />}
             placeholder="https://yourlink.com"
+            {...register("website")}
           />
         </div>
 

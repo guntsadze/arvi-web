@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { marketplaceService } from "@/services/marketplace.service";
 import { FormHeader } from "../cars/carForm/shared/FormHeader";
 import { FormSection } from "../cars/carForm/shared/FormSection";
-import { RuggedInput } from "../ui/RuggedInput";
+import { Input } from "../ui/Input";
 import { FormActions } from "../cars/carForm/shared/FormActions";
 import { InspectionSection } from "./InspectionSection";
 
@@ -44,7 +44,7 @@ export const MarketplaceForm = ({ car, onClose, onSuccess }: any) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#1c1917] z-[110] overflow-y-auto">
+    <div className="fixed inset-0 bg-background z-[110] overflow-y-auto">
       <div className="relative z-10 max-w-5xl mx-auto py-10 px-4 min-h-screen">
         {/* აქ გამოვიყენოთ შენი FormHeader */}
         <FormHeader title={`SELL_PROPOSAL: ${car.model}`} onClose={onClose} />
@@ -54,24 +54,21 @@ export const MarketplaceForm = ({ car, onClose, onSuccess }: any) => {
           <div className="space-y-8">
             <FormSection title="Commercial Parameters" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <RuggedInput
+              <Input
                 label="Offer Title"
-                name="title"
-                register={register}
                 placeholder="Ex: Immaculate Condition M3"
+                {...register("title")}
               />
-              <RuggedInput
+              <Input
                 label="Listing Price (USD/GEL)"
-                name="price"
                 type="number"
-                register={register}
                 placeholder="25000"
+                {...register("price")}
               />
-              <RuggedInput
+              <Input
                 label="Current Location"
-                name="location"
-                register={register}
                 placeholder="Tbilisi, Georgia"
+                {...register("location")}
               />
             </div>
           </div>
@@ -85,7 +82,7 @@ export const MarketplaceForm = ({ car, onClose, onSuccess }: any) => {
             <InspectionSection register={register} />
           </div>
 
-          <div className="pt-10 border-t border-stone-800">
+          <div className="pt-10 border-t border-border">
             <FormActions
               isSubmitting={isSubmitting}
               isEditing={false}

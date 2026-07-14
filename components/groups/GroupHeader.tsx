@@ -15,7 +15,7 @@ export const GroupHeader = ({
   isOwner: boolean;
 }) => {
   return (
-    <div className="relative border-b border-stone-800 bg-[#201d1b]/50 backdrop-blur-md overflow-hidden">
+    <div className="relative border-b border-border bg-surface-1/50 backdrop-blur-md overflow-hidden">
       <GroupCoverItem group={group} isOwner={isOwner} />
       <div className="max-w-6xl mx-auto px-4 relative">
         <div className="flex flex-col md:flex-row items-end gap-6 -mt-16 pb-8">
@@ -23,12 +23,12 @@ export const GroupHeader = ({
 
           <div className="flex-1 space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold font-mono uppercase tracking-tighter text-stone-100">
+              <h1 className="text-3xl font-bold font-mono uppercase tracking-tighter text-text-primary">
                 {group.name}
               </h1>
-              <ShieldCheck size={20} className="text-amber-800 opacity-50" />
+              <ShieldCheck size={20} className="text-accent opacity-50" />
             </div>
-            <p className="font-mono text-[10px] text-stone-300 uppercase tracking-widest">
+            <p className="font-mono text-[10px] text-text-secondary uppercase tracking-widest">
               Uptime: {new Date(group.createdAt).toLocaleDateString()} // Nodes:{" "}
               {group._count.members}
             </p>
@@ -43,8 +43,8 @@ export const GroupHeader = ({
               />
             )}
 
-            <button className="bg-stone-900 border border-stone-800 p-2 hover:border-stone-700 transition-all">
-              <Settings size={18} className="text-stone-300" />
+            <button className="bg-surface-1 border border-border p-2 hover:border-border transition-all">
+              <Settings size={18} className="text-text-secondary" />
             </button>
           </div>
         </div>
