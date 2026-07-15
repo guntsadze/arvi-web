@@ -144,7 +144,7 @@ const BottomPanel = ({
   const [tab, setTab] = useState<"nodes" | "market">("nodes");
 
   return (
-    <div className="flex flex-col border-t-4 border-border bg-surface-1 flex-1 min-h-0">
+    <div className="flex flex-col bg-surface-1 flex-1 min-h-0">
       {/* Tab bar */}
       <div className="flex border-b border-border shrink-0">
         <button
@@ -211,7 +211,9 @@ const BottomPanel = ({
               </div>
             ) : (
               <div className="p-4 m-3 border border-dashed border-border text-center">
-                <p className="text-[9px] text-text-secondary ">ინფორმაცია არ არის</p>
+                <p className="text-[9px] text-text-secondary ">
+                  ინფორმაცია არ არის
+                </p>
               </div>
             )}
           </>
@@ -500,7 +502,7 @@ export function Sidebar() {
       </div>
 
       {/* ── FOOTER ── */}
-      <div className="p-2 border-t-4 border-border bg-surface-1 shrink-0">
+      <div className="p-2 border-border bg-surface-1 shrink-0">
         <span className="text-[9px] text-text-secondary font-mono uppercase">
           ARVI powered by guntsadze © 2026
         </span>
@@ -611,7 +613,7 @@ export function Sidebar() {
       {/* Mobile Drawer (Sidebar) */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 w-72 bg-surface-1 border-r-4 border-border z-[70] lg:hidden flex flex-col transition-transform duration-300 ease-in-out shadow-2xl",
+          "fixed inset-y-0 left-0 w-72 bg-surface-1 z-[70] lg:hidden flex flex-col transition-transform duration-300 ease-in-out shadow-2xl",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -629,7 +631,7 @@ export function Sidebar() {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 border-r-4 border-border bg-surface-1 sticky top-0 h-screen">
+      <aside className="hidden lg:flex flex-col w-72 bg-surface-1 sticky top-0 h-screen">
         <SidebarContent />
       </aside>
     </>

@@ -68,9 +68,9 @@ export const RightPanel = () => {
   // if (loading) return <GlobalLoader />;
 
   return (
-    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-surface-1 border-l-4 border-border">
+    <aside className="hidden xl:flex flex-col w-80 h-screen sticky top-0 bg-surface-1">
       {/* HEADER */}
-      <div className="bg-surface-1 border-b-4 border-border p-4 flex justify-between items-center shrink-0">
+      <div className="bg-surface-1 p-4 flex justify-between items-center shrink-0">
         <div className="flex items-center gap-2 overflow-hidden">
           <div
             className={`w-1 h-3 shrink-0 ${activeView === "messages" ? "bg-accent animate-pulse" : "bg-surface-2"}`}
