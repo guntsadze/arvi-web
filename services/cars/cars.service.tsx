@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api";
 import { BaseApiService } from "@/services/common/base-api.service";
 import { PaginationParams } from "@/types/pagination.types";
+import { MediaDto } from "@/services/media.service";
 
 export interface Car {
   id: string;
@@ -33,8 +34,8 @@ export interface Car {
   mileage?: number;
   bodyType?: string;
 
-  images?: string[];
-  coverImage?: string;
+  photos?: MediaDto[];
+  coverPhoto?: MediaDto | null;
 
   description?: string;
   nickname?: string;

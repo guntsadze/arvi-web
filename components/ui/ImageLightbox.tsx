@@ -16,6 +16,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usersService } from "@/services/user/user.service";
 import { groupsService } from "@/services/groups.service";
+import { mediaService } from "@/services/media.service";
+import { getErrorMessage } from "@/lib/error-handler";
 import FileUploader, { UploadedFile } from "../ui/FileUploader";
 import Image from "next/image";
 
@@ -46,28 +48,23 @@ export const ImageLightbox = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const router = useRouter();
 
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-    });
-
   const handleUpload = async (files: UploadedFile[]) => {
     if (!files.length || !id || !type || !context) return;
     setUploading(true);
     try {
-      const base64 = await fileToBase64(files[0].file);
+      const media = await mediaService.upload(
+        files[0].file,
+        context === "user" ? "profiles" : "groups",
+      );
       if (context === "user") {
-        await usersService.uploadMedia(id, type, { file: base64 });
+        await usersService.setMedia(id, type, media.id);
       } else {
-        await groupsService.uploadMedia(id, type, { file: base64 });
+        await groupsService.setMedia(id, type, media.id);
       }
       router.refresh();
       onClose();
     } catch (err) {
-      console.error("Upload failed:", err);
+      console.error("Upload failed:", getErrorMessage(err));
     } finally {
       setUploading(false);
     }

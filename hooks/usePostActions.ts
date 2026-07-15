@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { postsService } from "@/services/posts/posts.service";
 import { Comment, Post } from "@/types/post.types";
-import { storageService } from "@/services/storage.service";
 
 export function usePostActions(post: Post, refresh: () => void) {
   const [isLiked, setIsLiked] = useState(post.isLiked);
@@ -97,33 +96,14 @@ export function usePostActions(post: Post, refresh: () => void) {
     }
   };
 
-  const handleAddComment = async (data: any, parentId?: string) => {
-    let uploadedMedia = [];
-
+  // `data.mediaIds` already points at files uploaded via POST /media by the
+  // CommentForm's own useMediaUpload — nothing left to upload here.
+  const handleAddComment = async (
+    data: { content: string; mediaIds: string[] },
+    parentId?: string,
+  ) => {
     try {
-      if (data.media.length > 0) {
-        const results = await Promise.all(
-          data.media.map((m: any) =>
-            storageService.uploadFile(m.file, "comments"),
-          ),
-        );
-
-        uploadedMedia = results.map((res) => ({
-          url: res.url,
-          publicId: res.publicId,
-          format: res.format,
-          bytes: res.bytes,
-          mediaType: res.mediaType, // storageService უკვე აბრუნებს "IMAGE"/"VIDEO"
-        }));
-
-        console.log("uploadedMedia:", uploadedMedia); // ✅ შევსების შემდეგ
-      }
-
-      await postsService.addComment(
-        post.id,
-        { ...data, media: uploadedMedia }, // ✅ uploadedMedia გამოიყენე
-        parentId,
-      );
+      await postsService.addComment(post.id, data, parentId);
 
       await fetchComments();
       setReplyTo(null);

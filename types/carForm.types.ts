@@ -1,3 +1,5 @@
+import { MediaDto } from "@/services/media.service";
+
 export interface CarFormProps {
   onClose: () => void;
   initialData?: any;
@@ -89,7 +91,10 @@ export type CarFormData = {
   isProject: boolean;
   characterTag?: string;
   isPublic: boolean;
-  photos?: any[];
+  // Uploaded via useMediaUpload (POST /media on select, not on submit) —
+  // by the time the form is submitted this only ever holds finished Media
+  // objects, never in-flight Files. See useCarForm.onSubmit.
+  photos?: MediaDto[];
   maintenanceRecords?: MaintenanceRecord[];
   modifications?: ModificationRecord[];
 

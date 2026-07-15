@@ -104,17 +104,17 @@
 // }
 
 import { useEffect, useRef } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { Smile, Image as ImageIcon, Video, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Smile, Image as ImageIcon, Video } from "lucide-react";
 import { UserAvatarItem } from "../ui/UserAvatarItem";
 import { useAppSelector } from "@/store/hooks";
 import { selectCurrentUser } from "@/store/slices/userSlice";
 import { cn } from "@/lib/utils";
-import FileUploader from "../ui/FileUploader";
+import { useMediaUpload } from "@/hooks/useMediaUpload";
 
 interface CommentFormValues {
   content: string;
-  media: any[];
+  mediaIds: string[];
 }
 
 interface CommentFormProps {
@@ -129,23 +129,27 @@ export function CommentForm({
   autoFocus = false,
 }: CommentFormProps) {
   const currentUser = useAppSelector(selectCurrentUser);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const videoInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Files upload to POST /media the moment they're picked (see
+  // useMediaUpload) — submitting the comment just sends the finished ids.
+  const { items, addFiles, mediaIds, isUploading, reset: resetMedia } =
+    useMediaUpload("comments");
 
   const {
     register,
     handleSubmit,
     reset,
     watch,
-    control,
     formState: { isSubmitting },
-  } = useForm<CommentFormValues>({
+  } = useForm<{ content: string }>({
     defaultValues: {
       content: "",
-      media: [],
     },
   });
 
   const contentValue = watch("content");
-  const mediaFiles = watch("media");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // ტექსტარეას სიმაღლის კონტროლი
@@ -156,10 +160,11 @@ export function CommentForm({
     }
   }, [contentValue]);
 
-  const onFormSubmit = async (data: CommentFormValues) => {
+  const onFormSubmit = async (data: { content: string }) => {
     try {
-      await onSubmit(data);
+      await onSubmit({ ...data, mediaIds });
       reset();
+      resetMedia([]);
     } catch (error) {
       console.error("Submission failed:", error);
     }
@@ -190,68 +195,60 @@ export function CommentForm({
           className="w-full bg-transparent px-4 py-3 text-[14px] text-text-primary placeholder:text-text-muted focus:outline-none resize-none min-h-[45px] max-h-[200px]"
         />
 
-        {/* არჩეული მედიის პატარა პრივიუ ან სია (სურვილისამებრ) */}
-        {/* {mediaFiles.length > 0 && (
+        {items.length > 0 && (
           <div className="px-4 pb-2 flex flex-wrap gap-2">
-            {mediaFiles.map((file, idx) => (
-              <div key={idx} className="relative group">
-                <div className="text-[10px] bg-surface-2 text-text-secondary px-2 py-1 rounded">
-                  {file.type.includes("image") ? "IMG" : "VID"}:{" "}
-                  {file.name.substring(0, 10)}...
-                </div>
+            {items.map((item) => (
+              <div
+                key={item.localId}
+                className="text-[10px] bg-surface-2 text-text-secondary px-2 py-1 rounded flex items-center gap-1"
+              >
+                {item.status === "uploading" ? `${item.progress}%` : item.kind === "video" ? "VID" : "IMG"}
               </div>
             ))}
           </div>
-        )} */}
+        )}
 
         <div className="flex items-center justify-between px-3 pb-2">
           <div className="flex items-center gap-1 text-text-secondary">
-            {/* მედია კონტროლერი */}
-            <Controller
-              name="media"
-              control={control}
-              render={({ field }) => (
-                <div className="flex items-center gap-1">
-                  <FileUploader
-                    accept="image/*"
-                    multiple
-                    showPreview={false}
-                    onFilesChange={(files) =>
-                      field.onChange([...field.value, ...files])
-                    }
-                  >
-                    <MediaButton
-                      type="image"
-                      icon={ImageIcon}
-                      count={
-                        field.value.filter((m: any) => m.type.includes("image"))
-                          .length
-                      }
-                      colorClass="text-text-primary hover:text-accent"
-                    />
-                  </FileUploader>
-
-                  <FileUploader
-                    accept="video/*"
-                    multiple
-                    showPreview={false}
-                    onFilesChange={(files) =>
-                      field.onChange([...field.value, ...files])
-                    }
-                  >
-                    <MediaButton
-                      type="video"
-                      icon={Video}
-                      count={
-                        field.value.filter((m: any) => m.type.includes("video"))
-                          .length
-                      }
-                      colorClass="text-text-primary hover:text-info"
-                    />
-                  </FileUploader>
-                </div>
-              )}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files?.length) addFiles(Array.from(e.target.files));
+                e.target.value = "";
+              }}
             />
+            <div onClick={() => imageInputRef.current?.click()}>
+              <MediaButton
+                type="image"
+                icon={ImageIcon}
+                count={items.filter((i) => i.kind === "image").length}
+                colorClass="text-text-primary hover:text-accent"
+              />
+            </div>
+
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files?.length) addFiles(Array.from(e.target.files));
+                e.target.value = "";
+              }}
+            />
+            <div onClick={() => videoInputRef.current?.click()}>
+              <MediaButton
+                type="video"
+                icon={Video}
+                count={items.filter((i) => i.kind === "video").length}
+                colorClass="text-text-primary hover:text-info"
+              />
+            </div>
 
             <button
               type="button"
@@ -261,10 +258,10 @@ export function CommentForm({
             </button>
           </div>
 
-          {(contentValue?.trim() || mediaFiles.length > 0) && (
+          {(contentValue?.trim() || items.length > 0) && (
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isUploading}
               className={cn(
                 "px-4 py-1.5 bg-link hover:bg-link-hover text-white text-[14px] font-semibold rounded-full transition-all disabled:opacity-50",
                 isSubmitting && "animate-pulse",

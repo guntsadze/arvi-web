@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Control,
@@ -8,8 +8,10 @@ import {
   UseFormSetValue,
   useWatch,
 } from "react-hook-form";
-import { Camera, ImagePlus, Upload, X, Globe, Lock } from "lucide-react";
+import { Camera, ImagePlus, Upload, X, Globe, Lock, Loader2, AlertCircle } from "lucide-react";
 import { CarFormData } from "@/types/carForm.types";
+import { MediaDto } from "@/services/media.service";
+import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { cn } from "@/lib/utils";
 
 interface ShowOffStepProps {
@@ -18,46 +20,39 @@ interface ShowOffStepProps {
   setValue: UseFormSetValue<CarFormData>;
 }
 
-interface UploadedPhoto {
-  url: string;
-  publicId?: string;
-  format?: string;
-  bytes?: number;
-  mediaType?: string;
-}
-
-type PhotoItem = File | UploadedPhoto;
-
-function getPreviewUrl(photo: PhotoItem): string {
-  return photo instanceof File ? URL.createObjectURL(photo) : photo.url;
-}
-
 /**
  * Step 4 — "Show Off": drag-and-drop photo uploader with preview thumbnails.
- * Keeps the same data shape the original ImageUpload component and
- * useCarForm's onSubmit rely on — an array mixing File objects (uploaded on
- * submit via storageService) and already-uploaded photo objects — just with
- * richer drag/drop + hover interactions to match the onboarding's premium
- * visual language.
+ * Files upload to POST /media the moment they're picked (via useMediaUpload)
+ * rather than on final form submit — by the time the wizard finishes, every
+ * photo already exists server-side and the "photos" form field just holds
+ * the resulting Media objects, which useCarForm turns into `mediaIds`.
  */
 export function ShowOffStep({ control, register, setValue }: ShowOffStepProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const photos: PhotoItem[] = useWatch({ control, name: "photos" }) ?? [];
+  const initialPhotos = useWatch({ control, name: "photos" }) as MediaDto[] | undefined;
   const isPublic = useWatch({ control, name: "isPublic" }) ?? true;
 
-  const addFiles = (fileList: FileList | null) => {
-    if (!fileList || fileList.length === 0) return;
-    const newFiles = Array.from(fileList).filter((f) => f.type.startsWith("image/"));
-    setValue("photos", [...photos, ...newFiles], { shouldValidate: true });
-  };
+  const { items, addFiles, removeItem, doneMedia } = useMediaUpload(
+    "cars",
+    // Only seed once on mount — after that, `items` (via doneMedia below) is
+    // the source of truth that writes back into the form, not the other way
+    // around, or every re-render would re-seed and drop in-flight uploads.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    initialPhotos,
+  );
 
-  const removeAt = (index: number) => {
-    setValue(
-      "photos",
-      photos.filter((_, i) => i !== index),
-      { shouldValidate: true },
+  useEffect(() => {
+    setValue("photos", doneMedia, { shouldValidate: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doneMedia]);
+
+  const handleFiles = (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList).filter(
+      (f) => f.type.startsWith("image/") || f.type.startsWith("video/"),
     );
+    if (files.length) addFiles(files);
   };
 
   return (
@@ -72,7 +67,7 @@ export function ShowOffStep({ control, register, setValue }: ShowOffStepProps) {
         onDrop={(e) => {
           e.preventDefault();
           setIsDragging(false);
-          addFiles(e.dataTransfer.files);
+          handleFiles(e.dataTransfer.files);
         }}
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-10 text-center transition-all duration-200",
@@ -84,11 +79,11 @@ export function ShowOffStep({ control, register, setValue }: ShowOffStepProps) {
         <input
           type="file"
           multiple
-          accept="image/*"
+          accept="image/*,video/*"
           ref={fileInputRef}
           className="hidden"
           onChange={(e) => {
-            addFiles(e.target.files);
+            handleFiles(e.target.files);
             e.target.value = "";
           }}
         />
@@ -110,32 +105,50 @@ export function ShowOffStep({ control, register, setValue }: ShowOffStepProps) {
         </div>
       </div>
 
-      {photos.length > 0 && (
+      {items.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-          {photos.map((photo, index) => (
+          {items.map((item, index) => (
             <div
-              key={index}
+              key={item.localId}
               className="group relative aspect-square overflow-hidden rounded-lg border border-border bg-surface-1"
             >
               <Image
-                src={getPreviewUrl(photo)}
+                src={item.previewUrl}
                 alt={`ფოტო ${index + 1}`}
                 fill
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className={cn(
+                  "object-cover transition-transform duration-300 group-hover:scale-105",
+                  item.status === "uploading" && "opacity-50",
+                )}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+
+              {item.status === "uploading" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/40 text-white">
+                  <Loader2 size={20} className="animate-spin" />
+                  <span className="text-[11px] font-semibold">{item.progress}%</span>
+                </div>
+              )}
+
+              {item.status === "error" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-error/80 px-2 text-center text-white">
+                  <AlertCircle size={18} />
+                  <span className="text-[10px] font-medium">ატვირთვა ვერ მოხერხდა</span>
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeAt(index);
+                  removeItem(item.localId);
                 }}
                 className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-error text-white opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100"
               >
                 <X size={13} />
               </button>
-              {index === 0 && (
+              {index === 0 && item.status === "done" && (
                 <span className="absolute bottom-1.5 left-1.5 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-bold text-primary-foreground uppercase">
                   ყდა
                 </span>

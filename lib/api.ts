@@ -150,6 +150,25 @@ export class ApiClient {
   }
 
   /**
+   * multipart/form-data POST (file uploads). The instance sets a default
+   * `Content-Type: application/json` header — that has to be cleared, not
+   * just omitted, or axios keeps it instead of letting the browser set the
+   * multipart boundary itself, and the server can't parse the body.
+   */
+  postForm<T = any>(
+    path: string,
+    formData: FormData,
+    onUploadProgress?: (percent: number) => void,
+  ): Promise<T> {
+    return this.client.post(path, formData, {
+      headers: { "Content-Type": undefined },
+      onUploadProgress: onUploadProgress
+        ? (e) => onUploadProgress(e.total ? Math.round((e.loaded / e.total) * 100) : 0)
+        : undefined,
+    });
+  }
+
+  /**
    * Registers an extra response-error observer without altering anything
    * setupInterceptors already does (auth refresh, error reformatting into
    * `{ message, data, status, config }` above all still run exactly as

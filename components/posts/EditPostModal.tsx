@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImageIcon, X, Save, AlertCircle, Loader2, Play } from "lucide-react";
-import FileUploader from "../ui/FileUploader";
-import { storageService } from "@/services/storage.service";
+import { useMediaUpload } from "@/hooks/useMediaUpload";
 import Image from "next/image";
 
 interface EditPostModalProps {
@@ -26,72 +25,38 @@ export function EditPostModal({
 }: EditPostModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { register, handleSubmit, watch, setValue, reset, control } = useForm({
-    defaultValues: { content: "", media: [] as any[] },
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: { content: "" },
   });
 
-  const currentMedia = watch("media");
+  // Files upload to POST /media the moment they're picked — editing a post
+  // just diffs the resulting Media ids against what's already attached.
+  const { items, addFiles, removeItem, mediaIds, isUploading, reset: resetMedia } =
+    useMediaUpload("posts");
 
   useEffect(() => {
     setMounted(true);
     if (isOpen && post) {
-      reset({ content: post.content, media: post.media || [] });
+      reset({ content: post.content });
+      resetMedia(post.media || []);
       document.body.style.overflow = "hidden";
     }
     return () => {
       document.body.style.overflow = "unset";
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, post, reset]);
 
   if (!mounted || !isOpen) return null;
 
-  const onSubmit = async (data: any) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
+  const onSubmit = async (data: { content: string }) => {
     setIsSubmitting(true);
     try {
-      const existingMedia = data.media.filter((m: any) => !m.file);
-      const newFiles = data.media.filter((m: any) => m.file);
-
-      let newlyUploaded = [];
-      if (newFiles.length > 0) {
-        const uploadPromises = newFiles.map((m: any) =>
-          storageService.uploadFile(m.file, "posts"),
-        );
-        const results = await Promise.all(uploadPromises);
-
-        newlyUploaded = results.map((res, i) => ({
-          url: res.url,
-          publicId: res.public_id || res.publicId,
-          bytes: res.bytes || 0,
-          format: res.format || "jpg",
-          mediaType: newFiles[i].type?.toUpperCase().includes("VIDEO")
-            ? "VIDEO"
-            : "IMAGE",
-        }));
-      }
-
-      const finalMedia = [
-        ...existingMedia.map((m: any) => ({
-          url: m.url,
-          publicId: m.publicId,
-          mediaType: m.mediaType || "IMAGE",
-          bytes: Number(m.bytes) || 0,
-          format: m.format || "jpg",
-        })),
-        ...newlyUploaded,
-      ];
-
-      console.log("🔵 existingMedia:", existingMedia);
-      console.log("🟢 newFiles:", newFiles);
-      console.log("🟡 finalMedia:", finalMedia);
-
-      // ვალიდაცია: თუ რაღაც სასწაულით publicId მაინც undefined-ია, არ გავატაროთ
-      const validMedia = finalMedia.filter((m) => m.publicId && m.url);
-
       await onSave({
         content: data.content,
-        media: validMedia,
+        mediaIds,
       });
 
       onClose();
@@ -103,20 +68,19 @@ export function EditPostModal({
     }
   };
 
-  const MediaItem = ({ m, index }: { m: any; index: number }) => {
-    const isVid =
-      m.mediaType === "VIDEO" || m.type === "video" || m.url?.endsWith(".mp4");
+  const MediaItem = ({ item }: { item: (typeof items)[number] }) => {
+    const isVid = item.kind === "video";
 
     return (
       <div className="relative aspect-square border border-border bg-surface-1 group overflow-hidden">
         {isVid ? (
           <video
-            src={m.url || m.preview}
+            src={item.previewUrl}
             className="w-full h-full object-cover opacity-60"
           />
         ) : (
           <Image
-            src={m.url || m.preview}
+            src={item.previewUrl}
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -132,16 +96,14 @@ export function EditPostModal({
               className="text-white/50 group-hover:text-white transition-colors"
             />
           )}
+          {item.status === "uploading" && (
+            <Loader2 size={16} className="animate-spin text-white pointer-events-none" />
+          )}
         </div>
 
         <button
           type="button"
-          onClick={() =>
-            setValue(
-              "media",
-              currentMedia.filter((_, i) => i !== index),
-            )
-          }
+          onClick={() => removeItem(item.localId)}
           className="absolute top-1 right-1 bg-error/80 hover:bg-error text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
         >
           <X size={12} />
@@ -198,38 +160,35 @@ export function EditPostModal({
 
               <div className="space-y-3">
                 <label className="text-[9px] font-mono text-text-secondary uppercase flex justify-between">
-                  Media Assets <span>{currentMedia.length} / 10</span>
+                  Media Assets <span>{items.length} / 10</span>
                 </label>
 
                 <div className="grid grid-cols-4 gap-3">
-                  {currentMedia.map((m, i) => (
-                    <MediaItem key={i} m={m} index={i} />
+                  {items.map((item) => (
+                    <MediaItem key={item.localId} item={item} />
                   ))}
 
-                  <Controller
-                    name="media"
-                    control={control}
-                    render={({ field }) => (
-                      <FileUploader
-                        accept="image/*,video/*"
-                        multiple
-                        showPreview={false}
-                        onFilesChange={(newFiles) =>
-                          field.onChange([...currentMedia, ...newFiles])
-                        }
-                      >
-                        <button
-                          type="button"
-                          className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-border hover:border-border hover:bg-surface-1-hover/50 text-text-primary transition-all"
-                        >
-                          <ImageIcon size={20} />
-                          <span className="text-[8px] uppercase">
-                            Add Media
-                          </span>
-                        </button>
-                      </FileUploader>
-                    )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,video/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files?.length) addFiles(Array.from(e.target.files));
+                      e.target.value = "";
+                    }}
                   />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full aspect-square flex flex-col items-center justify-center gap-2 border border-dashed border-border hover:border-border hover:bg-surface-1-hover/50 text-text-primary transition-all"
+                  >
+                    <ImageIcon size={20} />
+                    <span className="text-[8px] uppercase">
+                      Add Media
+                    </span>
+                  </button>
                 </div>
               </div>
 
@@ -248,10 +207,10 @@ export function EditPostModal({
                   </button>
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isUploading}
                     className="flex items-center gap-2 px-6 py-2 bg-accent text-background text-[10px] font-bold uppercase hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
-                    {isSubmitting ? (
+                    {isSubmitting || isUploading ? (
                       <Loader2 className="animate-spin" size={14} />
                     ) : (
                       <Save size={14} />

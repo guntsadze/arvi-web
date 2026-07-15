@@ -43,7 +43,7 @@ class GroupsService extends BaseApiService<Group> {
 
   createGroupPost(
     groupId: string,
-    data: { content: string; images?: string[] },
+    data: { content: string; mediaIds?: string[] },
   ) {
     return apiClient.post(`${this.endpoint}/${groupId}/posts`, data);
   }
@@ -56,12 +56,8 @@ class GroupsService extends BaseApiService<Group> {
     return apiClient.post(`/groups/${groupId}/posts/${postId}/pin`);
   }
 
-  uploadMedia(
-    groupId: string,
-    type: "avatar" | "cover",
-    data: { file: string },
-  ) {
-    return apiClient.post(`${this.endpoint}/${groupId}/${type}`, data);
+  setMedia(groupId: string, type: "avatar" | "cover", mediaId: string) {
+    return apiClient.put(`${this.endpoint}/${groupId}/${type}`, { mediaId });
   }
 
   deleteMedia(groupId: string, type: "avatar" | "cover") {

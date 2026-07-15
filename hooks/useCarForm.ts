@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { DEFAULT_FORM_VALUES } from "@/constants/carOptions";
 import { carsService } from "@/services/cars/cars.service";
 import { CarFormData } from "@/types/carForm.types";
-import { storageService } from "@/services/storage.service";
+import { MediaDto } from "@/services/media.service";
 import { getErrorMessage } from "@/lib/error-handler";
 import { toast } from "sonner";
 
@@ -80,28 +80,17 @@ export const useCarForm = ({
 
   const onSubmit = async (data: CarFormData) => {
     try {
-      let finalPhotos = [];
+      // Photos are already uploaded by the time we get here — ShowOffStep
+      // uploads to POST /media on file-select (see useMediaUpload) and only
+      // writes the resulting Media objects into this field. Submitting the
+      // car form is now just sending the ids to attach.
+      const photos = (data.photos ?? []) as MediaDto[];
+      const { photos: _photos, ...rest } = data;
 
-      // 1. ვახარისხებთ ფოტოებს: რომელია უკვე ატვირთული და რომელია ახალი (File)
-      const photos = data.photos ?? [];
-      const existingPhotos = photos.filter((p) => !(p instanceof File));
-      const newFiles = photos.filter((p) => p instanceof File) as File[];
-
-      // 2. ავტვირთოთ მხოლოდ ახალი ფაილები
-      if (newFiles.length > 0) {
-        const uploadPromises = newFiles.map((file) =>
-          storageService.uploadFile(file, "cars"),
-        );
-        const uploadedResults = await Promise.all(uploadPromises);
-        finalPhotos = [...existingPhotos, ...uploadedResults];
-      } else {
-        finalPhotos = existingPhotos;
-      }
-
-      // 3. მოვამზადოთ საბოლოო მონაცემები ბექენდისთვის
       const submitData = {
-        ...stripEmptyOptionalStrings(data),
-        photos: finalPhotos, // აქ უკვე მხოლოდ Cloudinary-ს ობიექტებია
+        ...stripEmptyOptionalStrings(rest as CarFormData),
+        mediaIds: photos.map((p) => p.id),
+        coverMediaId: photos[0]?.id,
         modifications: (data.modifications ?? []).map((m) => ({
           ...m,
           carId: initialData?.id,

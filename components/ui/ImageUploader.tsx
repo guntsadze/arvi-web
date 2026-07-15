@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Camera, Loader2, Trash2, RefreshCcw } from "lucide-react";
+import { Camera, Loader2, Trash2 } from "lucide-react";
 import { usersService } from "@/services/user/user.service";
 import { useRouter } from "next/navigation";
 import FileUploader, { UploadedFile } from "../ui/FileUploader";
 import { groupsService } from "@/services/groups.service";
+import { mediaService } from "@/services/media.service";
+import { getErrorMessage } from "@/lib/error-handler";
 
 interface Props {
   id: string;
@@ -24,68 +26,42 @@ export default function ImageUploader({ id, type, context }: Props) {
     setLoading(true);
 
     try {
-      // 1. ფაილის კონვერტაცია Base64-ში (რადგან ბექენდი Buffer/String-ს ელოდება)
-      const base64 = await fileToBase64(fileToUpload);
+      // Step 1: upload the raw file, get back a Media object.
+      const media = await mediaService.upload(
+        fileToUpload,
+        context === "user" ? "profiles" : "groups",
+      );
 
-      // 2. სერვისის გამოძახება კონტექსტის მიხედვით
+      // Step 2: attach it — the entity's create/update endpoint just gets
+      // the Media id, not the file itself.
       if (context === "user") {
-        if (type === "cover") {
-          await usersService.uploadMedia(id, "cover", { file: base64 });
-        } else {
-          await usersService.uploadMedia(id, "avatar", { file: base64 });
-        }
+        await usersService.setMedia(id, type, media.id);
       } else {
-        if (type === "cover") {
-          await groupsService.uploadMedia(id, "cover", { file: base64 });
-        }
-        if (type === "avatar") {
-          await groupsService.uploadMedia(id, "avatar", { file: base64 });
-        }
+        await groupsService.setMedia(id, type, media.id);
       }
 
       router.refresh();
     } catch (error) {
       console.error("Upload Error:", error);
-      alert("ფოტოს განახლება ვერ მოხერხდა");
+      alert(getErrorMessage(error) || "ფოტოს განახლება ვერ მოხერხდა");
     } finally {
       setLoading(false);
     }
   };
 
-  // დამხმარე ფუნქცია ფაილის წასაკითხად
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
   const handleDelete = async () => {
     if (!confirm("დარწმუნებული ხარ, რომ გინდა სურათის წაშლა?")) return;
 
-    if (context === "user") {
-      if (type === "avatar") {
-        await usersService.deleteUserMedia(id, "avatar");
-      } else {
-        await usersService.deleteUserMedia(id, "cover");
-      }
-    } else {
-      if (type === "cover") {
-        await groupsService.deleteMedia(id, "cover");
-      }
-      if (type === "avatar") {
-        await groupsService.deleteMedia(id, "avatar");
-      }
-    }
-
     try {
+      if (context === "user") {
+        await usersService.deleteUserMedia(id, type);
+      } else {
+        await groupsService.deleteMedia(id, type);
+      }
       router.refresh();
     } catch (error) {
       console.error("Delete failed", error);
       alert("წაშლა ვერ მოხერხდა");
-    } finally {
     }
   };
 

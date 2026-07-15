@@ -1,20 +1,18 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Send, Terminal, ImageIcon, Loader2, Video } from "lucide-react";
+import { Send, Terminal, ImageIcon, Loader2, Video, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
-import FileUploader from "../../ui/FileUploader";
-import { storageService } from "@/services/storage.service";
+import { useMediaUpload } from "@/hooks/useMediaUpload";
 
 const postSchema = z.object({
   content: z.string().min(1, "Required").max(5000),
-  media: z.array(z.any()).default([]),
 });
 
 interface UnifiedPostFormProps {
-  onSave: (data: { content: string; media: any[] }) => Promise<void>;
+  onSave: (data: { content: string; mediaIds: string[] }) => Promise<void>;
   storageFolder: string;
   placeholder?: string;
   onSuccess?: () => void;
@@ -30,17 +28,23 @@ export function UnifiedPostForm({
 }: UnifiedPostFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const videoInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Files upload to POST /media the moment they're picked, not on submit —
+  // submitting the post is then just sending the finished mediaIds.
+  const { items, addFiles, removeItem, mediaIds, isUploading, reset: resetMedia } =
+    useMediaUpload(storageFolder);
 
   const {
     register,
     handleSubmit,
-    control,
     watch,
     reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(postSchema),
-    defaultValues: { content: "", media: [] },
+    defaultValues: { content: "" },
   });
 
   const content = watch("content");
@@ -53,35 +57,15 @@ export function UnifiedPostForm({
   }, [content]);
 
   const onSubmit = async (data: z.infer<typeof postSchema>) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     try {
-      let uploadedMedia: any = [];
-
-      if (data.media.length > 0) {
-        const results = await Promise.all(
-          data.media.map((m: any) =>
-            storageService.uploadFile(m.file, storageFolder),
-          ),
-        );
-
-        uploadedMedia = results.map((res, i) => ({
-          url: res.url,
-          publicId: res.publicId,
-          bytes: res.bytes,
-          format: res.format,
-          mediaType: data.media[i].type.toUpperCase().includes("VIDEO")
-            ? "VIDEO"
-            : "IMAGE",
-        }));
-      }
-
       await onSave({
         content: data.content,
-        media: uploadedMedia,
+        mediaIds,
       });
 
       reset();
+      resetMedia([]);
       if (onSuccess) onSuccess();
     } catch (e) {
       console.error("Post Creation Error:", e);
@@ -89,6 +73,9 @@ export function UnifiedPostForm({
       setIsSubmitting(false);
     }
   };
+
+  const imageCount = items.filter((i) => i.kind === "image").length;
+  const videoCount = items.filter((i) => i.kind === "video").length;
 
   const ActionButton = ({ type, icon: Icon, count, activeColor }: any) => (
     <button
@@ -112,6 +99,41 @@ export function UnifiedPostForm({
 
   return (
     <div className="w-full mb-6 relative">
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {items.map((item) => (
+            <div
+              key={item.localId}
+              className="relative h-14 w-14 overflow-hidden rounded border border-border bg-surface-1"
+            >
+              {item.kind === "image" ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.previewUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <video src={item.previewUrl} className="h-full w-full object-cover" />
+              )}
+              {item.status === "uploading" && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                  <Loader2 size={14} className="animate-spin" />
+                </div>
+              )}
+              {item.status === "error" && (
+                <div className="absolute inset-0 flex items-center justify-center bg-error/80 text-white text-[9px] font-medium text-center px-1">
+                  ვერ აიტვირთა
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => removeItem(item.localId)}
+                className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-white"
+              >
+                <X size={9} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="relative flex items-end gap-2 bg-surface-1 border border-border p-2 min-h-[54px] shadow-2xl focus-within:border-border transition-all"
@@ -141,59 +163,53 @@ export function UnifiedPostForm({
         />
 
         <div className="flex items-center gap-1 mb-0.5">
-          <Controller
-            name="media"
-            control={control}
-            render={({ field }: any) => (
-              <>
-                <FileUploader
-                  accept="image/*"
-                  multiple
-                  showPreview={false}
-                  onFilesChange={(files) =>
-                    field.onChange([...field.value, ...files])
-                  }
-                >
-                  <ActionButton
-                    type="image"
-                    icon={ImageIcon}
-                    count={
-                      field.value.filter((m: any) => m.type.includes("image"))
-                        .length
-                    }
-                    activeColor="text-accent"
-                  />
-                </FileUploader>
-
-                <FileUploader
-                  accept="video/*"
-                  multiple
-                  showPreview={false}
-                  onFilesChange={(files) =>
-                    field.onChange([...field.value, ...files])
-                  }
-                >
-                  <ActionButton
-                    type="video"
-                    icon={Video}
-                    count={
-                      field.value.filter((m: any) => m.type.includes("video"))
-                        .length
-                    }
-                    activeColor="text-info"
-                  />
-                </FileUploader>
-              </>
-            )}
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files?.length) addFiles(Array.from(e.target.files));
+              e.target.value = "";
+            }}
           />
+          <div onClick={() => imageInputRef.current?.click()}>
+            <ActionButton
+              type="image"
+              icon={ImageIcon}
+              count={imageCount}
+              activeColor="text-accent"
+            />
+          </div>
+
+          <input
+            ref={videoInputRef}
+            type="file"
+            accept="video/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files?.length) addFiles(Array.from(e.target.files));
+              e.target.value = "";
+            }}
+          />
+          <div onClick={() => videoInputRef.current?.click()}>
+            <ActionButton
+              type="video"
+              icon={Video}
+              count={videoCount}
+              activeColor="text-info"
+            />
+          </div>
 
           <button
             type="submit"
-            disabled={isSubmitting || !content?.trim()}
+            disabled={isSubmitting || isUploading || !content?.trim()}
             className="ml-2 h-9 px-5 bg-accent hover:bg-primary-hover disabled:bg-surface-1 disabled:text-text-secondary text-background font-black text-[10px] tracking-widest uppercase transition-all flex items-center gap-2"
             style={{ clipPath: "polygon(10% 0, 100% 0, 100% 100%, 0 100%)" }}
           >
-            {isSubmitting ? (
+            {isSubmitting || isUploading ? (
               <Loader2 size={12} className="animate-spin" />
             ) : (
               <>

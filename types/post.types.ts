@@ -1,8 +1,8 @@
 export interface Posts {
   type?: string;
   content?: string;
-  images?: string[];
-  videos?: string[];
+  // Pre-uploaded Media ids (from POST /media, via useMediaUpload) to attach.
+  mediaIds?: string[];
   carId?: string;
   location?: string;
   latitude?: number;
