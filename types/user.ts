@@ -15,6 +15,24 @@ export interface ProfileCompleteness {
   missing: ProfileCompletenessMissingItem[];
 }
 
+export type GarageDoorType = "ROLLER_SHUTTER" | "BARN_DOORS" | "SLIDING_DOOR";
+export type GarageMaterial =
+  | "INDUSTRIAL_STEEL"
+  | "DARK_WOOD"
+  | "RAW_CONCRETE"
+  | "CUSTOM";
+
+/** Garage shell only — no nested cars. Matches UserResponseDto's flattened
+ * `_count.cars` -> `carCount`, present on getByUsername/getProfile. */
+export interface GarageSummary {
+  id: string;
+  name: string;
+  doorType: GarageDoorType;
+  material: GarageMaterial;
+  color: string | null;
+  carCount: number;
+}
+
 export type User = {
   id: string;
   username: string | null;
@@ -36,4 +54,5 @@ export type User = {
   location?: string | null;
   isFollowing?: boolean;
   completeness?: ProfileCompleteness;
+  garages?: GarageSummary[];
 };

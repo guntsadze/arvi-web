@@ -1,41 +1,62 @@
 import { CarFormData } from "@/types/carForm.types";
 
+// Values must match the backend's Prisma enums exactly (prisma/schema.prisma
+// FuelType/TransmissionType/DriveType) — this file previously had several
+// values that don't exist backend-side (PLUG_IN_HYBRID vs PLUGIN_HYBRID,
+// GAS vs LPG, TIPTRONIC/SEQUENTIAL which have no backend equivalent at all,
+// 4WD vs FOURWD), so selecting them would fail @IsEnum validation on submit.
 export const FUEL_TYPES = [
   { value: "PETROL", label: "ბენზინი" },
   { value: "DIESEL", label: "დიზელი" },
   { value: "HYBRID", label: "ჰიბრიდი" },
-  { value: "PLUG_IN_HYBRID", label: "დატენვადი ჰიბრიდი (PHEV)" },
+  { value: "PLUGIN_HYBRID", label: "დატენვადი ჰიბრიდი (PHEV)" },
   { value: "ELECTRIC", label: "ელექტრო" },
-  { value: "GAS", label: "თხევადი გაზი / LPG" },
+  { value: "LPG", label: "თხევადი გაზი / LPG" },
   { value: "CNG", label: "ბუნებრივი გაზი" },
+  { value: "HYDROGEN", label: "წყალბადი" },
 ] as const;
 
 export const TRANSMISSION_TYPES = [
   { value: "MANUAL", label: "მექანიკური" },
   { value: "AUTOMATIC", label: "ავტომატიკა" },
-  { value: "TIPTRONIC", label: "ტიპტრონიკი" },
-  { value: "DCT", label: "DCT (ორმაგი გადაბმულობა)" },
+  { value: "SEMI_AUTOMATIC", label: "ნახევრად ავტომატური" },
   { value: "CVT", label: "ვარიატორი" },
-  { value: "SEQUENTIAL", label: "სეკვენტალური" },
+  { value: "DCT", label: "DCT (ორმაგი გადაბმულობა)" },
 ] as const;
 
 export const DRIVE_TYPES = [
   { value: "FWD", label: "წინა წამყვანი (FWD)" },
   { value: "RWD", label: "უკანა წამყვანი (RWD)" },
   { value: "AWD", label: "სრული (AWD)" },
-  { value: "4WD", label: "4x4 (4WD)" },
+  { value: "FOURWD", label: "4x4 (4WD)" },
 ] as const;
 
+// Matches the new backend CarCharacter enum (prisma/schema.prisma).
+export const CAR_CHARACTER_TAGS = [
+  { value: "DAILY_DRIVER", label: "ყოველდღიური" },
+  { value: "PROJECT_CAR", label: "პროექტი" },
+  { value: "TRACK_BEAST", label: "სავარჯიშო/რბოლის მანქანა" },
+  { value: "GARAGE_QUEEN", label: "გარაჟის დედოფალი" },
+  { value: "STOCK", label: "საფაბრიკო მდგომარეობა" },
+] as const;
+
+// Matches the backend BodyType enum exactly (prisma/schema.prisma) — this
+// previously had CABRIOLET/MICROVAN, which don't exist backend-side, and was
+// missing CONVERTIBLE/CROSSOVER/VAN/SPORTS_CAR/SUPERCAR entirely, the same
+// class of drift FUEL_TYPES/TRANSMISSION_TYPES/DRIVE_TYPES had.
 export const BODY_TYPES = [
   { value: "SEDAN", label: "სედანი" },
   { value: "COUPE", label: "კუპე" },
-  { value: "SUV", label: "ჯიპი / SUV" },
+  { value: "CONVERTIBLE", label: "კაბრიოლეტი" },
   { value: "HATCHBACK", label: "ჰეჩბექი" },
   { value: "WAGON", label: "უნივერსალი" },
-  { value: "MINIVAN", label: "მინივენი" },
-  { value: "CABRIOLET", label: "კაბრიოლეტი" },
+  { value: "SUV", label: "ჯიპი / SUV" },
+  { value: "CROSSOVER", label: "კროსოვერი" },
   { value: "PICKUP", label: "პიკაპი" },
-  { value: "MICROVAN", label: "მიკროავტობუსი" },
+  { value: "VAN", label: "ფურგონი" },
+  { value: "MINIVAN", label: "მინივენი" },
+  { value: "SPORTS_CAR", label: "სპორტული" },
+  { value: "SUPERCAR", label: "სუპერკარი" },
 ] as const;
 
 export const DEFAULT_FORM_VALUES: CarFormData = {
@@ -52,10 +73,12 @@ export const DEFAULT_FORM_VALUES: CarFormData = {
   transmission: "MANUAL",
   driveType: "RWD",
   color: "",
-  bodyType: "",
+  paintCode: "",
+  bodyType: undefined,
   mileage: "",
   description: "",
   isProject: false,
+  characterTag: undefined,
   isPublic: true,
   photos: [],
 

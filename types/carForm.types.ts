@@ -2,6 +2,8 @@ export interface CarFormProps {
   onClose: () => void;
   initialData?: any;
   onSuccess: () => void;
+  /** Which garage a newly created car lands in — ignored when editing. */
+  garageId?: string;
 }
 
 // types/carForm.types.ts
@@ -78,12 +80,14 @@ export type CarFormData = {
   torque?: string | number;
   fuelType: string;
   transmission: string;
-  driveType: string;
+  driveType?: string;
   color?: string;
+  paintCode?: string;
   bodyType?: string;
   mileage?: string | number;
   description?: string;
   isProject: boolean;
+  characterTag?: string;
   isPublic: boolean;
   photos?: any[];
   maintenanceRecords?: MaintenanceRecord[];

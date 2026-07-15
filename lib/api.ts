@@ -91,6 +91,7 @@ export class ApiClient {
         const formattedError = new Error(`${status}: ${message}`) as any;
         formattedError.data = data;
         formattedError.status = status;
+        formattedError.config = originalRequest;
         return Promise.reject(formattedError);
       },
     );
@@ -146,6 +147,34 @@ export class ApiClient {
     return this.client.patch(path, body, {
       headers: options?.headers,
     });
+  }
+
+  /**
+   * Registers an extra response-error observer without altering anything
+   * setupInterceptors already does (auth refresh, error reformatting into
+   * `{ message, data, status, config }` above all still run exactly as
+   * before — this callback never swallows the rejection, only re-throws
+   * it unchanged). Axios runs response interceptors in *registration*
+   * order (each interceptor is pushed, not unshifted — see
+   * axios/lib/core/Axios.js), so an observer registered here — always
+   * after the constructor's own interceptor, since that one is wired up
+   * at construction time — sees the already-reformatted `{ message, data,
+   * status, config }` error, not the raw AxiosError. Consume it as that
+   * shape (`config` was added above specifically so callers can scope by
+   * request URL/method).
+   * Used by the onboarding wizard (app/(onboarding)/onboarding/garage/page.tsx)
+   * to map class-validator's raw `message: string[]` onto wizard steps;
+   * callers should unsubscribe (e.g. on unmount) using the returned function.
+   */
+  onResponseError(handler: (error: unknown) => void): () => void {
+    const id = this.client.interceptors.response.use(
+      (response) => response,
+      (error: unknown) => {
+        handler(error);
+        return Promise.reject(error);
+      },
+    );
+    return () => this.client.interceptors.response.eject(id);
   }
 }
 

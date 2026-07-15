@@ -10,12 +10,58 @@ interface UseCarFormProps {
   initialData?: any;
   onClose: () => void;
   onSuccess: () => void;
+  /** Which garage a newly created car lands in — ignored when editing. */
+  garageId?: string;
+}
+
+// class-validator's @IsOptional() only skips validation for null/undefined,
+// not "" — so an empty string sent for e.g. bodyType (@IsEnum) or
+// licensePlate (@Matches) fails validation as if it were a real invalid
+// value. These are exactly the optional string/enum fields on CarFormData;
+// stripping "" -> undefined here means "not filled in" reads as "not
+// filled in" everywhere, not as invalid data.
+type OptionalStringKey = Extract<
+  keyof CarFormData,
+  | "nickname"
+  | "vin"
+  | "licensePlate"
+  | "engine"
+  | "color"
+  | "paintCode"
+  | "bodyType"
+  | "description"
+  | "driveType"
+  | "characterTag"
+>;
+
+const OPTIONAL_STRING_FIELDS: OptionalStringKey[] = [
+  "nickname",
+  "vin",
+  "licensePlate",
+  "engine",
+  "color",
+  "paintCode",
+  "bodyType",
+  "description",
+  "driveType",
+  "characterTag",
+];
+
+function stripEmptyOptionalStrings(data: CarFormData): CarFormData {
+  const result = { ...data };
+  OPTIONAL_STRING_FIELDS.forEach((key) => {
+    if (result[key] === "") {
+      result[key] = undefined;
+    }
+  });
+  return result;
 }
 
 export const useCarForm = ({
   initialData,
   onClose,
   onSuccess,
+  garageId,
 }: UseCarFormProps) => {
   const isEditing = Boolean(initialData?.id);
 
@@ -54,7 +100,7 @@ export const useCarForm = ({
 
       // 3. მოვამზადოთ საბოლოო მონაცემები ბექენდისთვის
       const submitData = {
-        ...data,
+        ...stripEmptyOptionalStrings(data),
         photos: finalPhotos, // აქ უკვე მხოლოდ Cloudinary-ს ობიექტებია
         modifications: (data.modifications ?? []).map((m) => ({
           ...m,
@@ -69,7 +115,9 @@ export const useCarForm = ({
       if (isEditing) {
         await carsService.update(initialData.id, submitData);
       } else {
-        await carsService.create(submitData);
+        await carsService.create(
+          garageId ? { ...submitData, garageId } : submitData,
+        );
       }
 
       onSuccess?.();

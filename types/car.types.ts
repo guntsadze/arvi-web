@@ -19,6 +19,7 @@ export interface Car {
   description?: string;
   isProject?: boolean;
   isPublic?: boolean;
+  garageId?: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
